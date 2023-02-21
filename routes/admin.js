@@ -19,7 +19,7 @@ const {
   unListCategory,
   getEditCategory,
   editCategory,
-} = require("../controllers/adminControllers");
+} = require("../controllers/adminControllers.js");
 
 
 // get admin panel

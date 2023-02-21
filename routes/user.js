@@ -20,7 +20,7 @@ const {
   resendPasswordOtp,
   getResetPassword,
   postResetPassword,
-} = require("../controllers/userControllers");
+} = require("../controllers/userControllers.js");
 
 //Get Home page
 router.get("/", getHome);
