@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookNook|Sign up</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+</head>
+<style>
+    body {
+        background-color: #ffffff;
+    }
+
+    *[role="form"] {
+        max-width: 530px;
+        padding: 15px;
+        margin-top: 100px;
+        border-radius: 0.3em;
+        background-color: #f2f2f2;
+    }
+
+    *[role="form"] h3 {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 25px;
+        font-weight: 600;
+        color: #000000;
+        margin-top: 5%;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+    }
+
+    #title {
+        margin-top: 100px;
+    }
+</style>
+<div id="title" class="text-center">
+    <h2>BookNook</h2>
+</div>
+<div class="container">
+    <form class="form-horizontal" role="form" action="/signup" method="post">
+        <h3 class="text-center">Registration</h3>
+        <div class="form-group">
+            <label for="firstName" class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+                <input type="text" id="firstName" placeholder="First Name" class="form-control" name="name" autofocus
+                    required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-sm-3 control-label">Email* </label>
+            <div class="col-sm-9">
+                <input type="email" id="email" placeholder="Email" class="form-control" name="email" required>
+            </div><br>
+            <label for="Invalid" class="text-danger">
+                <%= error %>
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-3 control-label">Password*</label>
+            <div class="col-sm-9">
+                <input type="password" id="password" placeholder="Password" class="form-control" name="password"
+                    required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-3 control-label">Confirm Password*</label>
+            <div class="col-sm-9">
+                <input type="password" id="password" placeholder="Password" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber" class="col-sm-3 control-label">Phone number </label>
+            <div class="col-sm-9">
+                <input type="tel" id="phoneNumber" placeholder="+91" class="form-control" name="mobile"
+                    pattern="[0-9]{10}" required>
+                <small>Format: 8234567898</small>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-danger btn-block" value="Register">
+    </form> <!-- /form -->
+</div> <!-- ./container -->
+
+</body>
+
+</html>

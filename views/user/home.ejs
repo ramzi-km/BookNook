@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BookNook</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div class="d-flex justify-content-center align-items-center mt-3" >
+        <% if(user == null){ %>
+            <h1>Welcome User</h1>
+        <% }else{ %>
+            <h1>Welcome <%= user.name %></h1>
+        <% } %>
+    </div>
+    <% if(user == null){ %>
+        <div class='buttondiv d-flex justify-content-center align-items-center mt-5'>
+            <form id="logout-form" class="form" action="/login" method="get">
+                <input type="submit" name="logIn" value="Log In" class='btn btn-primary'>
+                </input>
+            </form>
+        </div>
+    <% }else{ %>
+        <div class='buttondiv d-flex justify-content-center align-items-center mt-5'>
+            <form id="logout-form" class="form" action="/logout" method="post">
+                <input type="submit" name="logout" value="Logout" class='btn btn-primary'>
+                </input>
+            </form>
+        </div>
+    <% } %>
+    
+    
+  </body>
+</html>
+

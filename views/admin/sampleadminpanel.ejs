@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BookNook | adminpanel</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+  
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
+  </head>
+  <body>
+    <div class="d-flex justify-content-center align-items-center mt-3" >
+       <h5>Welcome <%= admin.name %></h5>
+    </div>
+    <div class="container">
+        <div class="row mb-5">
+            <a href="admin/adduser" class="btn btn-success ml-auto">Add User</a>
+        </div>
+        <table id="usersTable" class="table table-white table-bordered table-striped mt-5">
+        <thead>
+          <tr class="table-danger">
+            <th scope="col"class="text-dark" >N.O</th>
+            <th scope="col"class="text-dark" >Name</th>
+            <th scope="col"class="text-dark" >Email</th>
+            <th scope="col"class="text-dark" >Options</th>
+          </tr> 
+        </thead>
+        <tbody>
+        <% users.forEach((user,index) => { %>
+          <tr>
+            <th scope="row"><%= index+1 %></th>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td>
+              <a href="/admin/delete-user/<%= user._id %> "class="btn btn-danger" onclick="return confirm('Are you sure,Do you want to delete <%= user.name %> ?')">Delete</a>
+            </td>
+          </tr>
+          <% });%>
+        </tbody>
+      </table>
+    </div>
+    <div class='buttondiv d-flex justify-content-center align-items-center mt-5'>
+        <form id="logout-form" class="form" action="/admin" method="post">
+            <input type="submit" name="logout" value="Logout" class='btn btn-primary'>
+            </input>
+        </form>
+    </div>
+    <script>
+      $(document).ready( function () {
+      $('#usersTable').DataTable();
+      } );
+    </script>
+
+  </body>
+</html>
