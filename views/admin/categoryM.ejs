@@ -298,20 +298,25 @@
                                                     <td>
                                                         <%= category.updatedAt %>
                                                     </td>
-                                                    
+
                                                     <td>
-                                                        <a href="/admin/categoryM/editCategory/<%= category._id %> "
-                                                            class="btn btn-info"><i
-                                                                class="fa fa-pencil-square-o text-white"></i> Edit</a>
-                                                        <% if (category.unList) { %>
-                                                            <a href="/admin/categoryM/list/<%= category._id %> "
-                                                                class="btn btn-light btn-outline-success"
-                                                                onclick="return confirm('Do you want to List <%= category.name %> ?')"> List</a>
-                                                            <% } else { %>
-                                                                <a href="/admin/categoryM/unList/<%= category._id %> "
-                                                                    class="btn btn-light btn-outline-danger"
-                                                                    onclick="return confirm('Do you really want to Unlist <%= category.name %> ?')"> Unlist</a>
-                                                                <% } %>
+                                                        <div class="d-flex justify-content-end align-items-center">
+                                                            <a
+                                                                href="/admin/categoryM/editCategory/<%= category._id %> " class="me-3 btn btn-dark"><i
+                                                                    class="mdi mdi-pencil "></i></a>
+
+                                                            <% if (category.unList) { %>
+                                                                <a href="/admin/categoryM/list/<%= category._id %> "
+                                                                    class="btn btn-light btn-outline-success"
+                                                                    onclick="return confirm('Do you want to List <%= category.name %> ?')">
+                                                                    List</a>
+                                                                <% } else { %>
+                                                                    <a href="/admin/categoryM/unList/<%= category._id %> "
+                                                                        class="btn btn-light btn-outline-danger"
+                                                                        onclick="return confirm('Do you really want to Unlist <%= category.name %> ?')">
+                                                                        Unlist</a>
+                                                                    <% } %>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <% }) %>

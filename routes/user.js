@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
+
+//----------------------Controllers---------------//
 const {
-  getHome,
   getLogin,
   getSignup,
   postSignup,
-  validateUser,
   logOut,
   getVerification,
   verifySignupOtp,
@@ -20,7 +20,13 @@ const {
   resendPasswordOtp,
   getResetPassword,
   postResetPassword,
-} = require("../controllers/userControllers.js");
+  validateUser,
+} = require("../controllers/userAuthControllers.js");
+
+const { getHome } = require("../controllers/userControllers");
+
+
+
 
 //Get Home page
 router.get("/", getHome);

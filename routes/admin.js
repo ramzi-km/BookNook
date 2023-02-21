@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+//-----------------------------------Middlewares-------------------------------------------//
+
+const { verfiyLoggedIn } = require("../middlewares/verifyAdminLoggedIn");
+const { verifyLoggedOut } = require("../middlewares/verifyAdminLoggedOut");
+
+//-----------------------------------Controllers-------------------------------------------//
+const { getLogin, doLogout, validateAdmin } = require('../controllers/adminAuthControllers');
 const {
-  getPanel,
-  verifyLoggedIn,
-  verifyLoggedOut,
-  getLogin,
-  validateAdmin,
-  doLogout,
   getUserM,
   blockUser,
   getProductM,
@@ -19,11 +20,14 @@ const {
   unListCategory,
   getEditCategory,
   editCategory,
-} = require("../controllers/adminControllers.js");
+  getPanel,
+} = require("../controllers/adminControllers");
+
+
 
 
 // get admin panel
-router.get("/", verifyLoggedIn, getPanel);
+router.get("/", verfiyLoggedIn,getPanel);
 // post admin panel
 router.post("/", doLogout);
 
@@ -33,30 +37,36 @@ router.get("/adminLogin", verifyLoggedOut, getLogin);
 router.post("/adminLogin", validateAdmin);
 
 
-//----------get user management-----------//
-router.get('/userM',verifyLoggedIn,getUserM)
+//---------- user management-----------//
+
+// get user management page
+router.get('/userM',verfiyLoggedIn,getUserM)
 //block or unblock user
-router.get('/userM/:id',verifyLoggedIn,blockUser)
+router.get('/userM/:id',verfiyLoggedIn,blockUser)
 
-//---------get product management---------//
-router.get('/productM',verifyLoggedIn,getProductM)
+//--------- product management---------//
+
+//get product management page
+router.get('/productM',verfiyLoggedIn,getProductM)
 // get add product
-router.get('/productM/addProduct',verifyLoggedIn,getAddProduct)
+router.get('/productM/addProduct',verfiyLoggedIn,getAddProduct)
 
-//---------get category management--------//
-router.get('/categoryM',verifyLoggedIn,getCategoryM)
+//--------- category management--------//
+
+//get category page
+router.get('/categoryM',verfiyLoggedIn,getCategoryM)
 // get add category page
-router.get('/categoryM/addCategory',verifyLoggedIn,getAddCategory)
-//post add category
-router.post('/categoryM/addCategory',verifyLoggedIn,addCategory)
+router.get('/categoryM/addCategory',verfiyLoggedIn,getAddCategory)
+// post add category
+router.post('/categoryM/addCategory',verfiyLoggedIn,addCategory)
 // get edit category page
-router.get('/categoryM/editCategory/:id',verifyLoggedIn,getEditCategory)
-//post edit category
-router.post('/categoryM/editCategory',verifyLoggedIn,editCategory)
+router.get('/categoryM/editCategory/:id',verfiyLoggedIn,getEditCategory)
+// post edit category
+router.post('/categoryM/editCategory',verfiyLoggedIn,editCategory)
 // unlist category
-router.get('/categoryM/unList/:id',verifyLoggedIn,unListCategory)
+router.get('/categoryM/unList/:id',verfiyLoggedIn,unListCategory)
 // list category
-router.get('/categoryM/list/:id',verifyLoggedIn,listCategory)
+router.get('/categoryM/list/:id',verfiyLoggedIn,listCategory)
 
 
 

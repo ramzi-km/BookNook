@@ -1,55 +1,12 @@
 const mongoose = require("mongoose");
-const Admin = require("../models/adminModel.js");
 const User = require("../models/userModel.js");
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
-const bcrypt = require("bcrypt");
-const { findById } = require("../models/adminModel.js");
 
-let loginError = null;
 let addCategoryError = null;
 let editCategoryError = null;
 
 module.exports = {
-  getLogin: (req, res) => {
-    res.render("admin/login", { error: loginError });
-    loginError = null;
-  },
-  verifyLoggedIn: (req, res, next) => {
-    if (req.session.adminLoggedIn) {
-      next();
-    } else {
-      res.redirect("/admin/adminLogin");
-    }
-  },
-  verifyLoggedOut: (req, res, next) => {
-    if (req.session.adminLoggedIn) {
-      res.redirect("/admin");
-    } else {
-      next();
-    }
-  },
-  validateAdmin: async (req, res) => {
-    let admin = await Admin.findOne({ email: req.body.email });
-
-    if (admin) {
-      bcrypt.compare(req.body.password, admin.password).then((result) => {
-        if (result) {
-          console.log("login success");
-          req.session.admin = admin;
-          req.session.adminLoggedIn = true;
-          loginError = null;
-          res.redirect("/admin");
-        } else {
-          loginError = "Invalid username or password";
-          res.redirect("/admin/adminLogin");
-        }
-      });
-    } else {
-      loginError = "Invalid username or password";
-      res.redirect("/admin/adminLogin");
-    }
-  },
   getPanel: async (req, res) => {
     try {
       let admin = req.session.admin;
@@ -163,10 +120,5 @@ module.exports = {
     category.unList = false;
     await category.save();
     res.redirect("/admin/categoryM");
-  },
-  doLogout: (req, res) => {
-    req.session.admin = null;
-    req.session.adminLoggedIn = false;
-    res.redirect("/admin/adminLogin");
   },
 };
