@@ -22,6 +22,7 @@ const resetPasswordVerifyMail = {
 async function sentOtpVerification(tempUser, mail, req) {
   try {
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+    console.log(otp);
     //mail options
     const mailOptions = {
       from: process.env.AUTH_EMAIL,
@@ -72,7 +73,7 @@ module.exports = {
   },
 
   getSignup: (req, res) => {
-    res.render("user/signin", { error: signupError });
+    res.render("user/signup", { error: signupError });
     signupError = null;
   },
 
@@ -162,7 +163,7 @@ module.exports = {
   },
 
   getloginverification: (req, res) => {
-    res.render("user/loginverification", {
+    res.render("user/loginVerification", {
       user: req.session.validatedUser,
       error: loginOtpError,
     });
@@ -184,7 +185,7 @@ module.exports = {
       if (typedOtp === req.session.otp) {
         //stor user in session
         req.session.user = req.session.validatedUser;
-        req.session.UserLoggedIn = true;
+        req.session.userLoggedIn = true;
 
         req.session.otp = null;
         req.session.otpExpiry = null;
@@ -198,7 +199,7 @@ module.exports = {
   },
 
   getEmailInput: (req, res) => {
-    res.render("user/emailinput", { error: emailInputError });
+    res.render("user/emailInput", { error: emailInputError });
     emailInputError = null;
   },
 
@@ -214,7 +215,7 @@ module.exports = {
   },
 
   getPasswordVerification: (req, res) => {
-    res.render("user/passwordverification", {
+    res.render("user/passwordVerification", {
       error: rpOtpError,
       user: req.session.rpUser,
     });
@@ -250,7 +251,7 @@ module.exports = {
 
   getResetPassword: (req, res) => {
     if (req.session.rpVerified && req.session.rpUser) {
-      res.render("user/resetpassword");
+      res.render("user/resetPassword");
     } else {
       res.redirect("/emailInput");
     }

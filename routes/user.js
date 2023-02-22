@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
+//-----------------------------------Middlewares-------------------------------------------//
+
+
+const { verifyLoggedOut } = require("../middlewares/verifyUserLoggeOut.js");
+
 //----------------------Controllers---------------//
 const {
   getLogin,
@@ -24,6 +29,7 @@ const {
 } = require("../controllers/userAuthControllers.js");
 
 const { getHome } = require("../controllers/userControllers");
+const verifyUserLoggeOut = require("../middlewares/verifyUserLoggeOut.js");
 
 
 
@@ -36,9 +42,9 @@ router.post("/logout", logOut);
 /* -------------------User Authentication----------------------*/
 
 //Get login page
-router.get("/login", getLogin);
+router.get("/login",verifyLoggedOut, getLogin);
 //post login page
-router.post("/login", validateUser);
+router.post("/login",verifyLoggedOut, validateUser);
 
 //Get signup page
 router.get("/signup", getSignup);
@@ -53,11 +59,11 @@ router.post("/verifySignupOtp", verifySignupOtp);
 router.get("/resendSignupOtp", resendSignupOtp);
 
 //get loginverification page
-router.get("/loginVerification", getloginverification);
+router.get("/loginVerification",verifyLoggedOut, getloginverification);
 //get resendLoginOtp
-router.get("/resendLoginOtp", resendLoginOtp);
+router.get("/resendLoginOtp",verifyLoggedOut, resendLoginOtp);
 //post loginverification page
-router.post("/verifyLoginOtp", verifyLoginOtp);
+router.post("/verifyLoginOtp",verifyLoggedOut, verifyLoginOtp);
 
 // get reset password email input page
 router.get("/emailInput", getEmailInput);

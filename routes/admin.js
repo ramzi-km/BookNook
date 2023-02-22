@@ -34,7 +34,7 @@ router.post("/", doLogout);
 // get admin login
 router.get("/adminLogin", verifyLoggedOut, getLogin);
 // post admin login
-router.post("/adminLogin", validateAdmin);
+router.post("/adminLogin", verifyLoggedOut, validateAdmin);
 
 
 //---------- user management-----------//

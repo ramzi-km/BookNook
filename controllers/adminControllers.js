@@ -11,7 +11,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
       let users = await User.find().lean();
-      res.render("admin/adminpanel", { admin, users });
+      res.render("admin/adminPanel", { admin, users });
     } catch (error) {
       console.log(error);
     }
@@ -20,7 +20,7 @@ module.exports = {
   getUserM: async (req, res) => {
     let admin = req.session.admin;
     let users = await User.find().lean();
-    res.render("admin/userm", { admin, users });
+    res.render("admin/userM", { admin, users });
   },
   //block or unblock user
   blockUser: async (req, res) => {
@@ -42,7 +42,7 @@ module.exports = {
   getProductM: async (req, res) => {
     let admin = req.session.admin;
     let products = await Product.find().lean();
-    res.render("admin/productm", { admin, products });
+    res.render("admin/productM", { admin, products });
   },
   //get add product page
   getAddProduct: (req, res) => {
