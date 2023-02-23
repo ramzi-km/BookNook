@@ -1,5 +1,28 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+
+// -------image upload-------------//
+
+let multerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images/productImages");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
+  },
+});
+
+let upload = multer({
+  storage: multerStorage,
+});
+let uploadImages = upload.fields([
+  { name: "mainImage", maxCount: 1 },
+  { name: "coverImage", maxCount: 1 },
+  { name: "extraImages", maxCount: 3 },
+]);
+
+//-----------------xx------------------//
 
 //-----------------------------------Middlewares-------------------------------------------//
 
@@ -7,27 +30,34 @@ const { verfiyLoggedIn } = require("../middlewares/verifyAdminLoggedIn");
 const { verifyLoggedOut } = require("../middlewares/verifyAdminLoggedOut");
 
 //-----------------------------------Controllers-------------------------------------------//
-const { getLogin, doLogout, validateAdmin } = require('../controllers/adminAuthControllers');
+
 const {
+  getLogin,
+  doLogout,
+  validateAdmin,
+} = require("../controllers/adminAuthControllers");
+const {
+  getPanel,
   getUserM,
   blockUser,
   getProductM,
+  listProduct,
+  unListProduct,
   getAddProduct,
+  addProduct,
+  getEditProduct,
+  editProduct,
   getCategoryM,
-  getAddCategory,
-  addCategory,
   listCategory,
   unListCategory,
+  getAddCategory,
+  addCategory,
   getEditCategory,
   editCategory,
-  getPanel,
 } = require("../controllers/adminControllers");
 
-
-
-
 // get admin panel
-router.get("/", verfiyLoggedIn,getPanel);
+router.get("/", verfiyLoggedIn, getPanel);
 // post admin panel
 router.post("/", doLogout);
 
@@ -36,38 +66,46 @@ router.get("/adminLogin", verifyLoggedOut, getLogin);
 // post admin login
 router.post("/adminLogin", verifyLoggedOut, validateAdmin);
 
-
-//---------- user management-----------//
+//------------------------------ user management-----------------------------//
 
 // get user management page
-router.get('/userM',verfiyLoggedIn,getUserM)
+router.get("/userM", verfiyLoggedIn, getUserM);
 //block or unblock user
-router.get('/userM/:id',verfiyLoggedIn,blockUser)
+router.get("/userM/:id", verfiyLoggedIn, blockUser);
 
-//--------- product management---------//
+//--------------------------- product management----------------------------//
 
 //get product management page
-router.get('/productM',verfiyLoggedIn,getProductM)
+router.get("/productM", verfiyLoggedIn, getProductM);
 // get add product
-router.get('/productM/addProduct',verfiyLoggedIn,getAddProduct)
+router.get("/productM/addProduct", verfiyLoggedIn, getAddProduct);
+// post add product
+router.post("/productM/addProduct", verfiyLoggedIn, uploadImages, addProduct);
+// get edit product page
+router.get("/productM/editProduct/:id", verfiyLoggedIn, getEditProduct);
+// post edit product page
+router.post("/productM/editProduct/:id", verfiyLoggedIn,uploadImages,editProduct);
 
-//--------- category management--------//
+// Unlist product
+router.get("/productM/unList/:id", verfiyLoggedIn, unListProduct);
+// List product
+router.get("/productM/list/:id", verfiyLoggedIn, listProduct);
+
+//-------------------------- category management------------------------//
 
 //get category page
-router.get('/categoryM',verfiyLoggedIn,getCategoryM)
+router.get("/categoryM", verfiyLoggedIn, getCategoryM);
 // get add category page
-router.get('/categoryM/addCategory',verfiyLoggedIn,getAddCategory)
+router.get("/categoryM/addCategory", verfiyLoggedIn, getAddCategory);
 // post add category
-router.post('/categoryM/addCategory',verfiyLoggedIn,addCategory)
+router.post("/categoryM/addCategory", verfiyLoggedIn, addCategory);
 // get edit category page
-router.get('/categoryM/editCategory/:id',verfiyLoggedIn,getEditCategory)
+router.get("/categoryM/editCategory/:id", verfiyLoggedIn, getEditCategory);
 // post edit category
-router.post('/categoryM/editCategory',verfiyLoggedIn,editCategory)
+router.post("/categoryM/editCategory", verfiyLoggedIn, editCategory);
 // unlist category
-router.get('/categoryM/unList/:id',verfiyLoggedIn,unListCategory)
+router.get("/categoryM/unList/:id", verfiyLoggedIn, unListCategory);
 // list category
-router.get('/categoryM/list/:id',verfiyLoggedIn,listCategory)
-
-
+router.get("/categoryM/list/:id", verfiyLoggedIn, listCategory);
 
 module.exports = router;

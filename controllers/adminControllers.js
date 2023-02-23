@@ -5,6 +5,7 @@ const Category = require("../models/categoryModel.js");
 
 let addCategoryError = null;
 let editCategoryError = null;
+let addProductMessage = null;
 
 module.exports = {
   getPanel: async (req, res) => {
@@ -16,7 +17,8 @@ module.exports = {
       console.log(error);
     }
   },
-  //user management
+  //------------------------------ user management-----------------------------//
+
   getUserM: async (req, res) => {
     let admin = req.session.admin;
     let users = await User.find().lean();
@@ -38,19 +40,242 @@ module.exports = {
       res.redirect("/admin/userM");
     }
   },
-  //product management
+  //--------------------------- product management----------------------------//
+
   getProductM: async (req, res) => {
     let admin = req.session.admin;
     let products = await Product.find().lean();
-    res.render("admin/productM", { admin, products });
+    res.render("admin/productM", {
+      admin,
+      products,
+      message: addProductMessage,
+    });
+    addProductMessage = null;
   },
   //get add product page
-  getAddProduct: (req, res) => {
+  getAddProduct: async (req, res) => {
     let admin = req.session.admin;
-    res.render("admin/addProduct", { admin });
+    let categories = await Category.find().lean();
+    res.render("admin/addProduct", { admin, categories });
+  },
+  //post add product page
+  addProduct: async (req, res) => {
+    try {
+      const newProduct = await Product.create({
+        name: req.body.name,
+        author: req.body.author,
+        category: req.body.category,
+        mrp: req.body.mrp,
+        price: req.body.price,
+        inStock: req.body.inStock,
+        description: req.body.description,
+        richDescription: req.body.richDescription,
+        mainImage: req.files.mainImage,
+        coverImage: req.files.coverImage,
+        extraImages: req.files.extraImages,
+      });
+      addProductMessage = "product added successfully";
+      res.redirect("/admin/productM");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  // get edit product page
+  getEditProduct: async (req, res) => {
+    let admin = req.session.admin;
+    const categories = await Category.find().lean();
+    const product = await Product.findOne({ _id: req.params.id });
+    req.session.editingProduct = product;
+    res.render("admin/editProduct", {
+      categories,
+      admin,
+      product,
+    });
+  },
+  // post edit product page
+  editProduct: async (req, res) => {
+    let productId = req.params.id;
+    if (req.files.mainImage && req.files.coverImage && req.files.extraImages) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          mainImage: req.files.mainImage,
+          coverImage: req.files.coverImage,
+          extraImages: req.files.extraImages,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      req.files.mainImage &&
+      req.files.coverImage &&
+      !req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          mainImage: req.files.mainImage,
+          coverImage: req.files.coverImage,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      req.files.mainImage &&
+      !req.files.coverImage &&
+      req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          mainImage: req.files.mainImage,
+          extraImages: req.files.extraImages,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      !req.files.mainImage &&
+      req.files.coverImage &&
+      req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          coverImage: req.files.coverImage,
+          extraImages: req.files.extraImages,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      !req.files.mainImage &&
+      !req.files.coverImage &&
+      req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          extraImages: req.files.extraImages,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      !req.files.mainImage &&
+      req.files.coverImage &&
+      !req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          coverImage: req.files.coverImage,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      req.files.mainImage &&
+      !req.files.coverImage &&
+      !req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          mainImage: req.files.mainImage,
+        }
+      );
+      res.redirect("/admin/productM");
+    } else if (
+      !req.files.mainImage &&
+      !req.files.coverImage &&
+      !req.files.extraImages
+    ) {
+      await Product.updateOne(
+        { _id: productId },
+        {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+        }
+      );
+      res.redirect("/admin/productM");
+    }
+  },
+  // unlist product
+  unListProduct: async (req, res) => {
+    let productId = req.params.id;
+    let product = await Product.findById(productId);
+    product.unList = true;
+    await product.save();
+    res.redirect("/admin/productM");
+  },
+  //list product
+  listProduct: async (req, res) => {
+    let productId = req.params.id;
+    let product = await Product.findById(productId);
+    product.unList = false;
+    await product.save();
+    res.redirect("/admin/productM");
   },
 
-  //category management
+  //-------------------------- category management------------------------//
+
   getCategoryM: async (req, res) => {
     let admin = req.session.admin;
     let categories = await Category.find().lean();

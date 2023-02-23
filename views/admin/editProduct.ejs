@@ -243,7 +243,7 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center justify-content-between">
-                        <h3 class="page-title">Add product</h3>
+                        <h3 class="page-title">Edit product</h3>
                         <a href="/admin/productM" class="btn btn-info"><i class="fa fa-chevron-circle-left">
                                 Back</i></a>
                     </div>
@@ -269,26 +269,33 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body" style="background-color: #061c31;">
-                                <h4 class="card-title text-success">Add a new product</h4>
-                                <form class="form-horizontal mt-4" id="form" action="/admin/productM/addProduct" method="post" enctype="multipart/form-data">
+                                <h4 class="card-title text-success">Edit <%= product.name %>
+                                </h4>
+                                <form class="form-horizontal mt-4" id="form"
+                                    action="/admin/productM/editProduct/<%= product._id %>" method="post"
+                                    enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Name</label>
-                                            <input type="text" class="form-control" name="name" placeholder="Book title" required>
+                                            <input type="text" class="form-control" name="name"
+                                                value="<%= product.name %>" placeholder="Book title" required>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label class="text-white for=" Author">Author</label>
-                                            <input type="text" id="Author" name="author" class="form-control"
-                                                placeholder="Name of the Author" required>
+                                            <input type="text" id="Author" name="author" value="<%= product.author %>"
+                                                class="form-control" placeholder="Name of the Author" required>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Category</label>
                                             <select class="form-select shadow-none col-12" name="category"
                                                 id="inlineFormCustomSelect" required>
-                                                <option selected value="">Select a category</option>
+                                                <option selected value="<%= product.category %>">
+                                                    <%= product.category %>
+                                                </option>
                                                 <% categories.forEach(category=> { %>
-                                                    <option value="<%=category.name%>"><%= category.name %>
+                                                    <option value="<%=category.name %>">
+                                                        <%= category.name %>
                                                     </option>
                                                     <% }) %>
                                             </select>
@@ -301,18 +308,21 @@
                                         <div class="form-group col-md-4">
                                             <label class="text-white">MRP</label>
                                             <input type="text" class="form-control" name="mrp"
-                                                placeholder="Maximum retailing price" required>
+                                                value="<%= product.mrp %>" placeholder="Maximum retailing price"
+                                                required>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Price</label>
                                             <input type="text" class="form-control" name="price"
-                                                placeholder="BookNook retailing price" required>
+                                                value="<%= product.price %>" placeholder="BookNook retailing price"
+                                                required>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Stock</label>
                                             <input type="number" class="form-control" name="inStock"
+                                                value="<%= product.inStock %>"
                                                 placeholder="Available quantity of product" required>
                                         </div>
 
@@ -320,36 +330,70 @@
 
                                     <div class="form-group">
                                         <label class="text-white">Description</label>
-                                        <input type="text" class="form-control" name="description" required>
+                                        <input type="text" class="form-control" name="description"
+                                            value="<%= product.description %>" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="text-white">Rich Description</label>
                                         <textarea class="form-control" name="richDescription" rows="5"
-                                            required></textarea>
+                                            required><%= product.richDescription %></textarea>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-4 ">
+
+                                            <div class="form-outline">
+                                                <img style="width: 150px; height: 200px;"
+                                                    src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                                    id="mainImageDisplay" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 ">
+
+                                            <div class="form-outline">
+                                                <img style="width: 300px; height: 200px;"
+                                                    src="/images/productImages/<%= product.coverImage[0].filename %>"
+                                                    id="coverImageDisplay" alt="">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-outline">
+                                                <% product.extraImages.forEach(image=> { %>
+                                                    <a href="/admin/productM/editProduct/deleteExtraImage/<%= image.filename %>"
+                                                        onclick="return confirm('Do you really want to Delete this image')">
+                                                        <img style="width: 120px; height: 200px;"
+                                                            src="/images/productImages/<%= image.filename %>" alt="">
+                                                    </a>
+                                                <% }) %>
+
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <div class="row mt-4">
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Image</label>
-                                            <input type="file" class="form-control" name="mainImage" required>
+                                            <input type="file" class="form-control" name="mainImage">
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Cover Image</label>
-                                            <input type="file" class="form-control" name="coverImage" required>
+                                            <input type="file" class="form-control" name="coverImage">
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Side Image</label>
                                             <input id="images" type="file" multiple class="form-control"
-                                                name="extraImages" required>
+                                                name="extraImages">
                                         </div>
                                     </div>
 
                                     <div class="d-flex justify-content-center mt-4">
                                         <button id="submit" class="btn btn-success" type="submit"><span
-                                                class="text-white"> Add Product</span></button>
+                                                class="text-white"> Save</span></button>
                                     </div>
 
                                 </form>
@@ -421,33 +465,7 @@
          ****************************************/
         $("#zero_config").DataTable();
     </script>
-    <script>
-        $(function () {
 
-            var // Define maximum number of files.
-                max_file_number = 3,
-                // Define your form id or class or just tag.
-                $form = $('#form'),
-                // Define your upload field class or id or tag.
-                $file_upload = $('#images', $form),
-                // Define your submit class or id or tag.
-                $button = $('#submit', $form);
-
-            // Disable submit button on page ready.
-            $button.prop('disabled', 'disabled');
-
-            $file_upload.on('change', function () {
-                var number_of_images = $(this)[0].files.length;
-                if (number_of_images > max_file_number) {
-                    alert(`You can upload maximum ${max_file_number} files.`);
-                    $(this).val('');
-                    $button.prop('disabled', 'disabled');
-                } else {
-                    $button.prop('disabled', false);
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

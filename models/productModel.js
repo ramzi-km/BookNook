@@ -35,12 +35,12 @@ var productSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    image:{
-        type:String,
+    mainImage:{
+        type:Array,
         required:true,
     },
     coverImage:{
-        type:String,
+        type:Array,
         required:true,
     },
     extraImages:{
@@ -49,7 +49,6 @@ var productSchema = new mongoose.Schema({
     isFeatured:{
         type:String,
         default:false,
-        index:true,
     },
     ratings:{
         type:Array,
