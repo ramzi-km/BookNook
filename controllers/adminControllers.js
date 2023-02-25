@@ -107,18 +107,21 @@ module.exports = {
   // post edit product page
   editProduct: async (req, res) => {
     let productId = req.params.id;
+    await Product.updateOne({ _id: productId },
+      {
+        name: req.body.name,
+        author: req.body.author,
+        category: req.body.category,
+        mrp: req.body.mrp,
+        price: req.body.price,
+        inStock: req.body.inStock,
+        description: req.body.description,
+        richDescription: req.body.richDescription,
+      })
     if (req.files.mainImage && req.files.coverImage && req.files.extraImages) {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           mainImage: req.files.mainImage,
           coverImage: req.files.coverImage,
           extraImages: req.files.extraImages,
@@ -133,14 +136,6 @@ module.exports = {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           mainImage: req.files.mainImage,
           coverImage: req.files.coverImage,
         }
@@ -154,14 +149,6 @@ module.exports = {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           mainImage: req.files.mainImage,
           extraImages: req.files.extraImages,
         }
@@ -175,14 +162,6 @@ module.exports = {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           coverImage: req.files.coverImage,
           extraImages: req.files.extraImages,
         }
@@ -196,14 +175,6 @@ module.exports = {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           extraImages: req.files.extraImages,
         }
       );
@@ -216,14 +187,6 @@ module.exports = {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           coverImage: req.files.coverImage,
         }
       );
@@ -236,14 +199,6 @@ module.exports = {
       await Product.updateOne(
         { _id: productId },
         {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
           mainImage: req.files.mainImage,
         }
       );
@@ -253,19 +208,6 @@ module.exports = {
       !req.files.coverImage &&
       !req.files.extraImages
     ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
-        }
-      );
       res.redirect("/admin/productM");
     }
   },

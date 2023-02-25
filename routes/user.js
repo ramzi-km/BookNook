@@ -37,7 +37,7 @@ const verifyUserLoggeOut = require("../middlewares/verifyUserLoggeOut.js");
 //Get Home page
 router.get("/", getHome);
 //post home page
-router.post("/logout", logOut);
+router.post("/logout",logOut);
 
 /* -------------------User Authentication----------------------*/
 
