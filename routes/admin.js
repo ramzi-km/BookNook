@@ -54,6 +54,13 @@ const {
   addCategory,
   getEditCategory,
   editCategory,
+  getCouponM,
+  getAddCoupon,
+  addCoupon,
+  getEditCoupon,
+  editCoupon,
+  unListCoupon,
+  listCoupon,
 } = require("../controllers/adminControllers");
 
 // get admin panel
@@ -107,5 +114,25 @@ router.post("/categoryM/editCategory", verfiyLoggedIn, editCategory);
 router.get("/categoryM/unList/:id", verfiyLoggedIn, unListCategory);
 // list category
 router.get("/categoryM/list/:id", verfiyLoggedIn, listCategory);
+
+//-------------------------- Coupon management------------------------//
+
+// get coupon page
+router.get("/couponM",verfiyLoggedIn,getCouponM)
+// get coupon add page
+router.get("/couponM/addCoupon",verfiyLoggedIn,getAddCoupon)
+// post coupon add page
+router.post("/couponM/addCoupon",verfiyLoggedIn,addCoupon)
+// get coupon edit page
+router.get("/couponM/editCoupon/:id",verfiyLoggedIn,getEditCoupon)
+// post coupon edit page
+router.post("/couponM/editCoupon/:id",verfiyLoggedIn,editCoupon)
+// unlist coupon
+router.get("/couponM/unList/:id", verfiyLoggedIn,unListCoupon);
+// list category
+router.get("/couponM/list/:id", verfiyLoggedIn,listCoupon);
+
+
+
 
 module.exports = router;

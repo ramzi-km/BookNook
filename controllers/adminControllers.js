@@ -2,10 +2,22 @@ const mongoose = require("mongoose");
 const User = require("../models/userModel.js");
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
+const Coupon = require("../models/couponModel.js");
 
 let addCategoryError = null;
 let editCategoryError = null;
 let addProductMessage = null;
+
+function formattedDate(d) {
+  let month = String(d.getMonth() + 1);
+  let day = String(d.getDate());
+  const year = String(d.getFullYear());
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return `${year}-${month}-${day}`;
+}
 
 module.exports = {
   getPanel: async (req, res) => {
@@ -345,5 +357,67 @@ module.exports = {
     category.unList = false;
     await category.save();
     res.redirect("/admin/categoryM");
+  },
+
+  //--------------------------- Coupon management----------------------------//
+
+  // get coupon management page
+  getCouponM: async (req, res) => {
+    let admin = req.session.admin;
+    let coupons = await Coupon.find().lean();
+    res.render("admin/couponM", { admin, coupons });
+  },
+  // get coupon add page
+  getAddCoupon: (req, res) => {
+    let admin = req.session.admin;
+    res.render("admin/addCoupon", { admin });
+  },
+  // post coupon add page
+  addCoupon: async (req, res) => {
+    try {
+      const newCoupon = await Coupon.create(req.body);
+      res.redirect("/admin/couponM");
+    } catch (err) {
+      console.log(err);
+      res.redirect("/admin/couponM");
+    }
+  },
+  // get edit coupon page
+  getEditCoupon: async (req, res) => {
+    let admin = req.session.admin;
+    try {
+      const coupon = await Coupon.findById(req.params.id);
+      let expiryDate = formattedDate(coupon.expiryDate);
+      res.render("admin/editCoupon", { admin, coupon, expiryDate });
+    } catch (err) {
+      console.log(err);
+      res.redirect("/admin/couponM");
+    }
+  },
+  // post edit coupon page
+  editCoupon: async (req, res) => {
+    let couponId = req.params.id;
+    try {
+      const coupon = await Coupon.updateOne({ _id: couponId }, req.body);
+      res.redirect("/admin/couponM");
+    } catch (err) {
+      res.redirect("/admin/couponM");
+    }
+  },
+   //unList Coupon
+   unListCoupon: async (req, res) => {
+    let couponId = req.params.id;
+    let coupon = await Coupon.findById(couponId);
+    coupon.unList = true;
+    await coupon.save();
+    res.redirect("/admin/couponM");
+  },
+  //list Coupon
+  listCoupon: async (req, res) => {
+    let couponId = req.params.id;
+    let coupon = await Coupon.findById(couponId);
+    coupon.unList = false;
+    await coupon.save();
+    res.redirect("/admin/couponM");
   },
 };
