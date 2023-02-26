@@ -67,7 +67,7 @@ module.exports = {
     if (req.session.userLoggedIn) {
       res.redirect("/");
     } else {
-      res.render("user/login", { error: loginError });
+      res.render("user/login", { user:req.session.user,error: loginError });
       loginError = null;
     }
   },
