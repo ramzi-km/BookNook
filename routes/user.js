@@ -28,16 +28,26 @@ const {
   validateUser,
 } = require("../controllers/userAuthControllers.js");
 
-const { getHome } = require("../controllers/userControllers");
-const verifyUserLoggeOut = require("../middlewares/verifyUserLoggeOut.js");
+const { getHome, getShop, getProductDetails } = require("../controllers/userControllers");
 
 
-
+/* ----------------------Home page-----------------------------*/
 
 //Get Home page
 router.get("/", getHome);
 //post home page
 router.post("/logout",logOut);
+
+/* ----------------------Shop page-----------------------------*/
+
+// get shop page
+router.get('/shop',getShop)
+
+/* ----------------------Product details page-----------------------------*/
+
+router.get('/productDetails/:id',getProductDetails)
+
+
 
 /* -------------------User Authentication----------------------*/
 
