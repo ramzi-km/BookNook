@@ -4,8 +4,32 @@
     <div class="product_image_area" style="margin-top: -100px;">
         <div class="container">
             <div class="row s_product_inner">
-                <div class="col-lg-6">
-                    <div class="s_Product_carousel">
+                <div class="col-lg-6 d-flex flex-column product-main">
+                    <!-- Primary carousel image -->
+
+
+                    <div class="show" href="1.jpg" style="max-height: 540px">
+                        <img src="/images/productImages/<%= product.mainImage[0].filename %>"  id="show-img" style="max-height: 80%;">
+                    </div>
+
+                    <!-- Secondary carousel image thumbnail gallery -->
+
+                    <div class="small-img d-flex align-items-center">
+                        <img src="/imageZoom/images/next-icon.png" class="icon-left" alt="" id="prev-img">
+                        <div class="small-container" >
+                            <div id="small-img-roll" >
+                                <img src="/images/productImages/<%= product.mainImage[0].filename %>" class="show-small-img" alt="">
+                                <% product.extraImages.forEach(image=> { %>
+                                <img src="/images/productImages/<%= image.filename %>" class="show-small-img" alt="">
+                                <% }) %>
+                              
+                            </div >
+                        </div>
+                        <img src="/imageZoom/images/next-icon.png" class="icon-right" alt="" id="next-img">
+                    </div>
+             
+
+                    <!-- <div class="s_Product_carousel">
                         <div class="single-prd-item " style="max-height: 542px;">
                             <img class="img-fluid img_producto"
                                 src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
@@ -18,7 +42,7 @@
                             </div>
                             <% }) %>
 
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-lg-5 offset-lg-1">
                     <div class="s_product_text">
@@ -239,7 +263,9 @@
     </section>
     <!--================End Product Description Area =================-->
 
+    <!-- Product Image Gallery Js -->
+    <script src="/imageZoom/scripts/zoom-image.js"></script>
+    <script src="/imageZoom/scripts/main.js"></script>
 
-   
 
     <%- include('./partials/footer') %>
