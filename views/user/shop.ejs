@@ -86,11 +86,11 @@
                                     <a href="/productDetails/<%= product._id %>"><img class="img-fluid"
                                             src="/images/productImages/<%= product.mainImage[0].filename %>" alt="" style="max-width: 234px;  max-height: 274px;"></a>
                                     <div class="product-details">
-                                        <h6>
-                                            <%= product.name %>
+                                        <h6 style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" >
+                                            <a href="/productDetails/<%= product._id %>" class="text-dark"><span><%= product.name %></span></a>
                                         </h6>
                                         <div class="price">
-                                            <h6>₹ <%= product.price %>
+                                            <h6 class="text-danger">₹ <%= product.price %>
                                             </h6>
                                             <h6 class="l-through">₹ <%= product.mrp %>
                                             </h6>

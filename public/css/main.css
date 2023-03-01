@@ -62,7 +62,6 @@
     padding-bottom: 80px;
   }
 }
-
 .gray-bg {
   background: #f9f9ff;
 }
@@ -6806,7 +6805,6 @@ label {
 /* Login form Area css
 ============================================================================================ */
 .login_box_area .login_box_img {
-  margin-right: -30px;
   position: relative;
 }
 

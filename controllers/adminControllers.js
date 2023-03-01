@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
+
+//------------------------------ Models-----------------------------//
+
 const User = require("../models/userModel.js");
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
 const Coupon = require("../models/couponModel.js");
+const Order = require('../models/orderModel.js');
+
 
 let addCategoryError = null;
 let editCategoryError = null;
@@ -362,4 +367,15 @@ module.exports = {
     await coupon.save();
     res.redirect("/admin/couponM");
   },
+
+   //--------------------------- Coupon management----------------------------//
+
+   // get order management page
+  getOrderM:async (req,res) => {
+    let admin = req.session.admin;
+    let orders = await Order.find().lean();
+    res.render("admin/orderM", { admin, orders });
+  },
+
+
 };

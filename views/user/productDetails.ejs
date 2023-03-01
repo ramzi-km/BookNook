@@ -1,5 +1,4 @@
-<%- include('./partials/header') %>
-
+<%- include('./partials/header.ejs') %>
 
     <!--================Single Product Area =================-->
     <div class="product_image_area" style="margin-top: -100px;">
@@ -7,15 +6,18 @@
             <div class="row s_product_inner">
                 <div class="col-lg-6">
                     <div class="s_Product_carousel">
-                        <div class="single-prd-item">
-                            <img class="img-fluid" src="/images/productImages/<%= product.mainImage[0].filename %>" alt="" style="max-height: 542px;">
+                        <div class="single-prd-item " style="max-height: 542px;">
+                            <img class="img-fluid img_producto"
+                                src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
+                                style="max-height: 542px;">
                         </div>
-                        <% product.extraImages.forEach(image => { %>
-                            <div class="single-prd-item">
-                                <img class="img-fluid" src="/images/productImages/<%= image.filename %>" alt="" style="max-height: 542px;">
+                        <% product.extraImages.forEach(image=> { %>
+                            <div class="single-prd-item img_producto_container">
+                                <img class="img-fluid" src="/images/productImages/<%= image.filename %>" alt=""
+                                    style="max-height: 542px;">
                             </div>
-                        <% }) %>
-                        
+                            <% }) %>
+
                     </div>
                 </div>
                 <div class="col-lg-5 offset-lg-1">
@@ -28,10 +30,12 @@
                         <ul class="list">
                             <li><a href="#"><span>Category</span> : <%= product.category %></a></li>
                             <% if (product.inStock> 0) { %>
-                                <li><a href="#"><span>Availibility</span> : <span class="text-success">In Stock</span></a></li>
-                            <% }else{ %>
-                                <li><a href="#"><span>Availibility</span> : <span class="text-danger">Out of Stock</span></a></li>
-                            <% } %>
+                                <li><a href="#"><span>Availibility</span> : <span class="text-success">In
+                                            Stock</span></a></li>
+                                <% }else{ %>
+                                    <li><a href="#"><span>Availibility</span> : <span class="text-danger">Out of
+                                                Stock</span></a></li>
+                                    <% } %>
                         </ul>
                         <p>
                             <%= product.description %>
@@ -235,5 +239,7 @@
     </section>
     <!--================End Product Description Area =================-->
 
+
+   
 
     <%- include('./partials/footer') %>
