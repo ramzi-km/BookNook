@@ -20,16 +20,16 @@
 					<div class="login_form_inner">
 						<h3>Log in to enter</h3>
 						<form class="row login_form" action="/login" method="post" id="contactForm"
-							novalidate="novalidate">
+							>
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" id="name" name="email" required
+								<input type="email" class="form-control" id="name" name="email"
 									placeholder="Email" onfocus="this.placeholder = ''"
-									onblur="this.placeholder = 'Email'">
+									onblur="this.placeholder = 'Email'" required>
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" id="name" name="password" required
+								<input type="text" class="form-control" id="name" name="password"
 									placeholder="Password" onfocus="this.placeholder = ''"
-									onblur="this.placeholder = 'Password'">
+									onblur="this.placeholder = 'Password'" required>
 								<label for="Invalid" class="text-danger">
 									<%= error %>
 								</label>

@@ -1,6 +1,4 @@
-
-
-.show {
+.shows {
   width: 100%;
   height: 100%;
 }
@@ -13,7 +11,8 @@
   left: 25px;
 }
 
-.small-img .icon-left, .small-img .icon-right {
+.small-img .icon-left,
+.small-img .icon-right {
   width: 12px;
   height: 24px;
   cursor: pointer;
@@ -23,11 +22,18 @@
   margin: auto 0;
 }
 
-.small-img .icon-left { transform: rotate(180deg) }
+.small-img .icon-left {
+  transform: rotate(180deg);
+}
 
-.small-img .icon-right { right: 0; }
+.small-img .icon-right {
+  right: 0;
+}
 
-.small-img .icon-left:hover, .small-img .icon-right:hover { opacity: .5; }
+.small-img .icon-left:hover,
+.small-img .icon-right:hover {
+  opacity: 0.5;
+}
 
 .small-container {
   width: 310px;
@@ -52,22 +58,30 @@
   float: left;
 }
 
-.small-container .show-small-img:last-of-type { margin-right: 0; }
+.small-container .show-small-img:last-of-type {
+  margin-right: 0;
+}
 
-.show div{
+.shows div {
   z-index: 150 !important;
 }
-@media only screen and (max-width: 800px) {
-
-  .small-img{
+@media only screen and (max-width: 991px) {
+  .small-img {
     left: 0px !important;
   }
-  .product-main{
+  .product-main {
     overflow: hidden;
-  }
-  .show div{
     display: none !important;
   }
-
+  .shows div {
+    display: none !important;
+  }
+  .imageSliderMobile {
+    display: block !important;
+  }
 }
-
+@media only screen and (min-width: 991px) {
+  .imageSliderMobile {
+    display: none !important;
+  }
+}

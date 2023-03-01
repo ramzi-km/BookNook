@@ -10,8 +10,12 @@ module.exports = {
   getShop: async (req, res) => {
     let user = req.session.user;
     try {
-      let products = await Product.find().lean();
-      let categories = await Category.find().lean();
+      let categories = await Category.find({unList:false}).lean();
+      let categoryArray=[]
+      categories.forEach(category => {
+        categoryArray.push(category.name)
+      });
+      let products = await Product.find({unList:false,category:{$in:categoryArray}}).lean();
       let authors = await Product.aggregate([
         { $group: { _id: "$author"} },
       ])

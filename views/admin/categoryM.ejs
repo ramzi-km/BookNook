@@ -293,14 +293,14 @@
                                                         <%= category.name %>
                                                     </td>
                                                     <td>
-                                                        <%= category.createdAt %>
+                                                        <%= category.createdAt.toLocaleString('en-GB') %>
                                                     </td>
                                                     <td>
-                                                        <%= category.updatedAt %>
+                                                        <%= category.updatedAt.toLocaleString('en-GB') %>
                                                     </td>
 
                                                     <td>
-                                                        <div class="d-flex justify-content-end align-items-center">
+                                                        <div class="d-flex justify-content-center align-items-center">
                                                             <a
                                                                 href="/admin/categoryM/editCategory/<%= category._id %> " class="me-3 btn btn-dark"><i
                                                                     class="mdi mdi-pencil "></i></a>

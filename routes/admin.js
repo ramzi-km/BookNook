@@ -2,32 +2,12 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 
-// -------image upload-------------//
-
-let multerStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/images/productImages");
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
-  },
-});
-
-let upload = multer({
-  storage: multerStorage,
-});
-let uploadImages = upload.fields([
-  { name: "mainImage", maxCount: 1 },
-  { name: "coverImage", maxCount: 1 },
-  { name: "extraImages", maxCount: 3 },
-]);
-
-//-----------------xx------------------//
 
 //-----------------------------------Middlewares-------------------------------------------//
 
 const { verfiyLoggedIn } = require("../middlewares/verifyAdminLoggedIn");
 const { verifyLoggedOut } = require("../middlewares/verifyAdminLoggedOut");
+const { uploadImages } = require('../middlewares/multer.js');
 
 //-----------------------------------Controllers-------------------------------------------//
 
@@ -86,9 +66,9 @@ router.get("/userM/:id", verfiyLoggedIn, blockUser);
 //get product management page
 router.get("/productM", verfiyLoggedIn, getProductM);
 // get add product
-router.get("/productM/addProduct", verfiyLoggedIn, getAddProduct);
+router.get("/productM/addProduct", verfiyLoggedIn,getAddProduct);
 // post add product
-router.post("/productM/addProduct", verfiyLoggedIn, uploadImages, addProduct);
+router.post("/productM/addProduct", verfiyLoggedIn,uploadImages, addProduct);
 // get edit product page
 router.get("/productM/editProduct/:id", verfiyLoggedIn, getEditProduct);
 // post edit product page

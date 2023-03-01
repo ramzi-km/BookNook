@@ -6,8 +6,10 @@ const User = require("../models/userModel.js");
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
 const Coupon = require("../models/couponModel.js");
-const Order = require('../models/orderModel.js');
+const Order = require("../models/orderModel.js");
 
+//-------------------------middlewares----------------------------//
+const {uploadImages} = require("../middlewares/multer.js");
 
 let addCategoryError = null;
 let editCategoryError = null;
@@ -94,7 +96,7 @@ module.exports = {
       addProductMessage = "product added successfully";
       res.redirect("/admin/productM");
     } catch (err) {
-      console.log(err);
+      res.send(err);
     }
   },
   // get edit product page
@@ -112,7 +114,8 @@ module.exports = {
   // post edit product page
   editProduct: async (req, res) => {
     let productId = req.params.id;
-    await Product.updateOne({ _id: productId },
+    await Product.updateOne(
+      { _id: productId },
       {
         name: req.body.name,
         author: req.body.author,
@@ -122,7 +125,8 @@ module.exports = {
         inStock: req.body.inStock,
         description: req.body.description,
         richDescription: req.body.richDescription,
-      })
+      }
+    );
     if (req.files.mainImage && req.files.coverImage && req.files.extraImages) {
       await Product.updateOne(
         { _id: productId },
@@ -248,12 +252,15 @@ module.exports = {
   },
   //add category
   addCategory: async (req, res) => {
-    let category = await Category.findOne({ name: req.body.category });
+    req.body.category = req.body.category.toLowerCase();
+    let categoryName =
+      req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
+    let category = await Category.findOne({ name: categoryName });
     if (category) {
       addCategoryError = "category already exist";
       res.redirect("/admin/categoryM/addCategory");
     } else {
-      const newCategory = await Category.create({ name: req.body.category });
+      const newCategory = await Category.create({ name: categoryName });
       res.redirect("/admin/categoryM");
     }
   },
@@ -271,8 +278,13 @@ module.exports = {
   },
   //edit category
   editCategory: async (req, res) => {
-    let categoryExist = await Category.findOne({ name: req.body.category });
-    if (req.session.editingCategory.name == req.body.category) {
+    req.body.category = req.body.category.toLowerCase();
+    let categoryName =
+      req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
+
+    let categoryExist = await Category.findOne({ name: categoryName });
+
+    if (req.session.editingCategory.name == categoryName) {
       res.redirect("/admin/categoryM");
     } else if (categoryExist) {
       editCategoryError = "category already exist";
@@ -282,7 +294,7 @@ module.exports = {
     } else {
       await Category.updateOne(
         { _id: req.session.editingCategory._id },
-        { name: req.body.category }
+        { name: categoryName }
       );
       req.session.editingCategory = null;
       editCategoryError = null;
@@ -351,8 +363,8 @@ module.exports = {
       res.redirect("/admin/couponM");
     }
   },
-   //unList Coupon
-   unListCoupon: async (req, res) => {
+  //unList Coupon
+  unListCoupon: async (req, res) => {
     let couponId = req.params.id;
     let coupon = await Coupon.findById(couponId);
     coupon.unList = true;
@@ -368,14 +380,12 @@ module.exports = {
     res.redirect("/admin/couponM");
   },
 
-   //--------------------------- Coupon management----------------------------//
+  //--------------------------- Coupon management----------------------------//
 
-   // get order management page
-  getOrderM:async (req,res) => {
+  // get order management page
+  getOrderM: async (req, res) => {
     let admin = req.session.admin;
     let orders = await Order.find().lean();
     res.render("admin/orderM", { admin, orders });
   },
-
-
 };

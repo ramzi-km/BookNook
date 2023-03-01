@@ -302,7 +302,7 @@
                                                         <%= coupon.discountPercentage %>
                                                     </td>
                                                     <td>
-                                                        <%= coupon.expiryDate %>
+                                                        <%= coupon.expiryDate.toLocaleString("en-GB") %>
                                                     </td>
                                                     <td>
                                                         <%= coupon.minPurchaseAmount %>
@@ -312,7 +312,7 @@
                                                     </td>
 
                                                     <td>
-                                                        <div class="d-flex justify-content-end align-items-center">
+                                                        <div class="d-flex justify-content-center align-items-center">
                                                             <a
                                                                 href="/admin/couponM/editCoupon/<%= coupon._id %> " class="me-3 btn btn-dark"><i
                                                                     class="mdi mdi-pencil "></i></a>
