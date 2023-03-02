@@ -7,7 +7,6 @@ const multer = require("multer");
 
 const { verfiyLoggedIn } = require("../middlewares/verifyAdminLoggedIn");
 const { verifyLoggedOut } = require("../middlewares/verifyAdminLoggedOut");
-const { uploadImages } = require('../middlewares/multer.js');
 
 //-----------------------------------Controllers-------------------------------------------//
 
