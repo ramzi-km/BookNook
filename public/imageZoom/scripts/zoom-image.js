@@ -26,7 +26,8 @@
         $(this).each(function() {
             var self = $(this).css({position: 'relative'});
             var selfOffset = self.offset();
-            var imageW = self.width(); // 图片高度
+            var imageW = self.width(); // 图片高度       new Error('couldnt get details')
+
             var imageH = self.height();
 
             self.find('img').css({

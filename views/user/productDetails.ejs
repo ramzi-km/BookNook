@@ -6,11 +6,11 @@
             <div class="row s_product_inner">
 
                 <div class="col-lg-6">
-                    <div class="d-flex flex-column product-main">
+                    <div class="d-flex flex-column align-items-center product-main">
                         <!-- Primary carousel image -->
-                        <div class="shows" href="1.jpg" style="height: 540px">
+                        <div class="shows"  style="height: 540px; width:350px">
                             <img src="/images/productImages/<%= product.mainImage[0].filename %>" id="show-img"
-                                style="max-height:80%;">
+                                style="max-height:80%;" alt="">
                         </div>
 
                         <!-- Secondary carousel image thumbnail gallery -->
@@ -32,15 +32,15 @@
                         </div>
                     </div>
                     <div class="s_Product_carousel imageSliderMobile">
-                        <div class="single-prd-item " style="max-height: 542px;">
-                            <img class="img-fluid img_producto"
+                        <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;">
+                            <img class="img-fluid "
                                 src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
-                                style="height: 400px;">
+                                style="height: 100%; width: 100%;">
                         </div>
                         <% product.extraImages.forEach(image=> { %>
-                            <div class="single-prd-item img_producto_container">
+                            <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;" >
                                 <img class="img-fluid" src="/images/productImages/<%= image.filename %>" alt=""
-                                    style="height: 400px;">
+                                    style="height: 100%; width: 100%;" >
                             </div>
                             <% }) %>
 

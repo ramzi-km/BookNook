@@ -23,7 +23,7 @@ module.exports = {
       res.render("user/shop", { user, products, categories,authors });
     } catch (err) {
       console.log(err);
-      res.redirect("/");
+      res.send(err)
     }
   },
   getProductDetails:async(req,res) => {
@@ -34,8 +34,7 @@ module.exports = {
 
       res.render('user/productDetails',{user,product})
     } catch (err) {
-      console.log(err);
-      res.redirect('back')
+      res.send(err)
     }
   },
 };

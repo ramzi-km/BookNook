@@ -68,11 +68,15 @@ router.get("/productM", verfiyLoggedIn, getProductM);
 // get add product
 router.get("/productM/addProduct", verfiyLoggedIn,getAddProduct);
 // post add product
-router.post("/productM/addProduct", verfiyLoggedIn,uploadImages, addProduct);
+router.post("/productM/addProduct", verfiyLoggedIn,addProduct);
+
+
+
 // get edit product page
 router.get("/productM/editProduct/:id", verfiyLoggedIn, getEditProduct);
 // post edit product page
-router.post("/productM/editProduct/:id", verfiyLoggedIn,uploadImages,editProduct);
+router.post("/productM/editProduct/:id", verfiyLoggedIn,editProduct);
+
 
 // Unlist product
 router.get("/productM/unList/:id", verfiyLoggedIn, unListProduct);

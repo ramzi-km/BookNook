@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const multer = require("multer");
 //------------------------------ Models-----------------------------//
 
 const User = require("../models/userModel.js");
@@ -8,12 +8,23 @@ const Category = require("../models/categoryModel.js");
 const Coupon = require("../models/couponModel.js");
 const Order = require("../models/orderModel.js");
 
-//-------------------------middlewares----------------------------//
-const {uploadImages} = require("../middlewares/multer.js");
+//----------------------------------------------------------------//
 
-let addCategoryError = null;
-let editCategoryError = null;
-let addProductMessage = null;
+//-------------------------middlewares----------------------------//
+
+const { uploadImages } = require("../middlewares/multer.js");
+
+//----------------------------------------------------------------//
+
+//-------------------------helpers-------------------------------//
+
+function getImageFieldsToUpdate(files) {
+  const fields = {};
+  if (files.mainImage) fields.mainImage = files.mainImage;
+  if (files.coverImage) fields.coverImage = files.coverImage;
+  if (files.extraImages) fields.extraImages = files.extraImages;
+  return fields;
+}
 
 function formattedDate(d) {
   let month = String(d.getMonth() + 1);
@@ -25,6 +36,16 @@ function formattedDate(d) {
 
   return `${year}-${month}-${day}`;
 }
+
+//-------------------------------------------------------------//
+
+let addCategoryError = null;
+let editCategoryError = null;
+let addProductMessage = null;
+let addProductFailMessage = null;
+let editProductMessage = null;
+let editProductFailMessage = null;
+let imageFileError = null;
 
 module.exports = {
   getPanel: async (req, res) => {
@@ -63,178 +84,164 @@ module.exports = {
 
   getProductM: async (req, res) => {
     let admin = req.session.admin;
-    let products = await Product.find().lean();
-    res.render("admin/productM", {
-      admin,
-      products,
-      message: addProductMessage,
-    });
-    addProductMessage = null;
+    try {
+      let products = await Product.find().lean();
+      res.render("admin/productM", {
+        admin,
+        products,
+        message: addProductMessage,
+        failMessage: addProductFailMessage,
+        editMessage: editProductMessage,
+        editFailMessage: editProductFailMessage,
+      });
+      addProductMessage = null;
+      addProductFailMessage = null;
+      editProductFailMessage = null;
+      editProductMessage = null;
+    } catch (error) {
+      res.send(error);
+    }
   },
   //get add product page
   getAddProduct: async (req, res) => {
     let admin = req.session.admin;
-    let categories = await Category.find().lean();
-    res.render("admin/addProduct", { admin, categories });
+    try {
+      let categories = await Category.find().lean();
+      res.render("admin/addProduct", {
+        admin,
+        categories,
+        imageError: imageFileError,
+      });
+      imageFileError = null;
+    } catch (error) {
+      res.send(error);
+    }
   },
   //post add product page
   addProduct: async (req, res) => {
-    try {
-      const newProduct = await Product.create({
-        name: req.body.name,
-        author: req.body.author,
-        category: req.body.category,
-        mrp: req.body.mrp,
-        price: req.body.price,
-        inStock: req.body.inStock,
-        description: req.body.description,
-        richDescription: req.body.richDescription,
-        mainImage: req.files.mainImage,
-        coverImage: req.files.coverImage,
-        extraImages: req.files.extraImages,
-      });
-      addProductMessage = "product added successfully";
-      res.redirect("/admin/productM");
-    } catch (err) {
-      res.send(err);
-    }
+    uploadImages(req, res, async function (err) {
+      if (err instanceof multer.MulterError) {
+        // a multer error occured when uploading
+        imageFileError = "choose only image files";
+        res.redirect("/admin/productM/addProduct");
+        return;
+      } else if (err) {
+        // an unknown error occured while uploading
+        imageFileError =
+          "error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files";
+        res.redirect("/admin/productM/addProduct");
+        return;
+      }
+      // everything went fine
+      try {
+        const fields = {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          mainImage: req.files.mainImage,
+          coverImage: req.files.coverImage,
+          extraImages: req.files.extraImages,
+        };
+        const newProduct = await Product.create(fields);
+        imageFileError = null;
+        addProductMessage = "product added successfully";
+        res.redirect("/admin/productM");
+      } catch (err) {
+        addProductFailMessage = "Failed to add product";
+        res.redirect("/admin/productM");
+      }
+    });
   },
   // get edit product page
   getEditProduct: async (req, res) => {
     let admin = req.session.admin;
-    const categories = await Category.find().lean();
-    const product = await Product.findOne({ _id: req.params.id });
-    req.session.editingProduct = product;
-    res.render("admin/editProduct", {
-      categories,
-      admin,
-      product,
-    });
+    try {
+      const categories = await Category.find().lean();
+      const product = await Product.findOne({ _id: req.params.id });
+      req.session.editingProduct = product;
+      res.render("admin/editProduct", {
+        categories,
+        admin,
+        product,
+        imageError: imageFileError,
+      });
+      imageFileError = null;
+    } catch (error) {
+      res.send(error);
+    }
   },
   // post edit product page
-  editProduct: async (req, res) => {
-    let productId = req.params.id;
-    await Product.updateOne(
-      { _id: productId },
-      {
-        name: req.body.name,
-        author: req.body.author,
-        category: req.body.category,
-        mrp: req.body.mrp,
-        price: req.body.price,
-        inStock: req.body.inStock,
-        description: req.body.description,
-        richDescription: req.body.richDescription,
+  editProduct: (req, res) => {
+    uploadImages(req, res, async function (err) {
+      if (err instanceof multer.MulterError) {
+        // a multer error occured when uploading
+        imageFileError = "choose only image files";
+        res.redirect(`/admin/productM/editProduct/${req.params.id}`);
+        return;
+      } else if (err) {
+        // an unknown error occured while uploading
+        imageFileError =
+          "error occured when uploading images,make sure you only chose 3 images on side images input and all the chosen files are image files";
+        res.redirect(`/admin/productM/editProduct/${req.params.id}`);
+        return;
       }
-    );
-    if (req.files.mainImage && req.files.coverImage && req.files.extraImages) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          mainImage: req.files.mainImage,
-          coverImage: req.files.coverImage,
-          extraImages: req.files.extraImages,
+
+      // everything went fine //
+      try {
+        let productId = req.params.id;
+        const fieldsToUpdate = {
+          name: req.body.name,
+          author: req.body.author,
+          category: req.body.category,
+          mrp: req.body.mrp,
+          price: req.body.price,
+          inStock: req.body.inStock,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+        };
+        await Product.updateOne({ _id: productId }, fieldsToUpdate);
+
+        const imageFieldsToUpdate = getImageFieldsToUpdate(req.files);
+        if (Object.keys(imageFieldsToUpdate).length > 0) {
+          await Product.updateOne({ _id: productId }, imageFieldsToUpdate);
         }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      req.files.mainImage &&
-      req.files.coverImage &&
-      !req.files.extraImages
-    ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          mainImage: req.files.mainImage,
-          coverImage: req.files.coverImage,
-        }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      req.files.mainImage &&
-      !req.files.coverImage &&
-      req.files.extraImages
-    ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          mainImage: req.files.mainImage,
-          extraImages: req.files.extraImages,
-        }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      !req.files.mainImage &&
-      req.files.coverImage &&
-      req.files.extraImages
-    ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          coverImage: req.files.coverImage,
-          extraImages: req.files.extraImages,
-        }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      !req.files.mainImage &&
-      !req.files.coverImage &&
-      req.files.extraImages
-    ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          extraImages: req.files.extraImages,
-        }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      !req.files.mainImage &&
-      req.files.coverImage &&
-      !req.files.extraImages
-    ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          coverImage: req.files.coverImage,
-        }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      req.files.mainImage &&
-      !req.files.coverImage &&
-      !req.files.extraImages
-    ) {
-      await Product.updateOne(
-        { _id: productId },
-        {
-          mainImage: req.files.mainImage,
-        }
-      );
-      res.redirect("/admin/productM");
-    } else if (
-      !req.files.mainImage &&
-      !req.files.coverImage &&
-      !req.files.extraImages
-    ) {
-      res.redirect("/admin/productM");
-    }
+        editProductMessage = "Product edited successfully";
+        imageFileError = null;
+        res.redirect("/admin/productM");
+      } catch (error) {
+        editProductFailMessage = "Failed to edit product";
+        res.redirect("/admin/productM");
+      }
+    });
   },
   // unlist product
   unListProduct: async (req, res) => {
-    let productId = req.params.id;
-    let product = await Product.findById(productId);
-    product.unList = true;
-    await product.save();
-    res.redirect("/admin/productM");
+    try {
+      let productId = req.params.id;
+      let product = await Product.findById(productId);
+      product.unList = true;
+      await product.save();
+      res.redirect("/admin/productM");
+    } catch (error) {
+      res.send(error);
+    }
   },
   //list product
   listProduct: async (req, res) => {
-    let productId = req.params.id;
-    let product = await Product.findById(productId);
-    product.unList = false;
-    await product.save();
-    res.redirect("/admin/productM");
+    try {
+      let productId = req.params.id;
+      let product = await Product.findById(productId);
+      product.unList = false;
+      await product.save();
+      res.redirect("/admin/productM");
+    } catch (error) {
+      res.send(error);
+    }
   },
 
   //-------------------------- category management------------------------//
