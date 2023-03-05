@@ -60,7 +60,6 @@ module.exports = {
         pageCount,
       });
     } catch (err) {
-      console.log(err);
       res.send(err);
     }
   },
