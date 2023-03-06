@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+
+<head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="/images/logo.png">
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>BookNook</title>
+    <!--
+		CSS
+		============================================= -->
+    <link rel="stylesheet" href="/css/linearicons.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/themify-icons.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/owl.carousel.css">
+    <link rel="stylesheet" href="/css/nice-select.css">
+    <link rel="stylesheet" href="/css/nouislider.min.css">
+    <link rel="stylesheet" href="/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- font Awesome  -->
+    <script src="https://kit.fontawesome.com/4bb28dc21d.js" crossorigin="anonymous"></script>
+    <!-- font awesome -->
+
+    <!--------------- Image zoom --------------->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+
+
+    <!-- Basic Styles For Gallery -->
+    <link rel="stylesheet" type="text/css" href="/imageZoom/style.css">
+
+    <!---------------  Image zoom ------------------>
+
+
+    <!--------------- 2nd template files ------------------>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/template2/css/style.css" type="text/css">
+
+    <!--------------- 2nd template files ------------------>
+
+</head>
+
+<body style="background-color: #f1f1f1;">
+
+    <!-- Start Header Area -->
+    <header class="header_area sticky-header">
+        <div class="main_menu">
+            <nav class="navbar navbar-expand-lg navbar-light main_box">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <a class="navbar-brand logo_h" href="/"><img src="/images/logo.png" width="30%" alt=""><span
+                            class="ml-3">Book<span class="text-danger">Nook</span></span></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav menu_nav ml-auto">
+                            <li class="nav-item "><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/cart"><span style="font-size: large;"><i
+                                            class="fa-solid fa-cart-shopping"></i></span></a></li>
+                            <li class="nav-item"><a class="nav-link" href="#"><span style="font-size: large;"><i
+                                            class="fa-regular fa-heart"></i></span></a></li>
+                            <% if (user) { %>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                        aria-haspopup="true" aria-expanded="false"><span style="font-size: large;"><i
+                                                class="fa-solid fa-circle-user"></i> </span>
+                                        <%= user.name %>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item"><a class="nav-link" href="#"><i
+                                                    class="fa-solid fa-address-card"></i> Profile</a></li>
+                                        <li class="nav-item">
+                                            <form action="/logout" method="post">
+                                                <button class="nav-link " type="submit" style="width: 100%;"><i
+                                                        class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <% } else { %>
+                                    <li class="nav-item"><a class="nav-link" href="/login"><span
+                                                style="font-size: large;"><i class="fa-solid fa-circle-user"></i></span>
+                                            LogIn <i class="fa-solid fa-right-to-bracket"></i></a></li>
+                                    <% } %>
+                        </ul>
+                        <!-- <ul class="nav navbar-nav navbar-right">
+						</ul> -->
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- <div class="search_input" id="search_input_box">
+			<div class="container">
+				<form class="d-flex justify-content-between">
+					<input type="text" class="form-control" id="search_input" placeholder="Search Here">
+					<button type="submit" class="btn"></button>
+					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+				</form>
+			</div>
+		</div> -->
+    </header>
+    <!-- End Header Area -->
+    <section>
+        <div class="container-fluid " style="height: 120px;"></div>
+    </section>
+    <!-- start banner Area -->
+    <!-- End banner Area -->
+
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad">
+        <div class="container">
+            <h4 class="pb-3"><i class="fa-solid fa-cart-shopping"> Cart</i></h4>
+            <div class="row">
+                <div class="col-lg-8" style="background-color: #ffffff; padding: 2rem;">
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% products.forEach(product=> { %>
+                                    <tr>
+                                        <td class="product__cart__item" style="vertical-align: middle;">
+                                            <div class="product__cart__item__pic">
+                                                <img src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                                    width="75px" alt="">
+                                            </div>
+                                            <div class="product__cart__item__text">
+                                                <h6><a href="/productDetails/<%= product._id %>">
+                                                        <%= product.name %>
+                                                    </a></h6>
+                                                <h5>₹<%= product.price %>
+                                                </h5><br>
+                                                <h6> <strike>₹<%= product.mrp %></strike></h6>
+
+                                            </div>
+                                        </td>
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    <input type="text" value="1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="cart__price">₹ 30.00</td>
+                                        <td class="cart__close"><a href="/removeFromCart/<%= product._id %>"
+                                                onclick="return confirm('Do you really want to remove <%= product.name %> from cart ?')"><i
+                                                    class="fa fa-close"></i></a></td>
+                                    </tr>
+                                    <% }) %>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn">
+                                <a href="/shop">Continue Shopping</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+
+                    <div class="cart__total" style="background-color: #ffffff;">
+                        <h6>Cart total</h6>
+                        <ul>
+                            <li>Subtotal <span>₹ 169.50</span></li>
+                            <li>Discount <span class="text-success">₹ 169.50</span></li>
+                            <li>Total <span class="text-dark">₹ 169.50</span></li>
+                        </ul>
+                        <a href="#" class="primary-btn">Proceed to checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section End -->
+
+
+    <!-- Js Plugins -->
+    <script src="/template2/js/jquery-3.3.1.min.js"></script>
+    <script src="/template2/js/bootstrap.min.js"></script>
+    <script src="/template2/js/jquery.nice-select.min.js"></script>
+    <script src="/template2/js/jquery.nicescroll.min.js"></script>
+    <script src="/template2/js/jquery.magnific-popup.min.js"></script>
+    <script src="/template2/js/jquery.countdown.min.js"></script>
+    <script src="/template2/js/jquery.slicknav.js"></script>
+    <script src="/template2/js/mixitup.min.js"></script>
+    <script src="/template2/js/owl.carousel.min.js"></script>
+    <script src="/template2/js/main.js"></script>
+
+
+    <%- include('./partials/footer') %>

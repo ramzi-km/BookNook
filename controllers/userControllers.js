@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
+
+//-------------Models--------------//
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
+const User = require("../models/userModel.js");
+//---------------xx--------------------//
 
 module.exports = {
   //----------------Home------------------//
@@ -77,5 +81,63 @@ module.exports = {
       res.send(err);
     }
   },
+  //----------------xx---------------------------//
+
+  //--------------Cart page----------//
+  getCart: async (req, res) => {
+    let userId = req.session.user._id;
+    try {
+      let user = await User.findById(userId);
+      let cart = user.cart;
+      const cartQuantities = {};
+      const cartList = cart.map((item) => {
+        cartQuantities[item.id] = item.quantity;
+        return item.id;
+      });
+      const products = await Product.find({
+        _id: { $in: cartList },
+        unlist: false,
+      }).lean();
+
+      res.render("user/cart", { user, products });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+
+  //add product to cart
+  addToCart: async (req, res) => {
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
+    try {
+      const prodExist = await User.find({ _id: userId, "cart.id": prodId });
+      if (prodExist[0]) {
+        res.redirect("/cart");
+      } else {
+        await User.findByIdAndUpdate(userId, {
+          $addToSet: { cart: { id: prodId, quantity: 1 } },
+        });
+        res.redirect("/cart");
+      }
+    } catch (error) {
+      res.send(error);
+    }
+  },
+
+  // remove product from cart
+  removeFromCart: async (req, res) => {
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
+    console.log(userId, prodId);
+    try {
+      await User.findByIdAndUpdate(userId, {
+        $pull: { cart: { id: prodId } },
+      });
+      res.redirect("/cart");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+
   //----------------xx---------------------------//
 };

@@ -3,8 +3,9 @@ const router = express.Router();
 
 //-----------------------------------Middlewares-------------------------------------------//
 
-
 const { verifyLoggedOut } = require("../middlewares/verifyUserLoggeOut.js");
+const { verifyLoggedIn } = require("../middlewares/verifyUserLoggedIn.js");
+const { checkBan } = require('../middlewares/checkBan.js');
 
 //----------------------Controllers---------------//
 const {
@@ -28,33 +29,46 @@ const {
   validateUser,
 } = require("../controllers/userAuthControllers.js");
 
-const { getHome, getShop, getProductDetails } = require("../controllers/userControllers");
-
+const {
+  getHome,
+  getShop,
+  getProductDetails,
+  getCart,
+  addToCart,
+  removeFromCart,
+} = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
 
 //Get Home page
 router.get("/", getHome);
 //post home page
-router.post("/logout",logOut);
+router.post("/logout", logOut);
 
 /* ----------------------Shop page-----------------------------*/
 
 // get shop page
-router.get('/shop',getShop)
+router.get("/shop", getShop);
 
 /* ----------------------Product details page-----------------------------*/
 
-router.get('/productDetails/:id',getProductDetails)
+router.get("/productDetails/:id", getProductDetails);
 
+/* ----------------------Cart page-----------------------------*/
 
+//get cart page
+router.get("/cart",verifyLoggedIn,checkBan, getCart);
+// add product to cart
+router.get("/addToCart/:id",verifyLoggedIn,checkBan, addToCart);
+// remove product from cart
+router.get("/removeFromCart/:id",verifyLoggedIn,checkBan, removeFromCart)
 
 /* -------------------User Authentication----------------------*/
 
 //Get login page
-router.get("/login",verifyLoggedOut, getLogin);
+router.get("/login", verifyLoggedOut, getLogin);
 //post login page
-router.post("/login",verifyLoggedOut, validateUser);
+router.post("/login", verifyLoggedOut, validateUser);
 
 //Get signup page
 router.get("/signup", getSignup);
@@ -69,11 +83,11 @@ router.post("/verifySignupOtp", verifySignupOtp);
 router.get("/resendSignupOtp", resendSignupOtp);
 
 //get loginverification page
-router.get("/loginVerification",verifyLoggedOut, getloginverification);
+router.get("/loginVerification", verifyLoggedOut, getloginverification);
 //get resendLoginOtp
-router.get("/resendLoginOtp",verifyLoggedOut, resendLoginOtp);
+router.get("/resendLoginOtp", verifyLoggedOut, resendLoginOtp);
 //post loginverification page
-router.post("/verifyLoginOtp",verifyLoggedOut, verifyLoginOtp);
+router.post("/verifyLoginOtp", verifyLoggedOut, verifyLoginOtp);
 
 // get reset password email input page
 router.get("/emailInput", getEmailInput);
@@ -86,5 +100,7 @@ router.get("/resetPassword", getResetPassword);
 router.post("/resetPassword", postResetPassword);
 //get resend password otp page
 router.get("/resendPasswordOtp", resendPasswordOtp);
+
+/* -------------------xx----------------------*/
 
 module.exports = router;
