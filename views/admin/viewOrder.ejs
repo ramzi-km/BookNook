@@ -241,10 +241,10 @@
             <!-- Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
             <div class="page-breadcrumb">
-                <div class="row">
-                    <div class="col-12 d-flex no-block align-items-center justify-content-between">
-                        <h3 class="page-title">Edit product</h3>
-                        <a href="/admin/productM" class="btn btn-rounded btn-dark"><i class="fa fa-chevron-circle-left">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-10 d-flex no-block align-items-center justify-content-between">
+                        <h3 class="page-title">View order</h3>
+                        <a href="/admin/orderM" class="btn btn-rounded btn-dark"><i class="fa fa-chevron-circle-left">
                                 Back</i></a>
                     </div>
                 </div>
@@ -265,140 +265,53 @@
                 <!-- ============================================================== -->
                 <!-- Sales chart -->
                 <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-12">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-8">
                         <div class="card">
-                            <div class="card-body" style="background-color: #061c31;">
+                            <div class="card-header">
+                                <h4 class="card-title text-success">Order Id:<%= order.orderId %>
+                                </h4>
+                            </div>
+                            <div class="d-flex justify-content-center" style="width:100%">
+                                <img width="200px" src="/images/productImages/<%= order.product.mainImage %>">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">Product: <br><span class="text-info">
+                                        <%= order.product.name %>
+                                    </span></h3>
+                                <h4 class="card-title">Price:<br> <span class="text-danger">₹<%= order.product.price %>
+                                            </span></h4>
+                                <h4 class="card-title">Address:</h4>
+                                <p class="card-text">
+                                    <%= order.address.name %><br>
+                                        <%= order.address.mobile %><br>
+                                            <%= order.address.address %><br>
+                                                <%= order.address.pin %>
+                                </p>
+                                <h4 class="card-title">Status:</h4>
+                                <% if (order.status == "pending") { %>
+                                    <p class="card-text text-warning"><%= order.status %></p>
+                                <% }else if(order.status == "shipped"){ %>
+                                <p class="card-text text-info"><%= order.status %></p>
+                                <% }else if(order.status == "delivered"){ %>
+                                <p class="card-text text-success"><%= order.status %></p>
+                                <% }else if(order.status == "return processing"){ %>
+                                <p class="card-text text-primary"><%= order.status %></p>
+                                <% }else if(order.status == "returned"){ %>
+                                <p class="card-text text-danger"><%= order.status %></p>
+                                <% } %>
+                                <h4 class="card-title">Quantity:</h4>
+                                <p class="card-text text-dark "><%= order.quantity %></p>
+                                <h4 class="card-title">Total</h4>
+                                <p class="card-text text-danger ">₹<%= order.total %></p>
+                                <h4 class="card-title">Amount to pay:</h4>
+                                <p class="card-text text-warning ">₹<%= order.amountToPay %></p>
+                                <h4 class="card-title">Payment type:</h4>
+                                <p class="card-text text-dark "><%= order.paymentType %></p>
+                                <h4 class="card-title">Ordered Date:</h4>
+                                <p class="card-text text-dark "><%= order.createdAt.toLocaleString("en-GB") %></p>
+
                                 
-                                <form class="form-horizontal mt-4" id="form"
-                                    action="/admin/productM/editProduct/<%= product._id %>" method="post"
-                                    enctype="multipart/form-data">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Name</label>
-                                            <input type="text" class="form-control" name="name"
-                                                value="<%= product.name %>" placeholder="Book title" required>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white for=" Author">Author</label>
-                                            <input type="text" id="Author" name="author" value="<%= product.author %>"
-                                                class="form-control" placeholder="Name of the Author" required>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Category</label>
-                                            <select class="form-select shadow-none col-12" name="category"
-                                                id="inlineFormCustomSelect" required>
-                                                <option selected value="<%= product.category %>">
-                                                    <%= product.category %>
-                                                </option>
-                                                <% categories.forEach(category=> { %>
-                                                    <option value="<%=category.name %>">
-                                                        <%= category.name %>
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">MRP</label>
-                                            <input type="text" class="form-control" name="mrp"
-                                                value="<%= product.mrp %>" placeholder="Maximum retailing price"
-                                                required>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Price</label>
-                                            <input type="text" class="form-control" name="price"
-                                                value="<%= product.price %>" placeholder="BookNook retailing price"
-                                                required>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Stock</label>
-                                            <input type="number" class="form-control" name="inStock"
-                                                value="<%= product.inStock %>"
-                                                placeholder="Available quantity of product" required>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="text-white">Description</label>
-                                        <input type="text" class="form-control" name="description"
-                                            value="<%= product.description %>" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="text-white">Rich Description</label>
-                                        <textarea class="form-control" name="richDescription" rows="5"
-                                            required><%= product.richDescription %></textarea>
-                                    </div>
-                                    <div class="row">
-
-                                        <div class="col-md-4 ">
-
-                                            <div class="form-outline">
-                                                <img style="width: 150px; height: 200px;"
-                                                    src="/images/productImages/<%= product.mainImage[0].filename %>"
-                                                    id="mainImageDisplay" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 ">
-
-                                            <div class="form-outline">
-                                                <img style="width: 300px; height: 200px;"
-                                                    src="/images/productImages/<%= product.coverImage[0].filename %>"
-                                                    id="coverImageDisplay" alt="">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-outline">
-                                                <% product.extraImages.forEach(image=> { %>
-                                                    <a href="/admin/productM/editProduct/deleteExtraImage/<%= image.filename %>"
-                                                        onclick="return confirm('Do you really want to Delete this image')">
-                                                        <img style="width: 120px; height: 200px;"
-                                                            src="/images/productImages/<%= image.filename %>" alt="">
-                                                    </a>
-                                                <% }) %>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="row mt-4">
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Image</label>
-                                            <input type="file" class="form-control" accept="image/*" name="mainImage">
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Cover Image</label>
-                                            <input type="file" class="form-control" accept="image/*" name="coverImage">
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="text-white">Side Image</label>
-                                            <input id="images" type="file" multiple class="form-control"
-                                            accept="image/*" name="extraImages">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <label for="" class="text-danger"><%= imageError %></label>
-                                    </div>
-
-                                    <div class="d-flex justify-content-center mt-4">
-                                        <button id="submit" class="btn btn-success" type="submit"><span
-                                                class="text-white"> Save</span></button>
-                                    </div>
-
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -423,7 +336,7 @@
         <!-- ============================================================== -->
         <footer class="footer text-center">
 
-            <a href=""></a>.
+
         </footer>
         <!-- ============================================================== -->
         <!-- End footer -->

@@ -41,6 +41,8 @@ const {
   unListCoupon,
   listCoupon,
   getOrderM,
+  getOrderView,
+  updateOrderStatus,
 } = require("../controllers/adminControllers");
 
 // get admin panel
@@ -117,7 +119,13 @@ router.get("/couponM/unList/:id", verfiyLoggedIn,unListCoupon);
 router.get("/couponM/list/:id", verfiyLoggedIn,listCoupon);
 
 //-------------------------- Order management------------------------//
+
+// get order management page
 router.get("/orderM",verfiyLoggedIn,getOrderM)
+// update order status
+router.post('/orderM/:id',verfiyLoggedIn,updateOrderStatus)
+// get order views page
+router.get('/orderM/viewOrder/:id',verfiyLoggedIn,getOrderView)
 
 
 module.exports = router;

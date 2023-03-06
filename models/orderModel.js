@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Declare the Schema of the Mongo model
 var orderSchema = new mongoose.Schema({
-    orderStatus:{
+    status:{
         type:String,
         default:"pending"
     },
@@ -36,7 +36,7 @@ var orderSchema = new mongoose.Schema({
         type:Number,
 
     },
-    amountPayable:{
+    amountToPay:{
         type:Number,
         default:0,
     },

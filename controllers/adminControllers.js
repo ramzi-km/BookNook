@@ -387,7 +387,7 @@ module.exports = {
     res.redirect("/admin/couponM");
   },
 
-  //--------------------------- Coupon management----------------------------//
+  //--------------------------- Order management----------------------------//
 
   // get order management page
   getOrderM: async (req, res) => {
@@ -395,4 +395,30 @@ module.exports = {
     let orders = await Order.find().lean();
     res.render("admin/orderM", { admin, orders });
   },
+
+  // get order view page
+  getOrderView: async(req, res) => {
+    let admin = req.session.admin;
+    let objectId = req.params.id
+    try {
+      let order = await Order.findById(objectId).lean()
+      res.render('admin/viewOrder',{ admin ,order})
+    } catch (error) {
+      res.send(error)
+    }
+  },
+  // update order status
+  updateOrderStatus:async (req,res) => {
+    let status = req.body.status
+    let objectId = req.params.id
+    try {
+      let order = await Order.findById(objectId)
+      order.status = status
+      order.save()
+      res.redirect('/admin/orderM')
+    } catch (error) {
+      res.send(error)
+    }
+  },
+
 };
