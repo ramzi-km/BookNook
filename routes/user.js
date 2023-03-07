@@ -36,6 +36,8 @@ const {
   getCart,
   addToCart,
   removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -62,6 +64,11 @@ router.get("/cart",verifyLoggedIn,checkBan, getCart);
 router.get("/addToCart/:id",verifyLoggedIn,checkBan, addToCart);
 // remove product from cart
 router.get("/removeFromCart/:id",verifyLoggedIn,checkBan, removeFromCart)
+
+// increase quantity
+router.get('/cart/increaseQuantity/:id',verifyLoggedIn,checkBan, increaseQuantity)
+// decrease quantity
+router.get('/cart/decreaseQuantity/:id',verifyLoggedIn,checkBan, decreaseQuantity)
 
 /* -------------------User Authentication----------------------*/
 

@@ -94,12 +94,26 @@ module.exports = {
         cartQuantities[item.id] = item.quantity;
         return item.id;
       });
+
       const products = await Product.find({
         _id: { $in: cartList },
         unlist: false,
       }).lean();
 
-      res.render("user/cart", { user, products });
+      let totalPrice = 0;
+
+      products.forEach((item, index) => {
+        item.cartQuantity = cartQuantities[item._id];
+        totalPrice = totalPrice + item.price * cartQuantities[item._id];
+      });
+
+      let totalMrp = 0;
+
+      products.forEach((item, index) => {
+        totalMrp = totalMrp + item.mrp * cartQuantities[item._id];
+      });
+
+      res.render("user/cart", { user, products, totalPrice, totalMrp });
     } catch (error) {
       res.send(error);
     }
@@ -137,6 +151,41 @@ module.exports = {
     } catch (error) {
       res.send(error);
     }
+  },
+
+  // Increase quantity
+  increaseQuantity: async (req, res) => {
+    const userId = req.session.user._id;
+    const user = await userModel.updateOne(
+      { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
+      {
+        $inc: {
+          "cart.$.quantity": 1,
+        },
+      }
+    );
+    res.redirect("/cart");
+  },
+
+  // Decrease quantity
+  decreaseQuantity: async (req, res) => {
+    const userId = req.session.user._id;
+    let { cart } = await userModel.findOne(
+      {_id:userId, "cart.id": req.params.id },
+      { _id: 0, cart: { $elemMatch: { id: req.params.id } } }
+    );
+    if (cart[0].quantity <= 1) {
+      res.redirect('/cart')
+    }
+    let user = await userModel.updateOne(
+      { _id: req.session.user.id, cart: { $elemMatch: { id: req.params.id } } },
+      {
+        $inc: {
+          "cart.$.quantity": -1,
+        },
+      }
+    );
+    res.redirect('/cart')
   },
 
   //----------------xx---------------------------//
