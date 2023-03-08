@@ -43,6 +43,7 @@ const {
   getOrderM,
   getOrderView,
   updateOrderStatus,
+  deleteExtraImage,
 } = require("../controllers/adminControllers");
 
 // get admin panel
@@ -77,6 +78,8 @@ router.post("/productM/addProduct", verfiyLoggedIn,addProduct);
 router.get("/productM/editProduct/:id", verfiyLoggedIn, getEditProduct);
 // post edit product page
 router.post("/productM/editProduct/:id", verfiyLoggedIn,editProduct);
+// delete extra images individually
+router.get("/productM/editProduct/deleteExtraImage/:prodId/:imageName",verfiyLoggedIn,deleteExtraImage)
 
 
 // Unlist product

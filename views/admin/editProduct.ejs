@@ -306,14 +306,14 @@
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">MRP</label>
-                                            <input type="text" class="form-control" name="mrp"
+                                            <input type="number" class="form-control" name="mrp"
                                                 value="<%= product.mrp %>" placeholder="Maximum retailing price"
                                                 required>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Price</label>
-                                            <input type="text" class="form-control" name="price"
+                                            <input type="number" class="form-control" name="price"
                                                 value="<%= product.price %>" placeholder="BookNook retailing price"
                                                 required>
                                         </div>
@@ -358,9 +358,11 @@
                                         </div>
 
                                         <div class="col-md-4">
+                                            <label for="extraImageDelete" class="text-warning">Click on the image if  you want to remove it</label>
                                             <div class="form-outline">
-                                                <% product.extraImages.forEach(image=> { %>
-                                                    <a href="/admin/productM/editProduct/deleteExtraImage/<%= image.filename %>"
+                                                
+                                                <% product.extraImages.forEach((image,index)=> { %>
+                                                    <a id="extraImageDelete" href="/admin/productM/editProduct/deleteExtraImage/<%= product._id %>/<%= image.filename %>"
                                                         onclick="return confirm('Do you really want to Delete this image')">
                                                         <img style="width: 120px; height: 200px;"
                                                             src="/images/productImages/<%= image.filename %>" alt="">
@@ -384,7 +386,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label class="text-white">Side Image</label>
+                                            <label class="text-white">Side Images</label>
                                             <input id="images" type="file" multiple class="form-control"
                                             accept="image/*" name="extraImages">
                                         </div>
