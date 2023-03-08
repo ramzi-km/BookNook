@@ -3,9 +3,11 @@ const router = express.Router();
 
 //-----------------------------------Middlewares-------------------------------------------//
 
-const { verifyLoggedOut } = require("../middlewares/verifyUserLoggeOut.js");
-const { verifyLoggedIn } = require("../middlewares/verifyUserLoggedIn.js");
-const { checkBan } = require('../middlewares/checkBan.js');
+const {
+  verifyLoggedIn,
+  verifyLoggedOut,
+  checkBan,
+} = require("../middlewares/userAuth.js");
 
 //----------------------Controllers---------------//
 const {
@@ -59,16 +61,26 @@ router.get("/productDetails/:id", getProductDetails);
 /* ----------------------Cart page-----------------------------*/
 
 //get cart page
-router.get("/cart",verifyLoggedIn,checkBan, getCart);
+router.get("/cart", verifyLoggedIn, checkBan, getCart);
 // add product to cart
-router.get("/addToCart/:id",verifyLoggedIn,checkBan, addToCart);
+router.get("/addToCart/:id", verifyLoggedIn, checkBan, addToCart);
 // remove product from cart
-router.get("/removeFromCart/:id",verifyLoggedIn,checkBan, removeFromCart)
+router.get("/removeFromCart/:id", verifyLoggedIn, checkBan, removeFromCart);
 
 // increase quantity
-router.get('/cart/increaseQuantity/:id',verifyLoggedIn,checkBan, increaseQuantity)
+router.get(
+  "/cart/increaseQuantity/:id",
+  verifyLoggedIn,
+  checkBan,
+  increaseQuantity
+);
 // decrease quantity
-router.get('/cart/decreaseQuantity/:id',verifyLoggedIn,checkBan, decreaseQuantity)
+router.get(
+  "/cart/decreaseQuantity/:id",
+  verifyLoggedIn,
+  checkBan,
+  decreaseQuantity
+);
 
 /* -------------------User Authentication----------------------*/
 
