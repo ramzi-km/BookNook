@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 8000;
 
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
+const MongoStore = require("connect-mongo");
 
 //log requests
 app.use(morgan("dev"));
@@ -34,6 +35,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: oneDay },
+    store: MongoStore.create({ mongoUrl: process.env.MONGOOSE_CONNECT }),
   })
 );
 app.use(nocache());

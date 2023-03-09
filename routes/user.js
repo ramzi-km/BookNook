@@ -69,14 +69,14 @@ router.get("/removeFromCart/:id", verifyLoggedIn, checkBan, removeFromCart);
 
 // increase quantity
 router.get(
-  "/cart/increaseQuantity/:id",
+  "/cart/incQuantity/:id",
   verifyLoggedIn,
   checkBan,
   increaseQuantity
 );
 // decrease quantity
 router.get(
-  "/cart/decreaseQuantity/:id",
+  "/cart/decQuantity/:id",
   verifyLoggedIn,
   checkBan,
   decreaseQuantity

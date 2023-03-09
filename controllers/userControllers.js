@@ -73,10 +73,18 @@ module.exports = {
   getProductDetails: async (req, res) => {
     let user = req.session.user;
     let productId = req.params.id;
+    let productInCart = await User.find(
+      {
+        _id: user._id,
+        cart: { $elemMatch: { id: productId } },
+      },
+      { cart: 1 }
+    );
+
     try {
       let product = await Product.findById(productId);
 
-      res.render("user/productDetails", { user, product });
+      res.render("user/productDetails", { user, product, productInCart });
     } catch (err) {
       res.send(err);
     }
@@ -104,13 +112,13 @@ module.exports = {
 
       products.forEach((item, index) => {
         item.cartQuantity = cartQuantities[item._id];
-        totalPrice = totalPrice + item.price * cartQuantities[item._id];
+        totalPrice = totalPrice + item.price * item.cartQuantity;
       });
 
       let totalMrp = 0;
 
       products.forEach((item, index) => {
-        totalMrp = totalMrp + item.mrp * cartQuantities[item._id];
+        totalMrp = totalMrp + item.mrp * item.cartQuantity;
       });
 
       res.render("user/cart", { user, products, totalPrice, totalMrp });
@@ -142,7 +150,6 @@ module.exports = {
   removeFromCart: async (req, res) => {
     const userId = req.session.user._id;
     const prodId = req.params.id;
-    console.log(userId, prodId);
     try {
       await User.findByIdAndUpdate(userId, {
         $pull: { cart: { id: prodId } },
@@ -155,37 +162,74 @@ module.exports = {
 
   // Increase quantity
   increaseQuantity: async (req, res) => {
-    const userId = req.session.user._id;
-    const user = await userModel.updateOne(
-      { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
-      {
-        $inc: {
-          "cart.$.quantity": 1,
+    try {
+      const userId = req.session.user._id;
+      const { cart } = await User.findOne(
+        {
+          _id: userId,
+          cart: { $elemMatch: { id: req.params.id } },
         },
+        { _id: 0, "cart.$": 1 }
+      );
+
+      let quantity = cart[0].quantity;
+      if (quantity > 8) {
+        res.json({ quantity, success: true, increased:false });
+      } else {
+        const user = await User.updateOne(
+          { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
+          {
+            $inc: {
+              "cart.$.quantity": 1,
+            },
+          }
+        );
+        if (user.acknowledged) {
+          quantity++;
+          res.json({ quantity, success: true,increased:true });
+        } else {
+          res.json({ success: false ,increased:false});
+        }
       }
-    );
-    res.redirect("/cart");
+    } catch (error) {
+      res.json({ error, success: false });
+    }
   },
 
   // Decrease quantity
   decreaseQuantity: async (req, res) => {
-    const userId = req.session.user._id;
-    let { cart } = await userModel.findOne(
-      {_id:userId, "cart.id": req.params.id },
-      { _id: 0, cart: { $elemMatch: { id: req.params.id } } }
-    );
-    if (cart[0].quantity <= 1) {
-      res.redirect('/cart')
-    }
-    let user = await userModel.updateOne(
-      { _id: req.session.user.id, cart: { $elemMatch: { id: req.params.id } } },
-      {
-        $inc: {
-          "cart.$.quantity": -1,
+    try {
+      const userId = req.session.user._id;
+      const { cart } = await User.findOne(
+        {
+          _id: userId,
+          cart: { $elemMatch: { id: req.params.id } },
         },
+        { _id: 0, "cart.$": 1 }
+      );
+      let quantity = cart[0].quantity;
+
+      if (quantity <= 1) {
+        res.json({ quantity, success: true ,decreased:false });
+      } else {
+        const user = await User.updateOne(
+          { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
+          {
+            $inc: {
+              "cart.$.quantity": -1,
+            },
+          }
+        );
+        if (user.acknowledged) {
+          quantity--;
+          res.json({ quantity, success: true , decreased:true});
+        } else {
+          res.json({ success: false ,decreased:false });
+        }
       }
-    );
-    res.redirect('/cart')
+    } catch (error) {
+      res.json({ error, success: false });
+    }
   },
 
   //----------------xx---------------------------//

@@ -2,7 +2,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-5">
+            <div class="col-xl-3 col-lg-4 col-md-5 mb-5">
                 <div class="shop__sidebar__search">
                     <form method="get">
                         <input id="productsearchinput" type="text" name="search" value="<%= search %>"
@@ -13,8 +13,10 @@
                 </div>
 
                 <div class="sidebar-categories">
-                    <div class="head">Browse Categories</div>
-                    <ul class="main-categories">
+
+                    <div class="head" data-toggle="collapse" data-target="#categorydiv" aria-expanded="true" 
+                        aria-controls="categorydiv">Browse Categories <i class="fa-solid fa-caret-down"></i></div>
+                    <ul class="main-categories collapse show" id="categorydiv">
                         <li class="main-nav-list"><input class="pixel-radio" type="radio" onchange="this.form.submit()"
                                 id="category1" name="category" value="" <% if (category=="" ) { %>
                             checked
@@ -36,19 +38,22 @@
                     </ul>
                 </div>
                 <div class="sidebar-filter mt-50">
-                    <div class="top-filter-head">Product Filters</div>
+                    <div class="top-filter-head" data-toggle="collapse" data-target="#pricefilter" aria-expanded="true" 
+                    aria-controls="pricefilter">Filters <i class="fa-solid fa-caret-down"></i></div>
 
-                    <div class="common-filter">
+                    <div class="common-filter collapse show" id="pricefilter">
                         <div class="head">Price</div>
 
-                        <ul>
+                        <ul >
                             <li class="filter-list"><input class="pixel-radio" type="radio"
-                                    onchange="this.form.submit()" id="price0" name="price" value="" <% if(price=="" ) { %>
+                                    onchange="this.form.submit()" id="price0" name="price" value="" <% if(price=="" ) {
+                                    %>
                                 checked
                                 <% } %> > <label for="price0">All</label>
                             </li>
                             <li class="filter-list"><input class="pixel-radio" type="radio"
-                                    onchange="this.form.submit()" id="price1" name="price" value="1" <% if(price==1) { %>
+                                    onchange="this.form.submit()" id="price1" name="price" value="1" <% if(price==1) {
+                                    %>
                                 checked
                                 <% } %>> <label for="price1">₹100 - ₹500</label>
                             </li>
@@ -59,7 +64,8 @@
                                         ₹1500</label>
                             </li>
                             <li class="filter-list"><input class="pixel-radio" type="radio"
-                                    onchange="this.form.submit()" id="price3" name="price" value="3" <% if (price==3){ %>
+                                    onchange="this.form.submit()" id="price3" name="price" value="3" <% if (price==3){
+                                    %>
                                 checked
                                 <% } %>><label for="price3">above ₹1500</label>
                             </li>

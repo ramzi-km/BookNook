@@ -142,14 +142,16 @@
                 <div class="row">
                     <div class="empty-container w-100 h-50 d-flex flex-column justify-content-center align-items-center"
                         style="gap:10px">
-                        <img src="/images/empty-cart.webp" height="300px" alt="">
+                        <img src="https://cdni.iconscout.com/illustration/premium/thumb/confusing-woman-due-to-empty-cart-4558760-3780056.png"
+                            height="300px" alt="">
                         <h3>Your Cart is empty!</h3>
                         <p> you haven't added anything to your cart </p>
+                        <a href="/shop"><button class="btn btn-rounder btn-danger">Go to shop</button></a>
                     </div>
                 </div>
                 <% }else{ %>
                     <div class="row">
-                        <div class="col-lg-8" style="background-color: #ffffff; padding: 2rem;">
+                        <div class="col-lg-8 mb-5 " style="background-color: #ffffff; padding: 2rem;">
                             <div class="shopping__cart__table">
                                 <table>
                                     <thead>
@@ -174,21 +176,30 @@
                                                             </a></h6>
                                                         <h5>₹<%= product.price %>
                                                         </h5><br>
-                                                        <h6> <strike>₹<%= product.mrp %></strike></h6>
+                                                        <h6> <del>₹<%= product.mrp %></del></h6>
 
                                                     </div>
                                                 </td>
                                                 <td class="quantity__item">
                                                     <div class="cart-quantity">
                                                         <div class="cartquantiy-box">
-                                                            <button onclick="decQuantity()">-</button>
-                                                            <input type="number" readonly
-                                                                value="<%= product.cartQuantity %>" id="">
-                                                            <button onclick="addQuantity()">+</button>
+                                                            <button
+                                                                onclick="decQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')">-</button>
+                                                            <input type="number" readonly id="<%='q'+product._id %>"
+                                                                value="<%= product.cartQuantity %>">
+                                                            <button
+                                                                onclick="incQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')">+</button>
                                                         </div>
                                                     </div>
+                                                    <b id="<%=product._id%>" class="text-danger">
+                                                        <% if(product.inStock==0){ %>
+                                                            Out Of Stock
+                                                            <% }else if(product.inStock < product.cartQuantity){%>
+                                                                only <%= product.inStock %> left
+                                                                    <% } %>
+                                                    </b>
                                                 </td>
-                                                <td class="cart__price">₹ <%= product.price*product.cartQuantity %>
+                                                <td class="cart__price" id="<%='p'+ product._id %>">₹ <%= product.price*product.cartQuantity %>
                                                 </td>
                                                 <td class="cart__close"><a href="/removeFromCart/<%= product._id %>"
                                                         onclick="return confirm('Do you really want to remove <%= product.name %> from cart ?')"><i
@@ -212,9 +223,9 @@
                             <div class="cart__total" style="background-color: #ffffff;">
                                 <h6>Cart total</h6>
                                 <ul>
-                                    <li>Subtotal <span>₹ <%= totalMrp %></span></li>
-                                    <li>Discount <span class="text-success">- ₹ <%= totalMrp - totalPrice %></span></li>
-                                    <li>Total <span class="text-dark">₹ <%= totalPrice %></span></li>
+                                    <li>Subtotal <span id="totalMrp">₹ <%= totalMrp %></span></li>
+                                    <li>Discount <span class="text-success" id="totalDiscount">- ₹ <%= totalMrp - totalPrice %></span></li>
+                                    <li>Total <span class="text-dark" id="totalPrice">₹ <%= totalPrice %></span></li>
                                 </ul>
                                 <a href="#" class="primary-btn">Proceed to checkout</a>
                             </div>
@@ -224,6 +235,64 @@
         </div>
     </section>
     <!-- Shopping Cart Section End -->
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        let totalPrice = Number('<%= totalPrice%>')
+        let totalMrp = Number('<%= totalMrp%>')
+
+        async function incQuantity(id, price, mrp) {
+            const response = await axios.get("/cart/incQuantity/" + id)
+            if (response.data.success) {
+                var priceTag = document.getElementById('p' + id)
+                var totalDiscountTag = document.getElementById('totalDiscount');
+                var totalMrpTag = document.getElementById('totalMrp');
+                var totalPriceTag = document.getElementById('totalPrice');
+                var quantity = response.data.quantity
+                priceTag.innerHTML ='₹ '+quantity * price;
+                document.getElementById('q' + id).value = quantity;
+                if (response.data.increased) {
+                    totalMrp = Number(totalMrp) + Number(mrp)
+                    totalPrice = Number(totalPrice) + Number(price)
+                    totalMrpTag.innerHTML = '₹ '+totalMrp;
+                    totalDiscountTag.innerHTML = '- ₹ '+(totalMrp - totalPrice);
+                    totalPriceTag.innerHTML = '₹ '+totalPrice;
+                } else {
+
+                }
+                
+            } else {
+                window.location.reload()
+            }
+        }
+
+
+        async function decQuantity(id, price, mrp) {
+            const response = await axios.get("/cart/decQuantity/" + id)
+            if (response.data.success) {
+                var priceTag = document.getElementById('p' + id)
+                var totalDiscountTag = document.getElementById('totalDiscount');
+                var totalMrpTag = document.getElementById('totalMrp');
+                var totalPriceTag = document.getElementById('totalPrice');
+                var quantity = response.data.quantity
+                priceTag.innerHTML ='₹ '+quantity * price;
+                document.getElementById('q' + id).value = quantity;
+                if (response.data.decreased) {
+                    totalMrp = totalMrp-mrp
+                    totalPrice = totalPrice - price
+                    totalMrpTag.innerHTML = '₹ '+totalMrp;
+                    totalDiscountTag.innerHTML = '- ₹ '+(totalMrp - totalPrice);
+                    totalPriceTag.innerHTML = '₹ '+totalPrice;
+                } else {
+
+                }
+                
+            } else {
+                window.location.reload()
+            }
+        }
+    </script>
+    <!--  -->
 
 
     <!-- Js Plugins -->

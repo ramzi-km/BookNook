@@ -215,14 +215,14 @@ ol {
     align-items: center;
 }
 .cart-quantity input{
-    width: 40px;
+    width: 30px;
     text-align: center;
     border: none;
     outline: none;
     background:none;
 }
 .cart-quantity button{
-    width: 30px;
+    width: 25px;
     height: 30px;
     border: none;
     outline: none;

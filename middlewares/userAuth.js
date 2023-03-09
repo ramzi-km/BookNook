@@ -16,7 +16,7 @@ module.exports = {
       },
       checkBan: async (req, res, next) => {
         if (req.session.user) {
-          const user = await User.findById(req.session.user.id);
+          const user = await User.findById(req.session.user._id);
           if (user?.block) {
             req.session.user = null;
             req.session.userLoggedIn = false;
