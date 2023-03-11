@@ -80,12 +80,10 @@ module.exports = {
       },
       { cart: 1 }
     );
-    let productInWishlist = await User.find(
-      {
-        _id: user._id,
-        wishlist: productId,
-      }
-    );
+    let productInWishlist = await User.find({
+      _id: user._id,
+      wishlist: productId,
+    });
 
     try {
       let product = await Product.findById(productId);
@@ -282,12 +280,15 @@ module.exports = {
     let userId = req.session.user._id;
     let prodId = req.params.id;
     try {
-     let user = await User.updateOne({_id:userId}, {
-        $pull: {
-          wishlist: prodId,
-        },
-      });
-      res.json({user});
+      let user = await User.updateOne(
+        { _id: userId },
+        {
+          $pull: {
+            wishlist: prodId,
+          },
+        }
+      );
+      res.json({ user });
     } catch (error) {
       res.send(error);
     }
@@ -310,4 +311,13 @@ module.exports = {
       res.send(error);
     }
   },
+
+  //----------------xx---------------------------//
+
+  //--------------Checkout page----------//
+  getCheckout:async (req,res) => {
+    const user = req.session.user
+    res.render('user/checkout',{user})
+  },
+
 };
