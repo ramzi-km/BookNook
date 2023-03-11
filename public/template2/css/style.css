@@ -110,7 +110,7 @@ ol {
   Helper CSS
 -----------------------*/
 
-.section-title {
+/* .section-title {
 	margin-bottom: 45px;
 	text-align: center;
 }
@@ -177,7 +177,7 @@ ol {
 	text-transform: uppercase;
 	display: inline-block;
 	padding: 14px 30px;
-}
+} */
 
 /* Preloder */
 
@@ -245,7 +245,7 @@ ol {
 
 .shopping__cart__table table thead tr th {
 	color: #111111;
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: 700;
 	text-transform: uppercase;
 	padding-bottom: 25px;
@@ -261,7 +261,7 @@ ol {
 }
 
 .shopping__cart__table table tbody tr td.product__cart__item {
-	width: 400px;
+	width: 380px;
 }
 
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__pic {
@@ -276,18 +276,18 @@ ol {
 
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h6 {
 	color: #111111;
-	font-size: 15px;
+	font-size: 14px;
 	font-weight: 600;
 	margin-bottom: 10px;
 }
 
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h5 {
 	color: #0d0d0d;
-	font-weight: 700;
+	font-weight: 600;
 }
 
 .shopping__cart__table table tbody tr td.quantity__item {
-	width: 175px;
+	width: 170px;
 }
 
 .shopping__cart__table table tbody tr td.quantity__item .quantity .pro-qty-2 {
@@ -311,13 +311,14 @@ ol {
 
 .shopping__cart__table table tbody tr td.cart__price {
 	color: #111111;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 700;
-	width: 140px;
+	width: 130px;
+	padding-left: 5px;
 }
 
 .shopping__cart__table table tbody tr td.cart__close i {
-	font-size: 18px;
+	font-size: 16px;
 	color: #111111;
 	height: 40px;
 	width: 40px;
@@ -326,6 +327,7 @@ ol {
 	line-height: 40px;
 	text-align: center;
 }
+
 
 .continue__btn.update__btn {
 	text-align: right;

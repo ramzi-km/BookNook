@@ -174,7 +174,7 @@ module.exports = {
 
       let quantity = cart[0].quantity;
       if (quantity > 8) {
-        res.json({ quantity, success: true, increased:false });
+        res.json({ quantity, success: true, increased: false });
       } else {
         const user = await User.updateOne(
           { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
@@ -186,9 +186,9 @@ module.exports = {
         );
         if (user.acknowledged) {
           quantity++;
-          res.json({ quantity, success: true,increased:true });
+          res.json({ quantity, success: true, increased: true });
         } else {
-          res.json({ success: false ,increased:false});
+          res.json({ success: false, increased: false });
         }
       }
     } catch (error) {
@@ -210,7 +210,7 @@ module.exports = {
       let quantity = cart[0].quantity;
 
       if (quantity <= 1) {
-        res.json({ quantity, success: true ,decreased:false });
+        res.json({ quantity, success: true, decreased: false });
       } else {
         const user = await User.updateOne(
           { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
@@ -222,9 +222,9 @@ module.exports = {
         );
         if (user.acknowledged) {
           quantity--;
-          res.json({ quantity, success: true , decreased:true});
+          res.json({ quantity, success: true, decreased: true });
         } else {
-          res.json({ success: false ,decreased:false });
+          res.json({ success: false, decreased: false });
         }
       }
     } catch (error) {
@@ -233,4 +233,22 @@ module.exports = {
   },
 
   //----------------xx---------------------------//
+
+  //--------------Whishlist page----------//
+
+  getWishlist: async (req, res) => {
+    const userId = req.session.user._id;
+    try {
+      const user = await User.findById(userId);
+      let wishlist = user.wishlist;
+      const products = await Product.find({
+        _id: { $in: wishlist },
+        unList: false,
+      }).lean();
+
+      res.render("user/wishlist", { user,products });
+    } catch (error) {
+      res.send(error);
+    }
+  },
 };

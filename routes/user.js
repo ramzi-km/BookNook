@@ -40,6 +40,7 @@ const {
   removeFromCart,
   increaseQuantity,
   decreaseQuantity,
+  getWishlist,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -81,6 +82,12 @@ router.get(
   checkBan,
   decreaseQuantity
 );
+
+/* ----------------------Whishlist page-----------------------------*/
+
+//get whishlist page
+router.get("/wishlist", verifyLoggedIn, checkBan, getWishlist);
+
 
 /* -------------------User Authentication----------------------*/
 

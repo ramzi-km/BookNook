@@ -85,7 +85,7 @@
                             <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
                             <li class="nav-item"><a class="nav-link" href="/cart"><span style="font-size: large;"><i
                                             class="fa-solid fa-cart-shopping"></i></span></a></li>
-                            <li class="nav-item"><a class="nav-link" href="#"><span style="font-size: large;"><i
+                            <li class="nav-item"><a class="nav-link" href="/wishlist"><span style="font-size: large;"><i
                                             class="fa-regular fa-heart"></i></span></a></li>
                             <% if (user) { %>
                                 <li class="nav-item submenu dropdown">
@@ -129,7 +129,7 @@
     </header>
     <!-- End Header Area -->
     <section>
-        <div class="container-fluid " style="height: 120px;"></div>
+        <div class="container-fluid " style="height: 130px;"></div>
     </section>
     <!-- start banner Area -->
     <!-- End banner Area -->
@@ -151,7 +151,7 @@
                 </div>
                 <% }else{ %>
                     <div class="row">
-                        <div class="col-lg-8 mb-5 " style="background-color: #ffffff; padding: 2rem;">
+                        <div class="col-lg-8 mb-5 " style="background-color: #ffffff; padding: 1.5rem;">
                             <div class="shopping__cart__table">
                                 <table>
                                     <thead>
@@ -180,8 +180,8 @@
 
                                                     </div>
                                                 </td>
-                                                <td class="quantity__item">
-                                                    <div class="cart-quantity">
+                                                <td class="quantity__item " >
+                                                    <div class="cart-quantity d-flex flex-column align-items-center">
                                                         <div class="cartquantiy-box">
                                                             <button
                                                                 onclick="decQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')">-</button>
@@ -190,14 +190,15 @@
                                                             <button
                                                                 onclick="incQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')">+</button>
                                                         </div>
+                                                        <b id="<%=product._id%>" class="text-danger">
+                                                            <% if(product.inStock==0){ %>
+                                                                Out Of Stock
+                                                                <% }else if(product.inStock < product.cartQuantity){%>
+                                                                    only <%= product.inStock %> left
+                                                                        <% } %>
+                                                        </b>
                                                     </div>
-                                                    <b id="<%=product._id%>" class="text-danger">
-                                                        <% if(product.inStock==0){ %>
-                                                            Out Of Stock
-                                                            <% }else if(product.inStock < product.cartQuantity){%>
-                                                                only <%= product.inStock %> left
-                                                                    <% } %>
-                                                    </b>
+                                                    
                                                 </td>
                                                 <td class="cart__price" id="<%='p'+ product._id %>">₹ <%= product.price*product.cartQuantity %>
                                                 </td>
