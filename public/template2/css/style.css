@@ -277,12 +277,12 @@ ol {
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h6 {
 	color: #111111;
 	font-size: 14px;
-	font-weight: 600;
+	font-weight: 700;
 	margin-bottom: 10px;
 }
 
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h5 {
-	color: #0d0d0d;
+	color: #4f4f4f;
 	font-weight: 600;
 }
 

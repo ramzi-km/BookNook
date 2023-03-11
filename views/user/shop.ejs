@@ -14,7 +14,7 @@
 
                 <div class="sidebar-categories">
 
-                    <div class="head" data-toggle="collapse" data-target="#categorydiv" aria-expanded="true" 
+                    <div class="head" data-toggle="collapse" data-target="#categorydiv" aria-expanded="true"
                         aria-controls="categorydiv">Browse Categories <i class="fa-solid fa-caret-down"></i></div>
                     <ul class="main-categories collapse show" id="categorydiv">
                         <li class="main-nav-list"><input class="pixel-radio" type="radio" onchange="this.form.submit()"
@@ -38,13 +38,13 @@
                     </ul>
                 </div>
                 <div class="sidebar-filter mt-50">
-                    <div class="top-filter-head" data-toggle="collapse" data-target="#pricefilter" aria-expanded="true" 
-                    aria-controls="pricefilter">Filters <i class="fa-solid fa-caret-down"></i></div>
+                    <div class="top-filter-head" data-toggle="collapse" data-target="#pricefilter" aria-expanded="true"
+                        aria-controls="pricefilter">Filters <i class="fa-solid fa-caret-down"></i></div>
 
                     <div class="common-filter collapse show" id="pricefilter">
                         <div class="head">Price</div>
 
-                        <ul >
+                        <ul>
                             <li class="filter-list"><input class="pixel-radio" type="radio"
                                     onchange="this.form.submit()" id="price0" name="price" value="" <% if(price=="" ) {
                                     %>
@@ -143,10 +143,43 @@
                                                 <span class="ti-bag"></span>
                                                 <p class="hover-text">add to cart</p>
                                             </a>
-                                            <a href="" class="social-info">
-                                                <span class="lnr lnr-heart"></span>
-                                                <p class="hover-text">Wishlist</p>
+                                            <a class="social-info">
+                                                <span class="lnr lnr-heart"
+                                                    onclick="addToWishlist('<%=product._id%>','<%=product.name%>')"></span>
+                                                <p class="hover-text"
+                                                    onclick="addToWishlist('<%=product._id%>','<%=product.name%>')">
+                                                    Wishlist</p>
                                             </a>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="wishModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Wishlist
+                                                                updated <i
+                                                                    class="text-success fa-sharp fa-regular fa-circle-check"></i>
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div id="modalBody" class="modal-body">
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-dark"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="button"
+                                                                onclick="window.location.href='/wishlist'"
+                                                                class="btn btn-danger">Go to Wishlist</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+
                                         </div>
                                     </div>
                                 </div>
@@ -154,6 +187,7 @@
                             <% }) %>
 
                                 <!-- single product -->
+
 
                                 <!-- single product -->
 
@@ -186,6 +220,17 @@
     <!-- Start related-product Area -->
 
     <!-- End related-product Area -->
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        async function addToWishlist(id, name) {
+            var modalBody = document.getElementById('modalBody');
+            const response = await axios.get("/wishlist/add/" + id)
+            if (response.data?.user?.acknowledged) {
+                modalBody.innerHTML = `<b>"${name}"</b> added to Wishlist`
+                $("#wishModal").modal('show')
+            }
+        }
+    </script>
 
 
     <%- include('./partials/footer') %>

@@ -80,11 +80,22 @@ module.exports = {
       },
       { cart: 1 }
     );
+    let productInWishlist = await User.find(
+      {
+        _id: user._id,
+        wishlist: productId,
+      }
+    );
 
     try {
       let product = await Product.findById(productId);
 
-      res.render("user/productDetails", { user, product, productInCart });
+      res.render("user/productDetails", {
+        user,
+        product,
+        productInCart,
+        productInWishlist,
+      });
     } catch (err) {
       res.send(err);
     }
@@ -236,6 +247,7 @@ module.exports = {
 
   //--------------Whishlist page----------//
 
+  //get wishlist page
   getWishlist: async (req, res) => {
     const userId = req.session.user._id;
     try {
@@ -246,7 +258,54 @@ module.exports = {
         unList: false,
       }).lean();
 
-      res.render("user/wishlist", { user,products });
+      res.render("user/wishlist", { user, products });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  // remove from wishlist
+  removeFromWishlist: async (req, res) => {
+    let userId = req.session.user._id;
+    let prodId = req.params.id;
+    try {
+      await User.findByIdAndUpdate(userId, {
+        $pull: {
+          wishlist: prodId,
+        },
+      });
+      res.redirect("back");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  removeFromWishlist2: async (req, res) => {
+    let userId = req.session.user._id;
+    let prodId = req.params.id;
+    try {
+     let user = await User.updateOne({_id:userId}, {
+        $pull: {
+          wishlist: prodId,
+        },
+      });
+      res.json({user});
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  // add to wishlist
+  addToWishlist: async (req, res) => {
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
+    try {
+      let user = await User.updateOne(
+        { _id: userId },
+        {
+          $addToSet: {
+            wishlist: prodId,
+          },
+        }
+      );
+      res.json({ user });
     } catch (error) {
       res.send(error);
     }

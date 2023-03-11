@@ -168,19 +168,21 @@
                                                 <td class="product__cart__item" style="vertical-align: middle;">
                                                     <div class="product__cart__item__pic">
                                                         <img src="/images/productImages/<%= product.mainImage[0].filename %>"
-                                                            width="75px" alt="">
+                                                            width="75px" alt=""
+                                                            onclick="window.location.href='/productDetails/<%= product._id %>'">
                                                     </div>
                                                     <div class="product__cart__item__text">
-                                                        <h6><a href="/productDetails/<%= product._id %>">
-                                                                <%= product.name %>
-                                                            </a></h6>
+                                                        <h6
+                                                            onclick="window.location.href='/productDetails/<%= product._id %>'">
+                                                            <%= product.name %>
+                                                        </h6><br>
                                                         <h5>₹<%= product.price %>
-                                                        </h5><br>
+                                                        </h5>
                                                         <h6> <del>₹<%= product.mrp %></del></h6>
 
                                                     </div>
                                                 </td>
-                                                <td class="quantity__item " >
+                                                <td class="quantity__item ">
                                                     <div class="cart-quantity d-flex flex-column align-items-center">
                                                         <div class="cartquantiy-box">
                                                             <button
@@ -198,9 +200,10 @@
                                                                         <% } %>
                                                         </b>
                                                     </div>
-                                                    
+
                                                 </td>
-                                                <td class="cart__price" id="<%='p'+ product._id %>">₹ <%= product.price*product.cartQuantity %>
+                                                <td class="cart__price" id="<%='p'+ product._id %>">₹ <%=
+                                                        product.price*product.cartQuantity %>
                                                 </td>
                                                 <td class="cart__close"><a href="/removeFromCart/<%= product._id %>"
                                                         onclick="return confirm('Do you really want to remove <%= product.name %> from cart ?')"><i
@@ -225,7 +228,8 @@
                                 <h6>Cart total</h6>
                                 <ul>
                                     <li>Subtotal <span id="totalMrp">₹ <%= totalMrp %></span></li>
-                                    <li>Discount <span class="text-success" id="totalDiscount">- ₹ <%= totalMrp - totalPrice %></span></li>
+                                    <li>Discount <span class="text-success" id="totalDiscount">- ₹ <%= totalMrp -
+                                                totalPrice %></span></li>
                                     <li>Total <span class="text-dark" id="totalPrice">₹ <%= totalPrice %></span></li>
                                 </ul>
                                 <a href="#" class="primary-btn">Proceed to checkout</a>
@@ -250,18 +254,18 @@
                 var totalMrpTag = document.getElementById('totalMrp');
                 var totalPriceTag = document.getElementById('totalPrice');
                 var quantity = response.data.quantity
-                priceTag.innerHTML ='₹ '+quantity * price;
+                priceTag.innerHTML = '₹ ' + quantity * price;
                 document.getElementById('q' + id).value = quantity;
                 if (response.data.increased) {
                     totalMrp = Number(totalMrp) + Number(mrp)
                     totalPrice = Number(totalPrice) + Number(price)
-                    totalMrpTag.innerHTML = '₹ '+totalMrp;
-                    totalDiscountTag.innerHTML = '- ₹ '+(totalMrp - totalPrice);
-                    totalPriceTag.innerHTML = '₹ '+totalPrice;
+                    totalMrpTag.innerHTML = '₹ ' + totalMrp;
+                    totalDiscountTag.innerHTML = '- ₹ ' + (totalMrp - totalPrice);
+                    totalPriceTag.innerHTML = '₹ ' + totalPrice;
                 } else {
 
                 }
-                
+
             } else {
                 window.location.reload()
             }
@@ -276,18 +280,18 @@
                 var totalMrpTag = document.getElementById('totalMrp');
                 var totalPriceTag = document.getElementById('totalPrice');
                 var quantity = response.data.quantity
-                priceTag.innerHTML ='₹ '+quantity * price;
+                priceTag.innerHTML = '₹ ' + quantity * price;
                 document.getElementById('q' + id).value = quantity;
                 if (response.data.decreased) {
-                    totalMrp = totalMrp-mrp
+                    totalMrp = totalMrp - mrp
                     totalPrice = totalPrice - price
-                    totalMrpTag.innerHTML = '₹ '+totalMrp;
-                    totalDiscountTag.innerHTML = '- ₹ '+(totalMrp - totalPrice);
-                    totalPriceTag.innerHTML = '₹ '+totalPrice;
+                    totalMrpTag.innerHTML = '₹ ' + totalMrp;
+                    totalDiscountTag.innerHTML = '- ₹ ' + (totalMrp - totalPrice);
+                    totalPriceTag.innerHTML = '₹ ' + totalPrice;
                 } else {
 
                 }
-                
+
             } else {
                 window.location.reload()
             }

@@ -8,7 +8,8 @@
                 <div class="col-lg-6">
                     <div class="d-flex flex-column align-items-center product-main">
                         <!-- Primary carousel image -->
-                        <div class="shows" href="/images/productImages/<%= product.mainImage[0].filename %>"  style="height: 540px; width:350px">
+                        <div class="shows" href="/images/productImages/<%= product.mainImage[0].filename %>"
+                            style="height: 540px; width:350px">
                             <img src="/images/productImages/<%= product.mainImage[0].filename %>" id="show-img"
                                 style="max-height:80%;" alt="">
                         </div>
@@ -33,14 +34,13 @@
                     </div>
                     <div class="s_Product_carousel imageSliderMobile">
                         <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;">
-                            <img class="img-fluid "
-                                src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
-                                style="height: 100%; width: 100%;">
+                            <img class="img-fluid " src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                alt="" style="height: 100%; width: 100%;">
                         </div>
                         <% product.extraImages.forEach(image=> { %>
-                            <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;" >
+                            <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;">
                                 <img class="img-fluid" src="/images/productImages/<%= image.filename %>" alt=""
-                                    style="height: 100%; width: 100%;" >
+                                    style="height: 100%; width: 100%;">
                             </div>
                             <% }) %>
 
@@ -71,11 +71,25 @@
                             <% if (productInCart[0]) { %>
                                 <a class="primary-btn" href="/addToCart/<%= product._id %>">Go to Cart</a>
 
-                            <% }else{ %>
-                                <a class="primary-btn" href="/addToCart/<%= product._id %>">Add to Cart</a>
-                                <% } %>
-                            
-                            <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                                <% }else{ %>
+                                    <a class="primary-btn" href="/addToCart/<%= product._id %>">Add to Cart</a>
+                                    <% } %>
+
+                                        <% if (productInWishlist[0]) { %>
+                                            <div id="wishlistIcon" style="margin-left: auto;">
+                                                <a style="font-size: xx-large;"
+                                                    onclick="removeFromWishlist('<%=product._id%>')"><i
+                                                        class="text-danger fa-solid fa-heart"></i></a>
+                                            </div>
+                                            <% } else{ %>
+                                                <div id="wishlistIcon" style="margin-left: auto;">
+                                                    <a style="font-size: xx-large;"
+                                                        onclick="addToWishlist('<%=product._id%>')"><i
+                                                            class="fa-regular fa-heart"></i></a>
+                                                </div>
+                                                <% } %>
+
+
                         </div>
                     </div>
                 </div>
@@ -270,6 +284,28 @@
         </div>
     </section>
     <!--================End Product Description Area =================-->
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        var wishlistIcon = document.getElementById('wishlistIcon');
+        async function addToWishlist(id) {
+            const response = await axios.get("/wishlist/add/" + id)
+            if (response.data?.user?.acknowledged) {
+                wishlistIcon.innerHTML = `<a  style="font-size: xx-large;" onclick="removeFromWishlist('${id}')"><i class="text-danger fa-solid fa-heart"></i></a>`
+            }
+        }
+        async function removeFromWishlist(id) {
+            const response = await axios.get("/wishlist/remove2/" + id)
+            if (response.data?.user?.acknowledged) {
+                wishlistIcon.innerHTML = `<a  style="font-size: xx-large;" onclick="addToWishlist('${id}')"><i class="fa-regular fa-heart"></i></a>`
+            }
+        }
+
+    </script>
+
+    <!-- Axios -->
+
 
     <!-- Product Image Gallery Js -->
     <script src="/imageZoom/scripts/zoom-image.js"></script>

@@ -41,6 +41,9 @@ const {
   increaseQuantity,
   decreaseQuantity,
   getWishlist,
+  removeFromWishlist,
+  addToWishlist,
+  removeFromWishlist2,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -83,10 +86,15 @@ router.get(
   decreaseQuantity
 );
 
-/* ----------------------Whishlist page-----------------------------*/
+/* ----------------------Wishlist page-----------------------------*/
 
-//get whishlist page
+//get wishlist page
 router.get("/wishlist", verifyLoggedIn, checkBan, getWishlist);
+//add to wishlist
+router.get("/wishlist/add/:id", verifyLoggedIn, checkBan,addToWishlist);
+//remove from wishlist
+router.get("/wishlist/remove/:id", verifyLoggedIn, checkBan,removeFromWishlist);
+router.get("/wishlist/remove2/:id", verifyLoggedIn, checkBan,removeFromWishlist2);
 
 
 /* -------------------User Authentication----------------------*/
