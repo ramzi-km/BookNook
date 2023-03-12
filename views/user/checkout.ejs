@@ -54,7 +54,26 @@
     <link rel="stylesheet" href="/template2/css/style.css" type="text/css" />
 
     <!--------------- 2nd template files ------------------>
-    <style></style>
+    <style>
+        .address-box {
+            width: 100%;
+            background-color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .address-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .address-box input {
+            width: 15px;
+            height: 15px;
+        }
+    </style>
 </head>
 
 <body style="background-color: #f1f1f1">
@@ -139,8 +158,8 @@
     <!-- Checkout Section Begin -->
     <section class="checkout spad mt-3">
         <div class="container">
-            <div class="d-flex justify-content-center mb-5">
-                <h2>Checkout</h2>
+            <div class="d-flex justify-content-start mb-3">
+
             </div>
 
             <div class="checkout__form">
@@ -150,7 +169,7 @@
 
                     <div class="col-lg-8 col-md-6">
 
-                        <h6 class="checkout__title">Billing Details</h6>
+                        <h4 class="checkout__title">Billing Details</h4>
                         <div id="accordion">
                             <div class="card">
                                 <div class="card-header" id="headingTwo">
@@ -163,7 +182,7 @@
                                 </div>
                                 <div id="collapseTwo" class="collapse" data-parent="#accordion">
                                     <div class="card-body">
-                                        <form action="">
+                                        <form id="addAddressForm" action="/profile/addAddress" method="post">
                                             <div class="row">
 
                                                 <div class="col-lg-6">
@@ -175,8 +194,9 @@
                                                 <div class="col-lg-6">
                                                     <div class="checkout__input">
                                                         <p>Mobile<span>*</span></p>
-                                                        <input type="text" name="mobile" pattern="[0-9]*" maxlength="10"
-                                                            required />
+                                                        <input type="text" placeholder="+91" name="mobile"
+                                                            pattern="[0-9]*" minlength="10" maxlength="10" required />
+                                                        <label for="mobile">format:8923488398</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -195,7 +215,8 @@
                                             </div>
                                             <div class="checkout__input">
                                                 <p>PIN code<span>*</span></p>
-                                                <input type="text" name="pincode" required />
+                                                <input type="number" minlength="4" maxlength="8" name="pincode"
+                                                    required />
                                             </div>
                                             <div class="">
                                                 <button type="submit" class="btn btn-rounded btn-danger">Save</button>
@@ -205,22 +226,60 @@
                                 </div>
                             </div>
                         </div>
+                        <form id="mainForm" action="/cart/checkout" method="post"></form>
+                        <div>
 
-                        <form id="formone"  method="get" >
+                            <h6 class="mt-5 checkout__title">Choose Address</h6>
 
-
-                            <div>
-
+                            <% if (addressError) { %>
+                                <div class="alert alert-dismissable fade show alert-warning d-flex justify-content-between"
+                                role="alert">
+                                <strong>
+                                    Please choose an address before proceeding.if you doesn't have any saved addresses
+                                    please add one using the button given above.
+                                </strong>
                             </div>
+                            <% } %>
+
+                            <% if (!address[0]) { %>
+                                <div class="address-radio">
+                                    <input type="radio" class="pixel-radio" hidden value="empty" form="mainForm"
+                                        name="address" id="empty" checked required>
+                                </div>
+                                <% }else{%>
+                                    <% address.forEach(addr=>{ %>
+                                        <label class="address-box mt-3" for="<%= addr.id  %>">
+                                            <div class="address-detail">
+                                                <b class="text-dark">
+                                                    <%=addr.name %>
+                                                </b>
+                                                <b class="text-dark">
+                                                    <%=addr.mobile %>
+                                                </b>
+                                                <b class="text-dark">
+                                                    <%=addr.address %>
+                                                </b>
+                                                <b class="text-dark">PIN: <%=addr.pincode %> </b>
+                                            </div>
+                                            <div class="address-radio">
+                                                <input type="radio" class="pixel-radio" value="<%= addr.id  %>"
+                                                    form="mainForm" name="address" id="<%= addr.id  %>" required>
+                                            </div>
+                                        </label>
+                                        <% }) %>
+                                            <% } %>
+
+                        </div>
 
                     </div>
                     <div class="col-lg-4 col-md-6">
+                        <form id="couponForm" action="/cart/checkout/coupon" method="post"></form>
                         <div class="cart__discount">
                             <h6>Discount codes</h6>
-                           
-                                <form id="formtwo" method="get">
-                                    <input type="text" name="couponCode" placeholder="Coupon code" style="color: #b7b7b7" />
-                                    <button onclick="secondFunction()" class="btn btn-rounded" style="
+
+                            <input type="text" form="couponForm" name="couponCode" placeholder="Coupon code"
+                                style="color: #b7b7b7" required />
+                            <button type="submit" form="couponForm" class="btn btn-rounded" style="
                             font-size: 14px;
                             color: #ffffff;
                             font-weight: 700;
@@ -230,10 +289,8 @@
                             width: auto;
                             border: none;
                           ">
-                                        Apply
-                                    </button>
-                                </form>
-                            
+                                Apply
+                            </button>
 
                         </div>
                         <div class="checkout__order">
@@ -242,14 +299,14 @@
                                 Product <span>Total</span>
                             </div>
                             <ul class="checkout__total__products">
-                                <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
-                                <li>02. German chocolate <span>$ 170.0</span></li>
-                                <li>03. Sweet autumn <span>$ 170.0</span></li>
-                                <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
+                                <% products.forEach(product=> { %>
+                                    <li>
+                                        <%= product.name %> <span>₹ <%= product.price * product.cartQuantity %></span>
+                                    </li>
+                                    <% }) %>
                             </ul>
                             <ul class="checkout__total__all">
-                                <li>Subtotal <span>$750.99</span></li>
-                                <li>Total <span>$750.99</span></li>
+                                <li>Total <span>₹ <%= totalPrice %></span></li>
                             </ul>
 
                             <ul style="
@@ -260,22 +317,24 @@
                     ">
 
                                 <li class="ml-2">
-                                    <input class="pixel-radio" name="paymentType" type="radio" id="cod" required />
+                                    <input class="pixel-radio" name="paymentType" form="mainForm" type="radio" id="cod"
+                                       value="cod" required />
                                     <label for="cod" class="text-dark">
                                         Cash on delivery
                                     </label>
                                 </li>
                                 <li class="ml-2">
-                                    <input class="pixel-radio" name="paymentType" type="radio" id="online" required />
+                                    <input class="pixel-radio" name="paymentType" form="mainForm" type="radio"
+                                        id="online" value="online" required />
                                     <label for="online" class="text-dark">
                                         Online payment
                                     </label>
                                 </li>
                             </ul>
-                            <button onclick="firstFunction()" class="site-btn">PLACE ORDER</button>
+                            <button type="submit" form="mainForm" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
-                    </form>
+
                 </div>
 
             </div>
@@ -283,14 +342,7 @@
     </section>
     <!-- Checkout Section End -->
 
-    <script>
-        function firstFunction() {
-            document.getElementById("formone").submit();
-        }
-        function secondFunction() {
-            document.getElementById("formtwo").submit();
-        }
-    </script>
+
 
     <!-- Js Plugins -->
     <script src="/template2/js/jquery-3.3.1.min.js"></script>
@@ -304,6 +356,3 @@
     <script src="/template2/js/main.js"></script>
 
     <%- include('./partials/footer') %>
-</body>
-
-</html>

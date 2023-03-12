@@ -4,7 +4,30 @@ const mongoose = require("mongoose");
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
 const User = require("../models/userModel.js");
+const Order = require("../models/orderModel.js");
 //---------------xx--------------------//
+
+//-------------------------helpers-------------------------------//
+
+function createId() {
+  let date = new Date();
+  let components = [
+    date.getYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+    date.getMilliseconds(),
+  ];
+
+  let id = "id" + components.join("");
+  return id;
+}
+let stockError = false;
+let addressError = false;
+
+//-------------------------------------------------------------//
 
 module.exports = {
   //----------------Home------------------//
@@ -100,7 +123,78 @@ module.exports = {
   },
   //----------------xx---------------------------//
 
-  //--------------Cart page----------//
+  //--------------Whishlist page----------//
+
+  //get wishlist page
+  getWishlist: async (req, res) => {
+    const userId = req.session.user._id;
+    try {
+      const user = await User.findById(userId);
+      let wishlist = user.wishlist;
+      const products = await Product.find({
+        _id: { $in: wishlist },
+        unList: false,
+      }).lean();
+
+      res.render("user/wishlist", { user, products });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  // remove from wishlist
+  removeFromWishlist: async (req, res) => {
+    let userId = req.session.user._id;
+    let prodId = req.params.id;
+    try {
+      await User.findByIdAndUpdate(userId, {
+        $pull: {
+          wishlist: prodId,
+        },
+      });
+      res.redirect("back");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  removeFromWishlist2: async (req, res) => {
+    let userId = req.session.user._id;
+    let prodId = req.params.id;
+    try {
+      let user = await User.updateOne(
+        { _id: userId },
+        {
+          $pull: {
+            wishlist: prodId,
+          },
+        }
+      );
+      res.json({ user });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  // add to wishlist
+  addToWishlist: async (req, res) => {
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
+    try {
+      let user = await User.updateOne(
+        { _id: userId },
+        {
+          $addToSet: {
+            wishlist: prodId,
+          },
+        }
+      );
+      res.json({ user });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+
+  //----------------xx---------------------------//
+
+  //-------------------Cart page-----------------//
   getCart: async (req, res) => {
     let userId = req.session.user._id;
     try {
@@ -130,7 +224,14 @@ module.exports = {
         totalMrp = totalMrp + item.mrp * item.cartQuantity;
       });
 
-      res.render("user/cart", { user, products, totalPrice, totalMrp });
+      res.render("user/cart", {
+        user,
+        products,
+        totalPrice,
+        totalMrp,
+        stockError,
+      });
+      stockError = false;
     } catch (error) {
       res.send(error);
     }
@@ -243,81 +344,147 @@ module.exports = {
 
   //----------------xx---------------------------//
 
-  //--------------Whishlist page----------//
+  //--------------Checkout page----------//
 
-  //get wishlist page
-  getWishlist: async (req, res) => {
+  //get checkout page
+  getCheckout: async (req, res) => {
     const userId = req.session.user._id;
     try {
       const user = await User.findById(userId);
-      let wishlist = user.wishlist;
+      let address = user.address;
+      let cart = user.cart;
+      const cartQuantities = {};
+      const cartList = cart.map((item) => {
+        cartQuantities[item.id] = item.quantity;
+        return item.id;
+      });
+
       const products = await Product.find({
-        _id: { $in: wishlist },
-        unList: false,
+        _id: { $in: cartList },
+        unlist: false,
       }).lean();
 
-      res.render("user/wishlist", { user, products });
-    } catch (error) {
-      res.send(error);
-    }
-  },
-  // remove from wishlist
-  removeFromWishlist: async (req, res) => {
-    let userId = req.session.user._id;
-    let prodId = req.params.id;
-    try {
-      await User.findByIdAndUpdate(userId, {
-        $pull: {
-          wishlist: prodId,
-        },
+      let totalPrice = 0;
+      stockError = false;
+      products.forEach((product, index) => {
+        product.cartQuantity = cartQuantities[product._id];
+        totalPrice = totalPrice + product.price * product.cartQuantity;
+        if (product.inStock < product.cartQuantity) {
+          stockError = true;
+        } else {
+        }
       });
-      res.redirect("back");
-    } catch (error) {
-      res.send(error);
-    }
-  },
-  removeFromWishlist2: async (req, res) => {
-    let userId = req.session.user._id;
-    let prodId = req.params.id;
-    try {
-      let user = await User.updateOne(
-        { _id: userId },
-        {
-          $pull: {
-            wishlist: prodId,
-          },
-        }
-      );
-      res.json({ user });
-    } catch (error) {
-      res.send(error);
-    }
-  },
-  // add to wishlist
-  addToWishlist: async (req, res) => {
-    const userId = req.session.user._id;
-    const prodId = req.params.id;
-    try {
-      let user = await User.updateOne(
-        { _id: userId },
-        {
-          $addToSet: {
-            wishlist: prodId,
-          },
-        }
-      );
-      res.json({ user });
+      if (stockError || !products[0]) {
+        res.redirect("/cart");
+      } else {
+        res.render("user/checkout", {
+          user,
+          address,
+          products,
+          totalPrice,
+          addressError,
+        });
+        addressError = false;
+      }
     } catch (error) {
       res.send(error);
     }
   },
 
+  postCheckout: async (req, res) => {
+    if (req.body.address == "empty") {
+      addressError = true;
+      res.redirect("/cart/checkout");
+    } else {
+      const userId = req.session.user._id;
+      const payment = req.body.paymentType;
+      const addressId = req.body.address;
+      try {
+        let { address } = await User.findOne(
+          { _id: userId },
+          { _id: 0, address: { $elemMatch: { id: addressId } } }
+        );
+        if (payment == "cod") {
+          let user = await User.findById(userId);
+          let cart = user.cart;
+          const cartQuantities = {};
+          const cartList = cart.map((item) => {
+            cartQuantities[item.id] = item.quantity;
+            return item.id;
+          });
+
+          let products = await Product.find({
+            _id: { $in: cartList },
+            unlist: false,
+          }).lean();
+
+          let orders = [];
+          let i = 0;
+
+          products.forEach(async (product) => {
+            await Product.updateOne(
+              { _id: product._id },
+              {
+                $inc: {
+                  inStock: -1 * cartQuantities[product._id],
+                },
+              }
+            );
+            let orderCount = await Order.find().count();
+            orders.push({
+              address: address[0],
+              product: product,
+              userId: userId,
+              quantity: cartQuantities[product._id],
+              total: cartQuantities[product._id] * product.price,
+              amounToPay: cartQuantities[product._id] * product.price,
+              orderId: orderCount + i,
+            });
+            i++;
+          });
+          console.log(order);
+          const order = await Order.create(orders);
+          await User.findByIdAndUpdate(userId, {
+            $set: { cart: [] },
+          });
+          res.redirect("/orderPlaced");
+        } else {
+          res.redirect("/cart/checkout");
+        }
+      } catch (error) {
+        res.send(error);
+      }
+    }
+  },
+
+  //get order placed page
+  getOrderPlaced: (req, res) => {
+    const user = req.session.user
+    res.render("user/orderPlaced",{user});
+  },
   //----------------xx---------------------------//
 
-  //--------------Checkout page----------//
-  getCheckout:async (req,res) => {
-    const user = req.session.user
-    res.render('user/checkout',{user})
+  //--------------Profile page----------//
+  //add user address
+  addAddress: async (req, res) => {
+    const userId = req.session.user._id;
+    const { name, mobile, address, city, state, pincode } = req.body;
+    await User.updateOne(
+      { _id: userId },
+      {
+        $addToSet: {
+          address: {
+            name,
+            mobile,
+            address,
+            city,
+            state,
+            pincode,
+            id: createId(),
+          },
+        },
+      }
+    );
+    res.redirect("back");
   },
-
 };

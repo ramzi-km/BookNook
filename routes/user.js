@@ -45,6 +45,9 @@ const {
   addToWishlist,
   removeFromWishlist2,
   getCheckout,
+  addAddress,
+  postCheckout,
+  getOrderPlaced,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -100,9 +103,14 @@ router.get(
 
 /* -------------------Checkout page----------------------*/
 
-//get cart page
+//get checkout page
 router.get("/cart/checkout", verifyLoggedIn, checkBan, getCheckout);
+router.post("/cart/checkout", verifyLoggedIn, checkBan, postCheckout);
+router.get("/orderPlaced",verifyLoggedIn, checkBan, getOrderPlaced)
 
+/* -------------------User profile----------------------*/
+// add address
+router.post('/profile/addAddress',verifyLoggedIn, checkBan,addAddress)
 
 
 /* -------------------User Authentication----------------------*/

@@ -273,32 +273,38 @@
                                 </div>
 
                                 <% if (message) { %>
-                                    <div class="alert alert-dismissable fade show alert-success" role="alert">
-                                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <div class="alert alert-dismissable fade show alert-success d-flex justify-content-between" role="alert">
                                         <strong>
                                             <%= message %>
                                         </strong>
+                                        <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
                                     </div>
                                     <% }else if(editMessage){ %>
-                                        <div class="alert alert-dismissable fade show alert-success" role="alert">
-                                            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <div class="alert alert-dismissable d-flex justify-content-between fade show alert-success" role="alert">
                                             <strong>
                                                 <%= editMessage %>
                                             </strong>
+                                            <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                         </div>
                                         <% }else if(failMessage){ %>
-                                            <div class="alert alert-dismissable fade show alert-danger" role="alert">
-                                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            <div class="alert alert-dismissable fade show alert-danger d-flex justify-content-between" role="alert">
                                                 <strong>
                                                     <%= failMessage %>
                                                 </strong>
+                                                <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <% }else if(editFailMessage){ %>
-                                                <div class="alert alert-dismissable fade show alert-danger" role="alert">
-                                                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                <div class="alert alert-dismissable fade show alert-danger d-flex justify-content-between"
+                                                    role="alert">
+
                                                     <strong>
                                                         <%= editFailMessage %>
                                                     </strong>
+                                                    <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <% } %>
                                                     <div class="table-responsive">
