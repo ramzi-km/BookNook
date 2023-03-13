@@ -419,9 +419,9 @@ module.exports = {
           }).lean();
 
           let orders = [];
-          let i = 0;
-
-          products.forEach(async (product) => {
+          let i = 1;
+          let orderCount = await Order.find().count();
+          for (let product of products) {
             await Product.updateOne(
               { _id: product._id },
               {
@@ -430,20 +430,19 @@ module.exports = {
                 },
               }
             );
-            let orderCount = await Order.find().count();
             orders.push({
               address: address[0],
               product: product,
               userId: userId,
               quantity: cartQuantities[product._id],
               total: cartQuantities[product._id] * product.price,
-              amounToPay: cartQuantities[product._id] * product.price,
+              amountToPay: cartQuantities[product._id] * product.price,
+              paymentType: "cod",
               orderId: orderCount + i,
             });
             i++;
-          });
-          console.log(order);
-          const order = await Order.create(orders);
+          }
+          await Order.create(orders);
           await User.findByIdAndUpdate(userId, {
             $set: { cart: [] },
           });
@@ -459,12 +458,13 @@ module.exports = {
 
   //get order placed page
   getOrderPlaced: (req, res) => {
-    const user = req.session.user
-    res.render("user/orderPlaced",{user});
+    const user = req.session.user;
+    res.render("user/orderPlaced", { user });
   },
   //----------------xx---------------------------//
 
   //--------------Profile page----------//
+
   //add user address
   addAddress: async (req, res) => {
     const userId = req.session.user._id;
@@ -486,5 +486,15 @@ module.exports = {
       }
     );
     res.redirect("back");
+  },
+
+  // get my orders page
+  getMyOrders: async (req, res) => {
+    const userId = req.session.user._id;
+    const user = req.session.user;
+    const orders = await Order.find({ userId: userId })
+      .sort({ _id: -1 })
+      .lean();
+    res.render("user/myOrders", { user,orders });
   },
 };

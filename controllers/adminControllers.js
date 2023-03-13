@@ -425,6 +425,10 @@ module.exports = {
     let objectId = req.params.id;
     try {
       let order = await Order.findById(objectId);
+      if(status == "delivered"){
+        order.paid = true
+        order.amountToPay = 0 ;
+      }
       order.status = status;
       order.save();
       res.redirect("/admin/orderM");

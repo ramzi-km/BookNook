@@ -18,11 +18,9 @@ var orderSchema = new mongoose.Schema({
     },
     userId:{
         type:String,
-
     },
     quantity:{
         type:Number,
-
     },
     payment:{
         type:Object,
@@ -30,7 +28,6 @@ var orderSchema = new mongoose.Schema({
     },
     paymentType:{
         type:String,
-        default:'cod'
     },
     total:{
         type:Number,
@@ -38,11 +35,9 @@ var orderSchema = new mongoose.Schema({
     },
     amountToPay:{
         type:Number,
-        default:0,
     },
     orderId:{
         type:Number,
-        default:0,
     }
 },{timestamps:true});
 

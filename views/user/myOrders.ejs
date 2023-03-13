@@ -1,0 +1,85 @@
+<%- include('./partials/header') %>
+
+    <section class="pb-5">
+
+        <div class="container">
+            <h4 class="pb-3 text-dark"><i class="fa-solid fa-box-open"><span class="text-dark"> My Orders</i </span>
+            </h4>
+
+            <div class="row" id="emptyWishlist">
+                <% if(!orders[0]){ %>
+                    <div class="empty-container w-100 h-50 d-flex flex-column justify-content-center align-items-center"
+                        style="gap:10px">
+                        <img src="https://www.thrindle.com/static/media/emptyCart.4e943399.png" height="250px" alt="">
+                        <h4>Looks like you haven't ordered anything yet</h4>
+                    </div>
+                    <% } %>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mx-auto">
+                    <!-- List group-->
+                    <ul class="list-group">
+                        <!-- list group item-->
+                        <% orders.forEach(order=> { %>
+                            <li class="list-group-item mb-3">
+                                <!-- Custom content-->
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+
+                                    <div class="media-body order-2 order-lg-1">
+                                        <h6 class="mb-2 text-danger">
+                                           Order Id: <%= order.orderId %>
+                                        </h6>
+                                        <h5 class="mt-0 font-weight-bold mb-2"
+                                            onclick="window.location.href='/profile/myOrders/<%= order._id %>'">
+                                            <%= order.product.name %>
+                                        </h5>
+                                        <p class="font-italic text-dark mb-0 small">
+                                            Quantity:<%= order.quantity %>
+                                        </p>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <h6 class="font-weight-bold my-2">₹ <%= order.total %>
+                                            </h6>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <% if (order.status=="pending" ) { %>
+                                                <button class="btn btn-rounded btn-outline-warning">
+                                                    <%= order.status %>
+                                                </button>
+                                            <% }else if (order.status=="shipped" ) { %>
+                                                <button class="btn btn-rounded btn-outline-info">
+                                                    <%= order.status %>
+                                                </button>
+                                            <% } else if (order.status=="delivered" ) { %>
+                                                <button class="btn btn-rounded btn-outline-success">
+                                                    <%= order.status %>
+                                                </button>
+                                            <% } else if (order.status == "return processing") { %>
+                                                <button class="btn btn-rounded btn-outline-primary">
+                                                    <%= order.status %>
+                                                </button>
+                                            <% } else if (order.status=="returned" ) { %>
+                                                <button class="btn btn-rounded btn-outline-danger">
+                                                    <%= order.status %>
+                                                </button>
+                                            <% } %>
+
+                                        </div>
+                                    </div>
+                                    <img src="/images/productImages/<%= order.product.mainImage[0].filename %>"
+                                        alt="image" height="170px" width="130px"
+                                        class="ml-lg-5 order-1 order-lg-2 mb-2 mb-lg-0"
+                                        onclick="window.location.href='/profile/myOrders/<%= order._id %>'">
+
+                                </div> <!-- End -->
+
+                            </li>
+                            <% }) %>
+
+                    </ul>
+
+                </div>
+
+    </section>
+
+    <%- include('./partials/footer') %>

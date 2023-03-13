@@ -48,6 +48,7 @@ const {
   addAddress,
   postCheckout,
   getOrderPlaced,
+  getMyOrders,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -111,6 +112,7 @@ router.get("/orderPlaced",verifyLoggedIn, checkBan, getOrderPlaced)
 /* -------------------User profile----------------------*/
 // add address
 router.post('/profile/addAddress',verifyLoggedIn, checkBan,addAddress)
+router.get("/profile/myOrders",verifyLoggedIn, checkBan,getMyOrders)
 
 
 /* -------------------User Authentication----------------------*/
