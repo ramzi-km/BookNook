@@ -497,4 +497,21 @@ module.exports = {
       .lean();
     res.render("user/myOrders", { user,orders });
   },
+
+  // get order details page 
+  getOrderDetails:async (req,res) => {
+    const userId = req.session.user._id
+    const user = req.session.user;
+    const orderId = req.params.id
+
+    const [order] = await Order.find({userId:userId,_id:orderId})
+
+    console.log(order);
+    res.render('user/orderDetails',{user,order})
+
+  },
+
+
+   //----------------xx---------------------------//
+
 };

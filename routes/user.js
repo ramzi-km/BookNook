@@ -49,6 +49,7 @@ const {
   postCheckout,
   getOrderPlaced,
   getMyOrders,
+  getOrderDetails,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -110,9 +111,13 @@ router.post("/cart/checkout", verifyLoggedIn, checkBan, postCheckout);
 router.get("/orderPlaced",verifyLoggedIn, checkBan, getOrderPlaced)
 
 /* -------------------User profile----------------------*/
+
 // add address
 router.post('/profile/addAddress',verifyLoggedIn, checkBan,addAddress)
+// get order history page
 router.get("/profile/myOrders",verifyLoggedIn, checkBan,getMyOrders)
+// get order details page
+router.get("/profile/myOrders/:id",verifyLoggedIn, checkBan,getOrderDetails)
 
 
 /* -------------------User Authentication----------------------*/

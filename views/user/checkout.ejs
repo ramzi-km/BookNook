@@ -123,6 +123,8 @@
                                             <a class="nav-link" href="#"><i class="fa-solid fa-address-card"></i>
                                                 Profile</a>
                                         </li>
+                                        <li class="nav-item"><a class="nav-link" href="/profile/myOrders"><i
+                                                    class="fa-solid fa-box-open"></i> My orders</a></li>
                                         <li class="nav-item">
                                             <form action="/logout" method="post">
                                                 <button class="nav-link" type="submit" style="width: 100%">
@@ -233,41 +235,43 @@
 
                             <% if (addressError) { %>
                                 <div class="alert alert-dismissable fade show alert-warning d-flex justify-content-between"
-                                role="alert">
-                                <strong>
-                                    Please choose an address before proceeding.if you doesn't have any saved addresses
-                                    please add one using the button given above.
-                                </strong>
-                            </div>
-                            <% } %>
-
-                            <% if (!address[0]) { %>
-                                <div class="address-radio">
-                                    <input type="radio" class="pixel-radio" hidden value="empty" form="mainForm"
-                                        name="address" id="empty" checked required>
+                                    role="alert">
+                                    <strong>
+                                        Please choose an address before proceeding.if you doesn't have any saved
+                                        addresses
+                                        please add one using the button given above.
+                                    </strong>
                                 </div>
-                                <% }else{%>
-                                    <% address.forEach(addr=>{ %>
-                                        <label class="address-box mt-3" for="<%= addr.id  %>">
-                                            <div class="address-detail">
-                                                <b class="text-dark">
-                                                    <%=addr.name %>
-                                                </b>
-                                                <b class="text-dark">
-                                                    <%=addr.mobile %>
-                                                </b>
-                                                <b class="text-dark">
-                                                    <%=addr.address %>
-                                                </b>
-                                                <b class="text-dark">PIN: <%=addr.pincode %> </b>
-                                            </div>
-                                            <div class="address-radio">
-                                                <input type="radio" class="pixel-radio" value="<%= addr.id  %>"
-                                                    form="mainForm" name="address" id="<%= addr.id  %>" required>
-                                            </div>
-                                        </label>
-                                        <% }) %>
-                                            <% } %>
+                                <% } %>
+
+                                    <% if (!address[0]) { %>
+                                        <div class="address-radio">
+                                            <input type="radio" class="pixel-radio" hidden value="empty" form="mainForm"
+                                                name="address" id="empty" checked required>
+                                        </div>
+                                        <% }else{%>
+                                            <% address.forEach(addr=>{ %>
+                                                <label class="address-box mt-3" style="background-color: #dadada;" for="<%= addr.id  %>">
+                                                    <div class="address-detail">
+                                                        <b class="text-dark">
+                                                            <%=addr.name %>
+                                                        </b>
+                                                        <b class="text-dark">
+                                                            <%=addr.mobile %>
+                                                        </b>
+                                                        <b class="text-dark">
+                                                            <%=addr.address %>
+                                                        </b>
+                                                        <b class="text-dark">PIN: <%=addr.pincode %> </b>
+                                                    </div>
+                                                
+                                                <div class="address-radio" >
+                                                    <input type="radio" style="background-color: #ffffff;" class="pixel-radio" value="<%= addr.id  %>"
+                                                        form="mainForm" name="address" id="<%= addr.id  %>" required>
+                                                </div>
+                                            </label>
+                                                <% }) %>
+                                                    <% } %>
 
                         </div>
 
@@ -293,7 +297,7 @@
                             </button>
 
                         </div>
-                        <div class="checkout__order">
+                        <div class="checkout__order mb-5">
                             <h4 class="order__title">Your order</h4>
                             <div class="checkout__order__products">
                                 Product <span>Total</span>
@@ -310,7 +314,7 @@
                             </ul>
 
                             <ul style="
-                      background-color: #dadada;
+                      background-color: #c6c3c3;
                       border-radius: 2px;
                       padding-top: 5px;
                       padding-bottom: 5px;
@@ -318,7 +322,7 @@
 
                                 <li class="ml-2">
                                     <input class="pixel-radio" name="paymentType" form="mainForm" type="radio" id="cod"
-                                       value="cod" required />
+                                        value="cod" required />
                                     <label for="cod" class="text-dark">
                                         Cash on delivery
                                     </label>
