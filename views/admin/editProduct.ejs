@@ -269,7 +269,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body" style="background-color: #061c31;">
-                                
+
                                 <form class="form-horizontal mt-4" id="form"
                                     action="/admin/productM/editProduct/<%= product._id %>" method="post"
                                     enctype="multipart/form-data">
@@ -358,16 +358,23 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="extraImageDelete" class="text-warning">Click on the image if  you want to remove it</label>
-                                            <div class="form-outline">
-                                                
+
+                                            <div class="form-outline d-lg-flex">
+
                                                 <% product.extraImages.forEach((image,index)=> { %>
-                                                    <a id="extraImageDelete" href="/admin/productM/editProduct/deleteExtraImage/<%= product._id %>/<%= image.filename %>"
-                                                        onclick="return confirm('Do you really want to Delete this image')">
+                                                    <div style="position: relative; width: 120px; height: 200px; ">
                                                         <img style="width: 120px; height: 200px;"
                                                             src="/images/productImages/<%= image.filename %>" alt="">
-                                                    </a>
-                                                <% }) %>
+                                                        <a id="extraImageDelete"
+                                                            href="/admin/productM/editProduct/deleteExtraImage/<%= product._id %>/<%= image.filename %>"
+                                                            onclick="return confirm('Do you really want to Delete this image')">
+                                                            <button type="button" class="btn btn-circle btn-danger"
+                                                                style="position: absolute; top: 0; right: 0; "><span
+                                                                    class="mdi mdi-delete"></span></button>
+                                                        </a>
+                                                    </div>
+
+                                                    <% }) %>
 
                                             </div>
                                         </div>
@@ -388,11 +395,13 @@
                                         <div class="form-group col-md-4">
                                             <label class="text-white">Side Images</label>
                                             <input id="images" type="file" multiple class="form-control"
-                                            accept="image/*" name="extraImages">
+                                                accept="image/*" name="extraImages">
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <label for="" class="text-danger"><%= imageError %></label>
+                                        <label for="" class="text-danger">
+                                            <%= imageError %>
+                                        </label>
                                     </div>
 
                                     <div class="d-flex justify-content-center mt-4">

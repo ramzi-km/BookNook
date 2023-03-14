@@ -74,20 +74,28 @@
                                 <% }else{ %>
                                     <a class="primary-btn" href="/addToCart/<%= product._id %>">Add to Cart</a>
                                     <% } %>
-
-                                        <% if (productInWishlist[0]) { %>
-                                            <div id="wishlistIcon" style="margin-left: auto;">
-                                                <a style="font-size: xx-large;"
-                                                    onclick="removeFromWishlist('<%=product._id%>')"><i
-                                                        class="text-danger fa-solid fa-heart"></i></a>
-                                            </div>
-                                            <% } else{ %>
+                                        <% if (user) { %>
+                                            <% if (productInWishlist[0]) { %>
                                                 <div id="wishlistIcon" style="margin-left: auto;">
                                                     <a style="font-size: xx-large;"
-                                                        onclick="addToWishlist('<%=product._id%>')"><i
-                                                            class="fa-regular fa-heart"></i></a>
+                                                        onclick="removeFromWishlist('<%=product._id%>')"><i
+                                                            class="text-danger fa-solid fa-heart"></i></a>
                                                 </div>
-                                                <% } %>
+                                                <% } else{ %>
+                                                    <div id="wishlistIcon" style="margin-left: auto;">
+                                                        <a style="font-size: xx-large;"
+                                                            onclick="addToWishlist('<%=product._id%>')"><i
+                                                                class="fa-regular fa-heart"></i></a>
+                                                    </div>
+                                                    <% } %>
+                                                        <% }else{ %>
+                                                            <div id="wishlistIcon" style="margin-left: auto;">
+                                                                <a style="font-size: xx-large;"
+                                                                    onclick="window.location.href='/login'"><i
+                                                                        class="fa-regular fa-heart"></i></a>
+                                                            </div>
+                                                            <% }%>
+
 
 
                         </div>

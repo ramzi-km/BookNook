@@ -149,7 +149,9 @@ module.exports = {
         };
         console.log(req.body);
         console.log(req.files);
-        const newProduct = await Product.create(fields);
+        console.log(fields);
+        const newProduct = new Product(fields);
+        await newProduct.save();
         imageFileError = null;
         addProductMessage = "product added successfully";
         res.redirect("/admin/productM");
@@ -228,7 +230,8 @@ module.exports = {
     await Product.findByIdAndUpdate(prodId, {
       $pull: { extraImages: { filename: imageName } },
     });
-    res.redirect('back')
+    console.log(prodId);
+    res.redirect("back");
   },
 
   // unlist product
@@ -425,9 +428,9 @@ module.exports = {
     let objectId = req.params.id;
     try {
       let order = await Order.findById(objectId);
-      if(status == "delivered"){
-        order.paid = true
-        order.amountToPay = 0 ;
+      if (status == "delivered") {
+        order.paid = true;
+        order.amountToPay = 0;
       }
       order.status = status;
       order.save();

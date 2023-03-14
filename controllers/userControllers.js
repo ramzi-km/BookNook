@@ -96,17 +96,25 @@ module.exports = {
   getProductDetails: async (req, res) => {
     let user = req.session.user;
     let productId = req.params.id;
-    let productInCart = await User.find(
-      {
+    let productInCart =[]
+    let productInWishlist =[]
+    if(user){
+       productInCart = await User.find(
+        {
+          _id: user._id,
+          cart: { $elemMatch: { id: productId } },
+        },
+        { cart: 1 }
+      );
+       productInWishlist = await User.find({
         _id: user._id,
-        cart: { $elemMatch: { id: productId } },
-      },
-      { cart: 1 }
-    );
-    let productInWishlist = await User.find({
-      _id: user._id,
-      wishlist: productId,
-    });
+        wishlist: productId,
+      });
+    }else{
+      productInCart = []
+      productInWishlist = []
+    }
+    
 
     try {
       let product = await Product.findById(productId);
