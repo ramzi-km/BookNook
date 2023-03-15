@@ -147,9 +147,6 @@ module.exports = {
           coverImage: req.files.coverImage,
           extraImages: req.files.extraImages,
         };
-        console.log(req.body);
-        console.log(req.files);
-        console.log(fields);
         const newProduct = new Product(fields);
         await newProduct.save();
         imageFileError = null;
