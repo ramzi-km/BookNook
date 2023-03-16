@@ -4985,13 +4985,13 @@ label {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 20px;
-  width: 20px;
+  height: 15px;
+  width: 15px;
   -webkit-transition: all 0.15s ease-out 0s;
   -moz-transition: all 0.15s ease-out 0s;
   transition: all 0.15s ease-out 0s;
   background: #fff;
-  border: 1px solid #eee;
+  border: 1px solid rgb(0,0,0,0.5);
   color: #fff;
   cursor: pointer;
   display: inline-block;

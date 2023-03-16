@@ -15,26 +15,28 @@
 
         <style>
             .address-box {
-                width: 100%;
-                background-color: var(--white);
-                display: flex;
+                background-color: #dddddd;
+                border-radius: 10px;
                 justify-content: space-between;
+                width: 100%;
+                display: flex;
+
                 align-items: center;
                 padding: 20px;
             }
-        
+
             .address-detail {
                 display: flex;
                 flex-direction: column;
             }
-        
+
             .address-box input {
                 width: 15px;
                 height: 15px;
             }
         </style>
 
-        
+
     </head>
 
 
@@ -98,7 +100,7 @@
                                             </div>
                                             <div class="checkout__input">
                                                 <p>PIN code<span>*</span></p>
-                                                <input type="number" minlength="4" maxlength="8" name="pincode"
+                                                <input type="number" minlength="4" maxlength="8" name="pinCode"
                                                     required />
                                             </div>
                                             <div class="">
@@ -126,16 +128,19 @@
                                 <% } %>
 
                                     <% if (!address[0]) { %>
+
                                         <div class="address-radio">
                                             <input type="radio" class="pixel-radio" hidden value="empty" form="mainForm"
                                                 name="address" id="empty" checked required>
+
                                         </div>
                                         <% }else{%>
                                             <% address.forEach(addr=>{ %>
-                                                <label class="address-box mt-3" style="background-color: #dadada;" for="<%= addr.id  %>">
+                                                <label class="address-box mt-3" for="<%= addr.id  %>">
                                                     <div class="address-detail">
-                                                        <b class="text-dark">
+                                                        <b class="d-flex  text-dark">
                                                             <%=addr.name %>
+
                                                         </b>
                                                         <b class="text-dark">
                                                             <%=addr.mobile %>
@@ -143,18 +148,98 @@
                                                         <b class="text-dark">
                                                             <%=addr.address %>
                                                         </b>
-                                                        <b class="text-dark">PIN: <%=addr.pincode %> </b>
+                                                        <b class="text-dark">PIN: <%=addr.pinCode %> </b>
                                                     </div>
-                                                
-                                                <div class="address-radio" >
-                                                    <input type="radio" style="background-color: #ffffff;" class="pixel-radio" value="<%= addr.id  %>"
-                                                        form="mainForm" name="address" id="<%= addr.id  %>" required>
+
+                                                    <div class="address-radio">
+                                                        <div class="mb-5 d-flex">
+
+                                                            <button class="btn m-1 collapsed" data-toggle="collapse"
+                                                                data-target="#collapse<%= addr.id %>"
+                                                                aria-expanded="false" aria-controls="collapseTwo">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                            </button>
+
+                                                            <a  href="/profile/deleteAddress/<%=addr.id %>" class="btn btn-light m-1"
+                                                                onclick="return confirm(`Do you really want to remove this address ?`)">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </a>
+                                                        </div>
+                                                        <input type="radio" style="background-color: #ffffff;"
+                                                            class="pixel-radio" value="<%= addr.id  %>" form="mainForm"
+                                                            name="address" id="<%= addr.id  %>" required>
+                                                    </div>
+
+                                                </label>
+                                                <div id="accordion<%= addr.id %>">
+                                                    <div class="card">
+                                                        <div id="collapse<%= addr.id %>" class="collapse"
+                                                            data-parent="#accordion<%= addr.id %>">
+                                                            <div class="card-body">
+                                                                <form id="editAddressForm<%= addr.id %>"
+                                                                    action="/profile/editAddress/<%= addr.id %>"
+                                                                    method="post">
+                                                                    <div class="row">
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="checkout__input">
+                                                                                <p>Name<span>*</span></p>
+                                                                                <input type="text" name="name"
+                                                                                    value="<%= addr.name %>" required />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="checkout__input">
+                                                                                <p>Mobile<span>*</span></p>
+                                                                                <input type="text" placeholder="+91"
+                                                                                    name="mobile" pattern="[0-9]*"
+                                                                                    minlength="10" maxlength="10"
+                                                                                    value="<%= addr.mobile %>"
+                                                                                    required />
+                                                                                <label
+                                                                                    for="mobile">format:8923488398</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="checkout__input">
+                                                                        <p>Address<span>*</span></p>
+                                                                        <textarea name="address" rows="3"
+                                                                            form="editAddressForm<%= addr.id %>"
+                                                                            required><%= addr.address %></textarea>
+                                                                    </div>
+                                                                    <div class="checkout__input">
+                                                                        <p>Town/City<span>*</span></p>
+                                                                        <input type="text" name="city"
+                                                                            value="<%= addr.city %>" required />
+                                                                    </div>
+                                                                    <div class="checkout__input">
+                                                                        <p>State<span>*</span></p>
+                                                                        <input type="text" name="state"
+                                                                            value="<%= addr.state %>" required />
+                                                                    </div>
+                                                                    <div class="checkout__input">
+                                                                        <p>PIN code<span>*</span></p>
+                                                                        <input type="number" minlength="4" maxlength="8"
+                                                                            name="pinCode" value="<%= addr.pinCode %>"
+                                                                            required />
+                                                                    </div>
+                                                                    <div class="">
+                                                                        <button type="submit"
+                                                                            form="editAddressForm<%= addr.id %>"
+                                                                            class="btn btn-rounded btn-danger">Save
+                                                                            changes</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </label>
+
                                                 <% }) %>
                                                     <% } %>
 
                         </div>
+
 
                     </div>
                     <div class="col-lg-4 col-md-6">
@@ -162,8 +247,9 @@
                         <div class="cart__discount">
                             <h6>Discount codes</h6>
                             <div class="input-group">
-                                <input type="text" class="form-control" form="couponForm" name="couponCode" placeholder="Coupon code" required />
-                            <button type="submit" form="couponForm" class="btn btn-rounded btn-danger btn-md" style="
+                                <input type="text" class="form-control" form="couponForm" name="couponCode"
+                                    placeholder="Coupon code" required />
+                                <button type="submit" form="couponForm" class="btn btn-rounded btn-danger btn-md" style="
                             font-size: 14px;
                             color: #ffffff;
                             font-weight: 700;
@@ -173,8 +259,8 @@
                             width: auto;
                             border: none;
                           ">
-                                Apply
-                            </button>
+                                    Apply
+                                </button>
                             </div>
                         </div>
                         <div class="checkout__order mb-5">
@@ -194,22 +280,23 @@
                             </ul>
 
                             <ul style="
-                      background-color: #c6c3c3;
-                      border-radius: 2px;
+                      background-color: #ffffff;
+                      border-radius: 10px;
+                      border: 1px solid rgb(0, 0, 0,0.75);
                       padding-top: 5px;
                       padding-bottom: 5px;
                     ">
 
                                 <li class="ml-2">
-                                    <input class="pixel-radio" name="paymentType" form="mainForm" type="radio" id="cod"
-                                        value="cod" required />
+                                    <input class="pixel-radio" style="height: 15px; width: 15px;" name="paymentType"
+                                        form="mainForm" type="radio" id="cod" value="cod" required />
                                     <label for="cod" class="text-dark">
                                         Cash on delivery
                                     </label>
                                 </li>
                                 <li class="ml-2">
-                                    <input class="pixel-radio" name="paymentType" form="mainForm" type="radio"
-                                        id="online" value="online" required />
+                                    <input class="pixel-radio" style="height: 15px; width: 15px;" name="paymentType"
+                                        form="mainForm" type="radio" id="online" value="online" required />
                                     <label for="online" class="text-dark">
                                         Online payment
                                     </label>
@@ -227,16 +314,5 @@
     <!-- Checkout Section End -->
 
 
-
-    <!-- Js Plugins -->
-    <script src="/template2/js/jquery-3.3.1.min.js"></script>
-    <script src="/template2/js/jquery.nice-select.min.js"></script>
-    <script src="/template2/js/jquery.nicescroll.min.js"></script>
-    <script src="/template2/js/jquery.magnific-popup.min.js"></script>
-    <script src="/template2/js/jquery.countdown.min.js"></script>
-    <script src="/template2/js/jquery.slicknav.js"></script>
-    <script src="/template2/js/mixitup.min.js"></script>
-    <script src="/template2/js/owl.carousel.min.js"></script>
-    <script src="/template2/js/main.js"></script>
 
     <%- include('./partials/footer') %>

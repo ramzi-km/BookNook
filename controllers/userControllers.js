@@ -96,25 +96,24 @@ module.exports = {
   getProductDetails: async (req, res) => {
     let user = req.session.user;
     let productId = req.params.id;
-    let productInCart =[]
-    let productInWishlist =[]
-    if(user){
-       productInCart = await User.find(
+    let productInCart = [];
+    let productInWishlist = [];
+    if (user) {
+      productInCart = await User.find(
         {
           _id: user._id,
           cart: { $elemMatch: { id: productId } },
         },
         { cart: 1 }
       );
-       productInWishlist = await User.find({
+      productInWishlist = await User.find({
         _id: user._id,
         wishlist: productId,
       });
-    }else{
-      productInCart = []
-      productInWishlist = []
+    } else {
+      productInCart = [];
+      productInWishlist = [];
     }
-    
 
     try {
       let product = await Product.findById(productId);
@@ -476,7 +475,7 @@ module.exports = {
   //add user address
   addAddress: async (req, res) => {
     const userId = req.session.user._id;
-    const { name, mobile, address, city, state, pincode } = req.body;
+    const { name, mobile, address, city, state, pinCode } = req.body;
     await User.updateOne(
       { _id: userId },
       {
@@ -487,13 +486,62 @@ module.exports = {
             address,
             city,
             state,
-            pincode,
+            pinCode,
             id: createId(),
           },
         },
       }
     );
     res.redirect("back");
+  },
+
+  // edit address
+  editAddress: async (req, res) => {
+    let userId = req.session.user._id;
+    let addressId = req.params.id;
+    const { name, mobile, address, city, state, pinCode } = req.body;
+    try {
+      await User.updateOne(
+        { _id: userId, address: { $elemMatch: { id: addressId } } },
+        {
+          $set: {
+            "address.$": {
+              name,
+              mobile,
+              address,
+              city,
+              state,
+              pinCode,
+              id: addressId,
+            },
+          },
+        }
+      );
+      res.redirect("back");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+
+  //delete address
+  deleteAddress: async (req, res) => {
+    let userId = req.session.user._id;
+    let addressId = req.params.id;
+    try {
+      await User.updateOne(
+        { _id: userId, address: { $elemMatch: { id: addressId } } },
+        {
+          $pull: {
+            address: {
+              id: addressId,
+            },
+          },
+        }
+      );
+      res.redirect("back");
+    } catch (error) {
+      res.send(error);
+    }
   },
 
   // get my orders page
@@ -503,23 +551,20 @@ module.exports = {
     const orders = await Order.find({ userId: userId })
       .sort({ _id: -1 })
       .lean();
-    res.render("user/myOrders", { user,orders });
+    res.render("user/myOrders", { user, orders });
   },
 
-  // get order details page 
-  getOrderDetails:async (req,res) => {
-    const userId = req.session.user._id
+  // get order details page
+  getOrderDetails: async (req, res) => {
+    const userId = req.session.user._id;
     const user = req.session.user;
-    const orderId = req.params.id
+    const orderId = req.params.id;
 
-    const [order] = await Order.find({userId:userId,_id:orderId})
+    const [order] = await Order.find({ userId: userId, _id: orderId });
 
     console.log(order);
-    res.render('user/orderDetails',{user,order})
-
+    res.render("user/orderDetails", { user, order });
   },
 
-
-   //----------------xx---------------------------//
-
+  //----------------xx---------------------------//
 };

@@ -497,7 +497,7 @@ ol {
 	width: 100%;
 	border: 1px solid #e1e1e1;
 	font-size: 14px;
-	color: #b7b7b7;
+	color: #000000;
 	padding-left: 20px;
 	margin-bottom: 20px;
 }
@@ -505,7 +505,7 @@ ol {
 	width: 100%;
 	border: 1px solid #e1e1e1;
 	font-size: 14px;
-	color: #b7b7b7;
+	color: #0c0c0c;
 	padding-left: 20px;
 	margin-bottom: 20px;
 }
@@ -587,6 +587,8 @@ ol {
 }
 
 .checkout__order {
+	border-radius: 10px;
+	border: 1px solid rgb(0, 0, 0,0.5);
 	background: #fff7b7;
 	padding: 30px;
 }

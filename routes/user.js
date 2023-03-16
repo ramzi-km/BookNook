@@ -50,6 +50,8 @@ const {
   getOrderPlaced,
   getMyOrders,
   getOrderDetails,
+  editAddress,
+  deleteAddress,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -112,8 +114,20 @@ router.get("/orderPlaced",verifyLoggedIn, checkBan, getOrderPlaced)
 
 /* -------------------User profile----------------------*/
 
+
+/* ------------Address----------------*/
+
+
 // add address
 router.post('/profile/addAddress',verifyLoggedIn, checkBan,addAddress)
+// edit address
+router.post('/profile/editAddress/:id',verifyLoggedIn, checkBan,editAddress)
+// delete address
+router.get('/profile/deleteAddress/:id',verifyLoggedIn,checkBan,deleteAddress)
+
+/* ------------xxxxxx----------------*/
+
+
 // get order history page
 router.get("/profile/myOrders",verifyLoggedIn, checkBan,getMyOrders)
 // get order details page

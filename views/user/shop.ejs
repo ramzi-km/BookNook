@@ -24,7 +24,7 @@
                                 <label for="category1">All</label>
                         </li>
                         <% categories.forEach(item=> { %>
-                            <li class="main-nav-list"><input class="pixel-radio" type="radio"
+                            <li class="main-nav-list"><input class="pixel-radio"  type="radio"
                                     onchange="this.form.submit()" id="category<%= item.name %>" name="category"
                                     value="<%= item.name %>" <% if (category==item.name ) { %>
                                 checked
@@ -45,25 +45,25 @@
                         <div class="head">Price</div>
 
                         <ul>
-                            <li class="filter-list"><input class="pixel-radio" type="radio"
+                            <li class="filter-list"><input class="pixel-radio"  type="radio"
                                     onchange="this.form.submit()" id="price0" name="price" value="" <% if(price=="" ) {
                                     %>
                                 checked
                                 <% } %> > <label for="price0">All</label>
                             </li>
-                            <li class="filter-list"><input class="pixel-radio" type="radio"
+                            <li class="filter-list"><input class="pixel-radio"  type="radio"
                                     onchange="this.form.submit()" id="price1" name="price" value="1" <% if(price==1) {
                                     %>
                                 checked
                                 <% } %>> <label for="price1">₹100 - ₹500</label>
                             </li>
-                            <li class="filter-list"><input class="pixel-radio" onchange="this.form.submit()"
+                            <li class="filter-list"><input class="pixel-radio"  onchange="this.form.submit()"
                                     type="radio" id="price2" name="price" value="2" <% if (price==2) { %>
                                 checked
                                 <% } %>><label for="price2">₹500 -
                                         ₹1500</label>
                             </li>
-                            <li class="filter-list"><input class="pixel-radio" type="radio"
+                            <li class="filter-list"><input class="pixel-radio"  type="radio"
                                     onchange="this.form.submit()" id="price3" name="price" value="3" <% if (price==3){
                                     %>
                                 checked
