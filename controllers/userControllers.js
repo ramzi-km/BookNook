@@ -31,9 +31,47 @@ let addressError = false;
 
 module.exports = {
   //----------------Home------------------//
-  getHome: (req, res) => {
+  getHome: async (req, res) => {
     let user = req.session.user;
-    res.render("user/home", { user });
+    try {
+      let bestProducts = await Order.aggregate([
+        {
+          $group: {
+            _id: "$product._id",
+            name: { $first: "$product.name" },
+            category: { $first: "$product.category" },
+            totalSold: { $sum: "$quantity" },
+            name: { $first: "$product.name" },
+            category: { $first: "$product.category" },
+            author: { $first: "$product.author" },
+            price: { $first: "$product.price" },
+            mrp: { $first: "$product.mrp" },
+            description: { $first: "$product.description" },
+            cover: { $first: "$product.coverImage" },
+          },
+        },
+        { $sort: { totalSold: -1 } },
+        { $limit: 5 },
+      ]);
+      let latestProducts = await Product.find({ unList: false })
+        .sort({ createdAt: -1 })
+        .limit(4)
+        .lean();
+
+      let products = await Product.find({ unList: false })
+        .sort({ createdAt: -1 })
+        .lean();
+      
+      let offerProducts = products.filter((product) => {
+        if ((product.price / product.mrp) * 100 < 70) {
+          return product;
+        }
+      })
+      console.log(offerProducts);
+      res.render("user/home", { user, bestProducts, latestProducts,offerProducts });
+    } catch (error) {
+      res.send(error);
+    }
   },
   //---------------xx--------------------//
 
@@ -194,6 +232,24 @@ module.exports = {
         }
       );
       res.json({ user });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  // add to wishlist
+  addToWishlist2: async (req, res) => {
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
+    try {
+      let user = await User.updateOne(
+        { _id: userId },
+        {
+          $addToSet: {
+            wishlist: prodId,
+          },
+        }
+      );
+      res.redirect("/wishlist");
     } catch (error) {
       res.send(error);
     }

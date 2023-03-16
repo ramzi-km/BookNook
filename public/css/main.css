@@ -2038,8 +2038,8 @@ h6 {
   width: 100%;
   content: "";
   background: #000;
-  opacity: 0;
-  visibility: hidden;
+  opacity: 0.5;
+  visibility: visible;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
@@ -2049,16 +2049,16 @@ h6 {
 .single-deal .deal-details {
   position: absolute;
   left: 50%;
-  top: 115%;
+  top: 50%;
   display: inline-block;
   text-align: center;
+  opacity: 1;
+  visibility: visible;
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  opacity: 0;
-  visibility: hidden;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
@@ -2070,16 +2070,6 @@ h6 {
   text-transform: uppercase;
 }
 
-.single-deal:hover .overlay {
-  opacity: 0.5;
-  visibility: visible;
-}
-
-.single-deal:hover .deal-details {
-  top: 50%;
-  opacity: 1;
-  visibility: visible;
-}
 
 /* end category area css
 ============================================================================================ */

@@ -52,6 +52,7 @@ const {
   getOrderDetails,
   editAddress,
   deleteAddress,
+  addToWishlist2,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -75,8 +76,12 @@ router.get("/productDetails/:id", getProductDetails);
 
 //get wishlist page
 router.get("/wishlist", verifyLoggedIn, checkBan, getWishlist);
+
 //add to wishlist
 router.get("/wishlist/add/:id", verifyLoggedIn, checkBan,addToWishlist);
+//add to wishlist2
+router.get("/wishlist/add2/:id", verifyLoggedIn, checkBan,addToWishlist2);
+
 //remove from wishlist
 router.get("/wishlist/remove/:id", verifyLoggedIn, checkBan,removeFromWishlist);
 router.get("/wishlist/remove2/:id", verifyLoggedIn, checkBan,removeFromWishlist2);

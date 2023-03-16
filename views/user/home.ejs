@@ -1,73 +1,171 @@
-					
-					
-					<%- include('./partials/header.ejs') %>
+<%- include('./partials/header.ejs') %>
 
+	<head>
+		<style>
+			.swiper-main {
+				background: #eee;
+				font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+				font-size: 14px;
+				color: #000;
+				margin: 0;
+				padding: 0;
+				height: 85vh;
+			}
 
-	<div class="container-fluid">
-		<div class="row d-flex justify-content-center" style="height: 450px;">
-			<div class="col-md-8" style="height: 100%">
-				<img src="images/library.jpg" class="w-100" height="100%" alt="">
-			</div>
+			swiper-container {
+				width: 80%;
+				height: 100%;
+			}
+
+			swiper-slide {
+				text-align: center;
+				font-size: 18px;
+				/* background: #fff; */
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			swiper-slide img {
+				display: block;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.banner {
+				width: 100%;
+				height: 100%;
+				background-repeat: no-repeat;
+				background-size: cover;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				justify-content: center;
+				padding-left: 100px;
+				box-shadow: inset 200px 200px 300px 200px rgba(0, 0, 0, 0.8);
+			}
+		</style>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+	</head>
+
+	<div class="container-fluid" style="margin-top: -30px">
+		<div class="swiper-main">
+			<swiper-container class="mySwiper" pagination="true" pagination-clickable="true" navigation="true"
+				space-between="30" centered-slides="true" autoplay-delay="5000" autoplay-disable-on-interaction="false">
+				<% if (bestProducts[0]) { %>
+					<% bestProducts.forEach(product=> { %>
+						<swiper-slide>
+							<div class="banner"
+								style="background-image: url('/images/productImages/<%= product.cover[0].filename %>');">
+								<h3 class="text-warning">BEST SELLER</h3>
+								<h1 class="text-white my-3"style="width: 80%; text-align: start;">
+									<%= product.name %>
+								</h1>
+								<div class="d-flex">
+									<span>
+										<b class="text-white">
+											<%= product.author %>
+										</b>
+									</span>
+									<span class="ml-5">
+										<b class="text-white">
+											<%= product.category %>
+										</b>
+									</span>
+								</div><br>
+								<div class="d-flex" style="width: 30%; text-align: start;">
+									<span style="color: #999999;">
+										<%= product.description %>
+									</span>
+								</div>
+								<div class="d-flex my-3">
+									<span>
+										<b class="text-white">
+											₹ <%= product.price %>
+										</b>
+									</span>
+									<span class="ml-5">
+										<b style="color: #ff3a3a;">
+											<strike>
+												₹ <%= product.mrp %>
+											</strike>
+										</b>
+									</span>
+								</div>
+								<button type="button" class="btn btn-rounded btn-danger"
+									onclick="window.location.href='/productDetails/<%= product._id %>'">Buy now</button>
+	
+							</div>
+						</swiper-slide>
+						<% }) %>
+				<% } %>
 		</div>
-
 	</div>
 
-	
+
 
 	<!-- Start category Area -->
 	<section class="category-area mt-5">
 		<div class="container">
+			<div class="d-flex justify-content-center m-3">
+				<h1>CATEGORIES</h1>
+			</div>
 			<div class="row justify-content-center">
 				<div class="col-lg-8 col-md-12">
 					<div class="row">
-						<div class="col-lg-8 col-md-8">
+						<div class="col-6 col-lg-8 col-md-8">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="images/philosophy.jpeg" alt="">
-								<a href="">
+								<img class="img-fluid w-100" src="/images/philosophy.png"
+									style="width:100%; height:12em; object-fit: cover;" alt="">
+								<a href="/shop?search=&category=Philosophy&price=&sort=0">
 									<div class="deal-details">
 										<h6 class="deal-title">Philosophy</h6>
 									</div>
 								</a>
 							</div>
 						</div>
-						<div class="col-lg-4 col-md-4">
+						<div class="col-6 col-lg-4 col-md-4">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="images/sports.jpeg" alt="">
-								<a href=""">
-									<div class=" deal-details">
-									<h6 class="deal-title">Sports</h6>
+								<img class="img-fluid w-100" src="/images/personal.webp"
+									style="width:100%; height:12em; object-fit: cover;" alt="">
+								<a href="/shop?search=&category=Personal+development&price=&sort=0">
+									<div class="deal-details">
+										<h6 class="deal-title">Personal development</h6>
+									</div>
+								</a>
 							</div>
-							</a>
+						</div>
+						<div class="col-6 col-lg-4 col-md-4">
+							<div class="single-deal">
+								<div class="overlay"></div>
+								<img class="img-fluid" src="/images/manga.jpg"
+									style="width:100%; height:12em; object-fit: cover;" alt="">
+								<a href="/shop?search=&category=Manga&price=&sort=0">
+									<div class=" deal-details">
+										<h6 class="deal-title">Manga</h6>
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="col-6 col-lg-8 col-md-8">
+							<div class="single-deal">
+								<div class="overlay"></div>
+								<img class="img-fluid " src="/images/philosophy.png"
+									style="width:100%; height: 12em; object-fit: cover;" alt="">
+								<a href="/shop?search=&category=Romance&price=&sort=0">
+									<div class="deal-details">
+										<h6 class="deal-title">Romance</h6>
+									</div>
+								</a>
+							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-4">
-						<div class="single-deal">
-							<div class="overlay"></div>
-							<img class="img-fluid" src="images/manga2.jpg" alt="">
-							<a href=""">
-									<div class=" deal-details">
-								<h6 class="deal-title">Manga</h6>
-						</div>
-						</a>
-					</div>
 				</div>
-				<div class="col-lg-8 col-md-8">
-					<div class="single-deal">
-						<div class="overlay"></div>
-						<img class="img-fluid w-100" src="images/business.jpeg" alt="">
-						<a href="">
-							<div class="deal-details">
-								<h6 class="deal-title">Business</h6>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		</div>
+			</div>
 		</div>
 	</section>
 	<!-- End category Area -->
@@ -77,7 +175,7 @@
 		<div class="container">
 			<div class="row features-inner">
 				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="col-lg-3 col-6">
 					<div class="single-features">
 						<div class="f-icon">
 							<img src="img/features/f-icon1.png" alt="">
@@ -87,7 +185,7 @@
 					</div>
 				</div>
 				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="col-lg-3 col-6">
 					<div class="single-features">
 						<div class="f-icon">
 							<img src="img/features/f-icon2.png" alt="">
@@ -97,7 +195,7 @@
 					</div>
 				</div>
 				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="col-lg-3 col-6">
 					<div class="single-features">
 						<div class="f-icon">
 							<img src="img/features/f-icon3.png" alt="">
@@ -107,7 +205,7 @@
 					</div>
 				</div>
 				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="col-lg-3 col-6">
 					<div class="single-features">
 						<div class="f-icon">
 							<img src="img/features/f-icon4.png" alt="">
@@ -130,149 +228,55 @@
 					<div class="col-lg-6 text-center">
 						<div class="section-title">
 							<h1>Latest Products</h1>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-								incididunt ut labore et
-								dolore
-								magna aliqua.</p>
+							<p>Take a look at some of our latest addition to our books collection.</p>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p1.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
 
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view</p>
-									</a>
+					<% if (latestProducts[0]) { %>
+						<% latestProducts.forEach(product=> { %>
+							<!-- single product -->
+							<div class="col-lg-3 col-md-6">
+								<div class="single-product">
+									<a href="/productDetails/<%= product._id %>"><img class="img-fluid"
+											src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
+											style="max-width: 234px;  max-height: 274px;"></a>
+									<div class="product-details">
+										<h6
+											style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+											<a href="/productDetails/<%= product._id %>" class="text-dark"><span>
+													<%= product.name %>
+												</span></a>
+										</h6>
+										<div class="price">
+											<h6 class="text-danger">₹ <%= product.price %>
+											</h6>
+											<h6 class="l-through">₹ <%= product.mrp %>
+											</h6>
+										</div>
+										<div class="prd-bottom">
+	
+											<a href="/addToCart/<%= product._id %>" class="social-info">
+												<span class="ti-bag"></span>
+												<p class="hover-text">add to cart</p>
+											</a>
+											<a class="social-info">
+												<span class="lnr lnr-heart"
+													onclick="window.location.href='/wishlist/add2/<%= product._id %>'"></span>
+												<p class="hover-text"
+													onclick="window.location.href='/wishlist/add2/<%= product._id %>'">
+													Wishlist</p>
+											</a>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p2.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
+	
+							<!-- single product -->
+							<% }) %>
+					<% } %>
 
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p3.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p4.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
-
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- single product -->
-
-					<!-- single product -->
-					
-					<!-- single product -->
-					
-					<!-- single product -->
-					
 				</div>
 			</div>
 		</div>
@@ -283,154 +287,55 @@
 					<div class="col-lg-6 text-center">
 						<div class="section-title">
 							<h1>Featured Products</h1>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-								incididunt ut labore et
-								dolore
-								magna aliqua.</p>
+							<p>The featured products area of our online bookstore showcases a carefully curated
+								selection of books that are popular, highly-rated, or recently released. </p>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p6.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
-
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p8.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
-
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
+					<% if (latestProducts[0]) { %>
+						<% latestProducts.forEach(product=> { %>
+							<!-- single product -->
+							<div class="col-lg-3 col-md-6">
+								<div class="single-product">
+									<a href="/productDetails/<%= product._id %>"><img class="img-fluid"
+											src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
+											style="max-width: 234px;  max-height: 274px;"></a>
+									<div class="product-details">
+										<h6
+											style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+											<a href="/productDetails/<%= product._id %>" class="text-dark"><span>
+													<%= product.name %>
+												</span></a>
+										</h6>
+										<div class="price">
+											<h6 class="text-danger">₹ <%= product.price %>
+											</h6>
+											<h6 class="l-through">₹ <%= product.mrp %>
+											</h6>
+										</div>
+										<div class="prd-bottom">
+	
+											<a href="/addToCart/<%= product._id %>" class="social-info">
+												<span class="ti-bag"></span>
+												<p class="hover-text">add to cart</p>
+											</a>
+											<a class="social-info">
+												<span class="lnr lnr-heart"
+													onclick="window.location.href='/wishlist/add2/<%= product._id %>'"></span>
+												<p class="hover-text"
+													onclick="window.location.href='/wishlist/add2/<%= product._id %>'">
+													Wishlist</p>
+											</a>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p3.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
-
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="img/product/p5.jpg" alt="">
-							<div class="product-details">
-								<h6>addidas New Hammer sole
-									for Sports person</h6>
-								<div class="price">
-									<h6>$150.00</h6>
-									<h6 class="l-through">$210.00</h6>
-								</div>
-								<div class="prd-bottom">
-
-									<a href="" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-sync"></span>
-										<p class="hover-text">compare</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- single product -->
-					
-					<!-- single product -->
-					
-					<!-- single product -->
-
-					<!-- single product -->
-					
+	
+							<!-- single product -->
+							<% }) %>
+					<% } %>
+				
 				</div>
 			</div>
 		</div>
@@ -441,29 +346,6 @@
 
 	<!-- End exclusive deal Area -->
 
-	<!-- Start brand Area -->
-	<!-- <section class="brand-area section_gap">
-		<div class="container">
-			<div class="row">
-				<a class="col single-img" href="#">
-					<img class="img-fluid d-block mx-auto" src="img/brand/1.png" alt="">
-				</a>
-				<a class="col single-img" href="#">
-					<img class="img-fluid d-block mx-auto" src="img/brand/2.png" alt="">
-				</a>
-				<a class="col single-img" href="#">
-					<img class="img-fluid d-block mx-auto" src="img/brand/3.png" alt="">
-				</a>
-				<a class="col single-img" href="#">
-					<img class="img-fluid d-block mx-auto" src="img/brand/4.png" alt="">
-				</a>
-				<a class="col single-img" href="#">
-					<img class="img-fluid d-block mx-auto" src="img/brand/5.png" alt="">
-				</a>
-			</div>
-		</div>
-	</section> -->
-	<!-- End brand Area -->
 
 	<!-- Start related-product Area -->
 	<section class="related-product-area section_gap_bottom">
@@ -471,86 +353,31 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-6 text-center">
 					<div class="section-title">
-						<h1>Deals of the Week</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
+						<h1><span class="text-danger">30%</span> Discount and Above</h1>
+						<p>This is the place to find great deals on books across all genres. From bestsellers to manga,
+							we offer discounts and promotions on a rotating selection of titles.</p>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-							<div class="single-related-product d-flex">
-								<a href="#"><img src="img/r1.jpg" alt=""></a>
-								<div class="desc">
-									<a href="#" class="title">Black lace Heels</a>
-									<div class="price">
-										<h6>$189.00</h6>
-										<h6 class="l-through">$210.00</h6>
+						<% if (offerProducts[0]) { %>
+							<% for(let i=0; i< (offerProducts.length || 9); i++) { %>
+								<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+									<div class="single-related-product d-flex">
+										<a href="/productDetails/<%= offerProducts[i]._id %>"><img width="50px;" src="images/productImages/<%= offerProducts[i].mainImage[0].filename %>" alt=""></a>
+										<div class="desc">
+											<a href="/productDetails/<%= offerProducts[i]._id %>" class="title">₹ <%= offerProducts[i].name %></a>
+											<div class="price">
+												<h6>₹ <%= offerProducts[i].price %></h6>
+												<h6 class="l-through">₹ <%= offerProducts[i].mrp %></h6>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-							<div class="single-related-product d-flex">
-								<a href="#"><img src="img/r2.jpg" alt=""></a>
-								<div class="desc">
-									<a href="#" class="title">Black lace Heels</a>
-									<div class="price">
-										<h6>$189.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-							<div class="single-related-product d-flex">
-								<a href="#"><img src="img/r3.jpg" alt=""></a>
-								<div class="desc">
-									<a href="#" class="title">Black lace Heels</a>
-									<div class="price">
-										<h6>$189.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-							<div class="single-related-product d-flex">
-								<a href="#"><img src="img/r5.jpg" alt=""></a>
-								<div class="desc">
-									<a href="#" class="title">Black lace Heels</a>
-									<div class="price">
-										<h6>$189.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-							<div class="single-related-product d-flex">
-								<a href="#"><img src="img/r6.jpg" alt=""></a>
-								<div class="desc">
-									<a href="#" class="title">Black lace Heels</a>
-									<div class="price">
-										<h6>$189.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-							<div class="single-related-product d-flex">
-								<a href="#"><img src="img/r7.jpg" alt=""></a>
-								<div class="desc">
-									<a href="#" class="title">Black lace Heels</a>
-									<div class="price">
-										<h6>$189.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-								</div>
-							</div>
-						</div>
+							<% } %>
+						<% } %>
 					</div>
 				</div>
 				<div class="col-lg-3">
@@ -564,5 +391,11 @@
 		</div>
 	</section>
 	<!-- End related-product Area -->
+
+
+	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
+	<script>
+		const swiper = new Swiper()
+	</script>
 
 	<%- include('./partials/footer.ejs') %>
