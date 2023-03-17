@@ -276,7 +276,12 @@
                                     <% }) %>
                             </ul>
                             <ul class="checkout__total__all">
-                                <li>Total <span>₹ <%= totalPrice %></span></li>
+                                <li>Sub total <span>₹ <%= totalPrice %></span></li>
+                                <input id="subTotalPriceInput" name="totalAmount" type="number" value="<%= totalPrice %>" hidden>
+                                <li>Coupon Discount <span class="text-success">₹ 0</span></li>
+                                <input id="discountPriceInput" name="couponDiscount" form="mainForm" type="number" value="<%= totalPrice %>" hidden>
+                                <li>Total<span>₹ <%= totalPrice %></span></li>
+                                <input id="amountToPayInput" name="amountToPay" form="mainForm" type="number" value="<%= totalPrice %>" hidden>
                             </ul>
 
                             <ul style="

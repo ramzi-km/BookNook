@@ -4,15 +4,16 @@ const session = require("express-session");
 const nocache = require("nocache");
 require("dotenv").config();
 const morgan = require("morgan");
-// const cors = require('cors');
+const cors = require('cors');
 const connectDb = require("./config/connection.js");
+const MongoStore = require("connect-mongo");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
-const MongoStore = require("connect-mongo");
+
 
 //log requests
 app.use(morgan("dev"));
@@ -39,8 +40,8 @@ app.use(
   })
 );
 app.use(nocache());
-// app.use(cors());
-// app.use('*',cors());
+app.use(cors());
+app.use('*',cors());
 
 //listening
 app.listen(PORT, () => {

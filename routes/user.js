@@ -53,6 +53,7 @@ const {
   editAddress,
   deleteAddress,
   addToWishlist2,
+  getPaymentGateway,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -71,20 +72,29 @@ router.get("/shop", getShop);
 
 router.get("/productDetails/:id", getProductDetails);
 
-
 /* ----------------------Wishlist page-----------------------------*/
 
 //get wishlist page
 router.get("/wishlist", verifyLoggedIn, checkBan, getWishlist);
 
 //add to wishlist
-router.get("/wishlist/add/:id", verifyLoggedIn, checkBan,addToWishlist);
+router.get("/wishlist/add/:id", verifyLoggedIn, checkBan, addToWishlist);
 //add to wishlist2
-router.get("/wishlist/add2/:id", verifyLoggedIn, checkBan,addToWishlist2);
+router.get("/wishlist/add2/:id", verifyLoggedIn, checkBan, addToWishlist2);
 
 //remove from wishlist
-router.get("/wishlist/remove/:id", verifyLoggedIn, checkBan,removeFromWishlist);
-router.get("/wishlist/remove2/:id", verifyLoggedIn, checkBan,removeFromWishlist2);
+router.get(
+  "/wishlist/remove/:id",
+  verifyLoggedIn,
+  checkBan,
+  removeFromWishlist
+);
+router.get(
+  "/wishlist/remove2/:id",
+  verifyLoggedIn,
+  checkBan,
+  removeFromWishlist2
+);
 
 /* ----------------------Cart page-----------------------------*/
 
@@ -96,48 +106,43 @@ router.get("/addToCart/:id", verifyLoggedIn, checkBan, addToCart);
 router.get("/removeFromCart/:id", verifyLoggedIn, checkBan, removeFromCart);
 
 // increase quantity
-router.get(
-  "/cart/incQuantity/:id",
-  verifyLoggedIn,
-  checkBan,
-  increaseQuantity
-);
+router.get("/cart/incQuantity/:id", verifyLoggedIn, checkBan, increaseQuantity);
 // decrease quantity
-router.get(
-  "/cart/decQuantity/:id",
-  verifyLoggedIn,
-  checkBan,
-  decreaseQuantity
-);
+router.get("/cart/decQuantity/:id", verifyLoggedIn, checkBan, decreaseQuantity);
 
 /* -------------------Checkout page----------------------*/
 
 //get checkout page
 router.get("/cart/checkout", verifyLoggedIn, checkBan, getCheckout);
+//post checkout page
 router.post("/cart/checkout", verifyLoggedIn, checkBan, postCheckout);
-router.get("/orderPlaced",verifyLoggedIn, checkBan, getOrderPlaced)
+//get payment gateway
+router.get("/paymentGateway", checkBan, verifyLoggedIn, getPaymentGateway);
+// get order placed page
+router.get("/orderPlaced", verifyLoggedIn, checkBan, getOrderPlaced);
 
 /* -------------------User profile----------------------*/
 
-
 /* ------------Address----------------*/
 
-
 // add address
-router.post('/profile/addAddress',verifyLoggedIn, checkBan,addAddress)
+router.post("/profile/addAddress", verifyLoggedIn, checkBan, addAddress);
 // edit address
-router.post('/profile/editAddress/:id',verifyLoggedIn, checkBan,editAddress)
+router.post("/profile/editAddress/:id", verifyLoggedIn, checkBan, editAddress);
 // delete address
-router.get('/profile/deleteAddress/:id',verifyLoggedIn,checkBan,deleteAddress)
+router.get(
+  "/profile/deleteAddress/:id",
+  verifyLoggedIn,
+  checkBan,
+  deleteAddress
+);
 
 /* ------------xxxxxx----------------*/
 
-
 // get order history page
-router.get("/profile/myOrders",verifyLoggedIn, checkBan,getMyOrders)
+router.get("/profile/myOrders", verifyLoggedIn, checkBan, getMyOrders);
 // get order details page
-router.get("/profile/myOrders/:id",verifyLoggedIn, checkBan,getOrderDetails)
-
+router.get("/profile/myOrders/:id", verifyLoggedIn, checkBan, getOrderDetails);
 
 /* -------------------User Authentication----------------------*/
 

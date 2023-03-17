@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Razorpay = require("razorpay");
 
 //-------------Models--------------//
 const Product = require("../models/productModel.js");
@@ -61,14 +62,19 @@ module.exports = {
       let products = await Product.find({ unList: false })
         .sort({ createdAt: -1 })
         .lean();
-      
+
       let offerProducts = products.filter((product) => {
         if ((product.price / product.mrp) * 100 < 70) {
           return product;
         }
-      })
+      });
       console.log(offerProducts);
-      res.render("user/home", { user, bestProducts, latestProducts,offerProducts });
+      res.render("user/home", {
+        user,
+        bestProducts,
+        latestProducts,
+        offerProducts,
+      });
     } catch (error) {
       res.send(error);
     }
@@ -455,67 +461,113 @@ module.exports = {
   },
 
   postCheckout: async (req, res) => {
+    const userId = req.session.user._id;
+    const payment = req.body.paymentType;
+    const addressId = req.body.address;
+    const amountToPay = req.body.amountToPay;
     if (req.body.address == "empty") {
       addressError = true;
       res.redirect("/cart/checkout");
     } else {
-      const userId = req.session.user._id;
-      const payment = req.body.paymentType;
-      const addressId = req.body.address;
       try {
         let { address } = await User.findOne(
           { _id: userId },
           { _id: 0, address: { $elemMatch: { id: addressId } } }
         );
-        if (payment == "cod") {
-          let user = await User.findById(userId);
-          let cart = user.cart;
-          const cartQuantities = {};
-          const cartList = cart.map((item) => {
-            cartQuantities[item.id] = item.quantity;
-            return item.id;
-          });
+        let user = await User.findById(userId);
+        let cart = user.cart;
+        const cartQuantities = {};
+        const cartList = cart.map((item) => {
+          cartQuantities[item.id] = item.quantity;
+          return item.id;
+        });
 
-          let products = await Product.find({
-            _id: { $in: cartList },
-            unlist: false,
-          }).lean();
+        let products = await Product.find({
+          _id: { $in: cartList },
+          unlist: false,
+        }).lean();
 
-          let orders = [];
-          let i = 1;
-          let orderCount = await Order.find().count();
-          for (let product of products) {
-            await Product.updateOne(
-              { _id: product._id },
-              {
-                $inc: {
-                  inStock: -1 * cartQuantities[product._id],
-                },
-              }
-            );
-            orders.push({
-              address: address[0],
-              product: product,
-              userId: userId,
-              quantity: cartQuantities[product._id],
-              total: cartQuantities[product._id] * product.price,
-              amountToPay: cartQuantities[product._id] * product.price,
-              paymentType: "cod",
-              orderId: orderCount + i,
-            });
-            i++;
+        let totalPrice = 0;
+        stockError = false;
+        products.forEach((product, index) => {
+          product.cartQuantity = cartQuantities[product._id];
+          totalPrice = totalPrice + product.price * product.cartQuantity;
+          if (product.inStock < product.cartQuantity) {
+            stockError = true;
+          } else {
           }
-          await Order.create(orders);
-          await User.findByIdAndUpdate(userId, {
-            $set: { cart: [] },
-          });
-          res.redirect("/orderPlaced");
+        });
+        if (stockError || !products[0]) {
+          res.redirect("/cart");
         } else {
-          res.redirect("/cart/checkout");
+          if (payment == "cod") {
+            let orders = [];
+            let i = 1;
+            let orderCount = await Order.find().count();
+            for (let product of products) {
+              await Product.updateOne(
+                { _id: product._id },
+                {
+                  $inc: {
+                    inStock: -1 * cartQuantities[product._id],
+                  },
+                }
+              );
+              orders.push({
+                address: address[0],
+                product: product,
+                userId: userId,
+                quantity: cartQuantities[product._id],
+                total: cartQuantities[product._id] * product.price,
+                amountToPay: cartQuantities[product._id] * product.price,
+                paymentType: "cod",
+                orderId: orderCount + i,
+              });
+              i++;
+            }
+            await Order.create(orders);
+            await User.findByIdAndUpdate(userId, {
+              $set: { cart: [] },
+            });
+            res.redirect("/orderPlaced");
+          } else if (payment == "online") {
+            let orders = [];
+            let i = 1;
+            let orderCount = await Order.find().count();
+            for (let product of products) {
+              orders.push({
+                address: address[0],
+                product: product,
+                userId: userId,
+                quantity: cartQuantities[product._id],
+                total: cartQuantities[product._id] * product.price,
+                amountToPay: cartQuantities[product._id] * product.price,
+                paymentType: "online",
+                orderId: orderCount + i,
+              });
+              i++;
+            }
+            req.session.amountToPay = amountToPay;
+            req.session.totalAmount = totalPrice;
+            req.session.tempOrders = orders;
+            res.redirect("/paymentGateway");
+          }
         }
       } catch (error) {
         res.send(error);
       }
+    }
+  },
+
+  getPaymentGateway: async (req, res) => {
+    if (req.session.tempOrders) {
+      let user = req.session.user;
+      let totalAmount = req.session.totalAmount;
+      let amountToPay = req.session.amountToPay;
+      req.session.tempOrders = null
+      res.render("user/paymentGateway", { user, totalAmount, amountToPay });
+    } else {
+      res.redirect("/cart");
     }
   },
 
