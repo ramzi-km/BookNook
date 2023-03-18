@@ -548,8 +548,7 @@ module.exports = {
                 amountToPay: 0,
                 paymentType: "online",
                 paid: true,
-              });
-              i++;
+              });``
             }
             req.session.amountToPay = amountToPay;
             req.session.totalAmount = totalPrice;

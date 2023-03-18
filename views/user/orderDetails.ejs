@@ -1,31 +1,46 @@
 <%- include('./partials/header') %>
+<style>
+@media only screen and (max-width: 991px) {
+#imageDiv{
+    height:340px;
+    width: 240px;
+}
+}
+@media only screen and (min-width: 992px) {
+#imageDiv{
+    height:500px;
+    width: 350px;
+}
+}
+</style>
 
-    <div class="product_image_area" style="margin-top: -100px;">
+    <div class="product_image_area" style="margin-top: -150px;">
         <div class="container">
             <div class="row s_product_inner">
 
-                <div class="col-lg-6 mt-3 mb-5">
+                <div class="col-lg-6 mt-3 mb-lg-5">
 
-                    <div class="d-flex justify-content-start">
-                        <h4 class="primary-btn">Order Id: <%= order.orderId %></h4>
-                    </div>
+                    
 
                     <div class="d-flex flex-column align-items-center">
+                        <div class="d-flex justify-content-start">
+                            <h4 class="primary-btn">Order Id: <%= order.orderId %></h4>
+                        </div>
                        
                         <!-- Primary carousel image -->
-                        <div class="shows" href="/images/productImages/<%= order.product.mainImage[0].filename %>"
-                            style="height: 540px; width:350px">
+                        <div id="imageDiv" class="shows" >
                             <img src="/images/productImages/<%= order.product.mainImage[0].filename %>" id="show-img"
-                                style="max-height:80%;" alt="">
+                                style="height:100%; width: 100%;" alt="">
+                        </div>
+                        <div class="d-flex m-3 justify-content-center">
+                            <a class="btn btn-rounded btn-lg btn-dark" href="">Cancel order</a>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        <a class="btn btn-rounded btn-dark w-75" href="">Cancel order</a>
-                    </div>
+                    
 
                 </div>
                 <div class="col-lg-5 offset-lg-1 mb-5">
-                    <div class="s_product_text">
+                    <div class="s_product_text" style="margin-top: 20px;">
                         <h3>
                             <%= order.product.name %>
                         </h3>
