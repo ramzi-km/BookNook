@@ -10,6 +10,11 @@ const Order = require("../models/orderModel.js");
 
 //-------------------------helpers-------------------------------//
 
+var instance = new Razorpay({
+  key_id: process.env.KEY_ID,
+  key_secret: process.env.KEY_SECRET,
+});
+
 function createId() {
   let date = new Date();
   let components = [
@@ -529,11 +534,10 @@ module.exports = {
             await User.findByIdAndUpdate(userId, {
               $set: { cart: [] },
             });
+            req.session.orderSuccess = true;
             res.redirect("/orderPlaced");
           } else if (payment == "online") {
             let orders = [];
-            let i = 1;
-            let orderCount = await Order.find().count();
             for (let product of products) {
               orders.push({
                 address: address[0],
@@ -541,15 +545,16 @@ module.exports = {
                 userId: userId,
                 quantity: cartQuantities[product._id],
                 total: cartQuantities[product._id] * product.price,
-                amountToPay: cartQuantities[product._id] * product.price,
+                amountToPay: 0,
                 paymentType: "online",
-                orderId: orderCount + i,
+                paid: true,
               });
               i++;
             }
             req.session.amountToPay = amountToPay;
             req.session.totalAmount = totalPrice;
             req.session.tempOrders = orders;
+            req.session.pass = true;
             res.redirect("/paymentGateway");
           }
         }
@@ -560,21 +565,89 @@ module.exports = {
   },
 
   getPaymentGateway: async (req, res) => {
-    if (req.session.tempOrders) {
+    if (req.session.tempOrders && req.session.pass) {
       let user = req.session.user;
       let totalAmount = req.session.totalAmount;
       let amountToPay = req.session.amountToPay;
-      req.session.tempOrders = null
+      req.session.pass = null;
       res.render("user/paymentGateway", { user, totalAmount, amountToPay });
     } else {
-      res.redirect("/cart");
+      res.redirect("/cart/checkout");
     }
+  },
+
+  payment: async (req, res) => {
+    let amount = req.session.amountToPay * 100;
+    let receiptId = Math.floor(Math.random() * 100000) + Date.now();
+    let options = {
+      amount: amount, // amount in the smallest currency unit
+      currency: "INR",
+      receipt: receiptId,
+    };
+    instance.orders.create(options, function (err, order) {
+      res.json({ success: true, key: process.env.KEY_ID, order });
+    });
+  },
+
+  verifyPayment: async (req, res) => {
+    instance.payments
+      .fetch(req.body.razorpay_payment_id)
+      .then(async (paymentDocument) => {
+        if (paymentDocument.status == "captured") {
+          try {
+            let orders = req.session.tempOrders;
+            let i = 1;
+            let orderCount = await Order.find().count();
+            for (let order of orders) {
+              await Product.updateOne(
+                { _id: order.product._id },
+                {
+                  $inc: {
+                    inStock: -1 * order.quantity,
+                  },
+                }
+              );
+              order.payment = paymentDocument;
+              order.orderId = orderCount + i;
+              i++;
+            }
+            await Order.create(orders);
+            await User.findByIdAndUpdate(req.session.user._id, {
+              $set: { cart: [] },
+            });
+            req.session.amountToPay = null;
+            req.session.totalAmount = null;
+            req.session.tempOrders = null;
+            req.session.orderSuccess = true;
+            res.redirect("orderPlaced");
+          } catch (error) {
+            req.session.amountToPay = null;
+            req.session.totalAmount = null;
+            req.session.tempOrders = null;
+            res.send(error);
+          }
+        } else {
+          req.session.orderSuccess = false;
+          res.redirect("orderPlaced");
+        }
+      })
+      .catch((err) => {
+        res.send(err);
+      });
   },
 
   //get order placed page
   getOrderPlaced: (req, res) => {
     const user = req.session.user;
-    res.render("user/orderPlaced", { user });
+    if (req.session.orderSuccess) {
+      req.session.orderSuccess = null;
+      res.render("user/orderPlaced", { user });
+    } else if (req.session.orderSuccess == false) {
+      req.session.orderSuccess = null;
+      res.render("user/orderFailure", { user });
+    } else {
+      res.redirect("/cart");
+    }
   },
   //----------------xx---------------------------//
 

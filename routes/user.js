@@ -54,6 +54,8 @@ const {
   deleteAddress,
   addToWishlist2,
   getPaymentGateway,
+  payment,
+  verifyPayment,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -117,7 +119,11 @@ router.get("/cart/checkout", verifyLoggedIn, checkBan, getCheckout);
 //post checkout page
 router.post("/cart/checkout", verifyLoggedIn, checkBan, postCheckout);
 //get payment gateway
-router.get("/paymentGateway", checkBan, verifyLoggedIn, getPaymentGateway);
+router.get("/paymentGateway", verifyLoggedIn, checkBan, getPaymentGateway);
+// post payment gateway
+router.post("/payment", verifyLoggedIn, checkBan, payment);
+//callback url after payment
+router.post("/verifyPayment", verifyLoggedIn, checkBan, verifyPayment);
 // get order placed page
 router.get("/orderPlaced", verifyLoggedIn, checkBan, getOrderPlaced);
 

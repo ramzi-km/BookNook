@@ -117,6 +117,15 @@
                 <!-- Start Best Seller -->
                 <section class="lattest-product-area pb-40 category-list">
                     <div class="row">
+                        <% if(!products[0]){ %>
+                            <div class="empty-container w-100 h-50 d-flex flex-column  justify-content-center align-items-center mb-5 mt-5 "
+                                style="gap:20px">
+                                <img src="https://www.breathearomatherapy.com/assets/images/global/no-product.png"
+                                    height="300px" alt="">
+                                <h3>Your search did not match any products!</h3>
+                                <p> Please try again </p>
+                            </div>
+                        <% }%>
                         <!-- single product -->
                         <% products.forEach(product=> { %>
                             <div class="col-lg-4 col-6 col-md-4">
