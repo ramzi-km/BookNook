@@ -24,6 +24,14 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+       @media only screen and (min-width: 767px) {
+            #logoutList {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -210,6 +218,13 @@
               <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/salesReport"
                 aria-expanded="false"><i class="mdi mdi-file-chart"></i><span class="hide-menu">Sales
                   report</span></a>
+            </li>
+            <li id="logoutList" class="sidebar-item">
+              <form action="/admin" method="post">
+              <button type="submit" class="sidebar-link  btn btn-rounded"
+                aria-expanded="false"><i class="fa fa-power-off me-1 ms-1"></i><span class="hide-menu">Logout</span>
+              </button>
+                </form>
             </li>
 
 

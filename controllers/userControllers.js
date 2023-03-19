@@ -548,7 +548,8 @@ module.exports = {
                 amountToPay: 0,
                 paymentType: "online",
                 paid: true,
-              });``
+              });
+              ``;
             }
             req.session.amountToPay = amountToPay;
             req.session.totalAmount = totalPrice;
@@ -651,6 +652,35 @@ module.exports = {
   //----------------xx---------------------------//
 
   //--------------Profile page----------//
+
+  //get profile page
+
+  getProfile: async (req, res) => {
+    const userId = req.session.user._id;
+    try {
+      const user = await User.findById(userId);
+      res.render("user/profile", { user });
+    } catch (error) {
+      res.send(error);
+    }
+  },
+
+  //get coupon page
+  getCoupon: async (req, res) => {
+    const user = req.session.user;
+    res.render("user/coupons", { user });
+  },
+
+  //edit user profile
+  editProfile: async (req, res) => {
+    const userId = req.params.id;
+    try {
+      await User.findByIdAndUpdate(userId, req.body);
+      res.redirect("back");
+    } catch (error) {
+      res.send(error);
+    }
+  },
 
   //add user address
   addAddress: async (req, res) => {

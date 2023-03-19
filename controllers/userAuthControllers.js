@@ -67,13 +67,13 @@ module.exports = {
     if (req.session.userLoggedIn) {
       res.redirect("/");
     } else {
-      res.render("user/login", { user:req.session.user,error: loginError });
+      res.render("user/login", { user: req.session.user, error: loginError });
       loginError = null;
     }
   },
 
   getSignup: (req, res) => {
-    res.render("user/signup", { error: signupError });
+    res.render("user/signup", { user: req.session.user, error: signupError });
     signupError = null;
   },
 
@@ -99,7 +99,8 @@ module.exports = {
 
   getVerification: (req, res) => {
     res.render("user/verification", {
-      user: req.session.tempUser,
+      user: req.session.user,
+      user2: req.session.tempUser,
       error: signupOtpError,
     });
     signupOtpError = null;
@@ -139,14 +140,14 @@ module.exports = {
     if (user) {
       bcrypt.compare(req.body.password, user.password).then((result) => {
         if (result && !user.block) {
-          console.log("login success");
-          req.session.validatedUser = user;
-          req.session.validatedUserLoggedIn = true;
+          // req.session.validatedUser = user;
+          // req.session.validatedUserLoggedIn = true;
+          // sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
+          req.session.user = user;
+          req.session.userLoggedIn = true;
           loginError = null;
-          sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
-          res.redirect("/loginVerification");
+          res.redirect("/");
         } else {
-          console.log("login failed");
           if (user.block) {
             loginError = "User is banned";
           } else {
@@ -156,50 +157,52 @@ module.exports = {
         }
       });
     } else {
-      console.log("login failed");
       loginError = "invalid email or password";
       res.redirect("/login");
     }
   },
 
-  getloginverification: (req, res) => {
-    res.render("user/loginVerification", {
-      user: req.session.validatedUser,
-      error: loginOtpError,
-    });
-    loginOtpError = null;
-  },
+  // getloginverification: (req, res) => {
+  //   res.render("user/loginVerification", {
+  //     user: req.session.validatedUser,
+  //     error: loginOtpError,
+  //   });
+  //   loginOtpError = null;
+  // },
 
-  resendLoginOtp: (req, res) => {
-    sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
-    res.redirect("/loginVerification");
-  },
+  // resendLoginOtp: (req, res) => {
+  //   sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
+  //   res.redirect("/loginVerification");
+  // },
 
-  verifyLoginOtp: async (req, res) => {
-    let typedOtp = req.body.typedotp;
+  // verifyLoginOtp: async (req, res) => {
+  //   let typedOtp = req.body.typedotp;
 
-    if (req.session.otpExpiry < Date.now()) {
-      loginOtpError = "Invalid otp";
-      res.redirect("/loginVerification");
-    } else {
-      if (typedOtp === req.session.otp) {
-        //stor user in session
-        req.session.user = req.session.validatedUser;
-        req.session.userLoggedIn = true;
+  //   if (req.session.otpExpiry < Date.now()) {
+  //     loginOtpError = "Invalid otp";
+  //     res.redirect("/loginVerification");
+  //   } else {
+  //     if (typedOtp === req.session.otp) {
+  //       //store user in session
+  //       req.session.user = req.session.validatedUser;
+  //       req.session.userLoggedIn = true;
 
-        req.session.otp = null;
-        req.session.otpExpiry = null;
-        loginOtpError = null;
-        res.redirect("/");
-      } else {
-        loginOtpError = "Invalid otp";
-        res.redirect("/loginVerification");
-      }
-    }
-  },
+  //       req.session.otp = null;
+  //       req.session.otpExpiry = null;
+  //       loginOtpError = null;
+  //       res.redirect("/");
+  //     } else {
+  //       loginOtpError = "Invalid otp";
+  //       res.redirect("/loginVerification");
+  //     }
+  //   }
+  // },
 
   getEmailInput: (req, res) => {
-    res.render("user/emailInput", { error: emailInputError });
+    res.render("user/emailInput", {
+      error: emailInputError,
+      user: req.session.user,
+    });
     emailInputError = null;
   },
 
@@ -217,7 +220,8 @@ module.exports = {
   getPasswordVerification: (req, res) => {
     res.render("user/passwordVerification", {
       error: rpOtpError,
-      user: req.session.rpUser,
+      user2: req.session.rpUser,
+      user: req.session.user,
     });
     rpOtpError = null;
   },
@@ -251,7 +255,7 @@ module.exports = {
 
   getResetPassword: (req, res) => {
     if (req.session.rpVerified && req.session.rpUser) {
-      res.render("user/resetPassword");
+      res.render("user/resetPassword", { user: req.session.user });
     } else {
       res.redirect("/emailInput");
     }

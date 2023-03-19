@@ -40,7 +40,7 @@
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-	
+
 
 	<!-- Basic Styles For Gallery -->
 	<link rel="stylesheet" type="text/css" href="/imageZoom/style.css">
@@ -84,14 +84,18 @@
 										<%= user.name %>
 									</a>
 									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="#"><i
+										<li class="nav-item"><a class="nav-link" href="/profile"><i
 													class="fa-solid fa-address-card"></i> Profile</a></li>
 										<li class="nav-item"><a class="nav-link" href="/profile/myOrders"><i
 													class="fa-solid fa-box-open"></i> My orders</a></li>
+										<li class="nav-item"><a class="nav-link" href="/profile/coupons"><i
+													class="fa-solid fa-ticket"></i> Coupons</a></li>
 										<li class="nav-item">
 											<form action="/logout" method="post">
-												<button class="nav-link " type="submit" style="width: 100%;"><i
-														class="fa-solid fa-right-from-bracket"></i> Logout</button>
+												<button class="nav-link " type="submit"
+													onclick="return confirm(`Do you really want to logout?`)"
+													style="width: 100%;"><i class="fa-solid fa-right-from-bracket"></i>
+													Logout</button>
 											</form>
 										</li>
 									</ul>

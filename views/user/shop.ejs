@@ -1,22 +1,30 @@
 <%- include('./partials/header') %>
-
+    <style>
+        @media only screen and (max-width: 767px) {
+            #paginationTop {
+                display: none !important;
+            }
+            .img-fluid{
+                height: 244px !important;
+            }
+        }
+    </style>
     <div class="container">
         <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-5 mb-5">
+            <div class="col-xl-3 col-lg-4 col-md-12 mb-5">
                 <div class="shop__sidebar__search">
                     <form method="get">
                         <input id="productsearchinput" type="text" name="search" value="<%= search %>"
                             placeholder="Search...">
                         <button id="procuctsearchbutton" type="submit" class="btn btn-danger"><span><i
                                     class="fa-solid fa-magnifying-glass"></i></span></button>
-
                 </div>
 
                 <div class="sidebar-categories">
 
                     <div class="head" data-toggle="collapse" data-target="#categorydiv" aria-expanded="true"
                         aria-controls="categorydiv">Browse Categories <i class="fa-solid fa-caret-down"></i></div>
-                    <ul class="main-categories collapse show" id="categorydiv">
+                    <ul class="main-categories collapse " id="categorydiv">
                         <li class="main-nav-list"><input class="pixel-radio" type="radio" onchange="this.form.submit()"
                                 id="category1" name="category" value="" <% if (category=="" ) { %>
                             checked
@@ -24,7 +32,7 @@
                                 <label for="category1">All</label>
                         </li>
                         <% categories.forEach(item=> { %>
-                            <li class="main-nav-list"><input class="pixel-radio"  type="radio"
+                            <li class="main-nav-list"><input class="pixel-radio" type="radio"
                                     onchange="this.form.submit()" id="category<%= item.name %>" name="category"
                                     value="<%= item.name %>" <% if (category==item.name ) { %>
                                 checked
@@ -41,29 +49,29 @@
                     <div class="top-filter-head" data-toggle="collapse" data-target="#pricefilter" aria-expanded="true"
                         aria-controls="pricefilter">Filters <i class="fa-solid fa-caret-down"></i></div>
 
-                    <div class="common-filter collapse show" id="pricefilter">
+                    <div class="common-filter collapse " id="pricefilter">
                         <div class="head">Price</div>
 
                         <ul>
-                            <li class="filter-list"><input class="pixel-radio"  type="radio"
+                            <li class="filter-list"><input class="pixel-radio" type="radio"
                                     onchange="this.form.submit()" id="price0" name="price" value="" <% if(price=="" ) {
                                     %>
                                 checked
                                 <% } %> > <label for="price0">All</label>
                             </li>
-                            <li class="filter-list"><input class="pixel-radio"  type="radio"
+                            <li class="filter-list"><input class="pixel-radio" type="radio"
                                     onchange="this.form.submit()" id="price1" name="price" value="1" <% if(price==1) {
                                     %>
                                 checked
                                 <% } %>> <label for="price1">₹100 - ₹500</label>
                             </li>
-                            <li class="filter-list"><input class="pixel-radio"  onchange="this.form.submit()"
+                            <li class="filter-list"><input class="pixel-radio" onchange="this.form.submit()"
                                     type="radio" id="price2" name="price" value="2" <% if (price==2) { %>
                                 checked
                                 <% } %>><label for="price2">₹500 -
                                         ₹1500</label>
                             </li>
-                            <li class="filter-list"><input class="pixel-radio"  type="radio"
+                            <li class="filter-list"><input class="pixel-radio" type="radio"
                                     onchange="this.form.submit()" id="price3" name="price" value="3" <% if (price==3){
                                     %>
                                 checked
@@ -75,7 +83,7 @@
 
                 </div>
             </div>
-            <div class="col-xl-9 col-lg-8 col-md-7">
+            <div class="col-xl-9 col-lg-8 col-md-12">
                 <!-- Start Filter Bar -->
                 <div class="filter-bar d-flex flex-wrap align-items-center">
                     <div class="sorting">
@@ -95,7 +103,7 @@
                         </select>
                     </div>
                     </form>
-                    <div class="pagination ml-auto">
+                    <div id="paginationTop" class="pagination ml-auto">
                         <a href="/shop?search=<%= search %>&category=<%= category %>&price=<%= price %>&sort=<%= sort %>&page=<%= (page-1) %>"
                             class="prev-arrow"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
                         <% for( let index=1; index <=pageCount; index++ ) { %>
@@ -125,94 +133,100 @@
                                 <h3>Your search did not match any products!</h3>
                                 <p> Please try again </p>
                             </div>
-                        <% }%>
-                        <!-- single product -->
-                        <% products.forEach(product=> { %>
-                            <div class="col-lg-4 col-6 col-md-4">
-                                <div class="single-product">
-                                    <a href="/productDetails/<%= product._id %>"><img class="img-fluid"
-                                            src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
-                                            style="max-width: 234px;  max-height: 274px;"></a>
-                                    <div class="product-details">
-                                        <h6
-                                            style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                            <a href="/productDetails/<%= product._id %>" class="text-dark"><span>
-                                                    <%= product.name %>
-                                                </span></a>
-                                        </h6>
-                                        <div class="price">
-                                            <h6 class="text-danger">₹ <%= product.price %>
-                                            </h6>
-                                            <h6 class="l-through">₹ <%= product.mrp %>
-                                            </h6>
-                                        </div>
-                                        <div class="prd-bottom">
+                            <% }%>
+                                <!-- single product -->
+                                <% products.forEach(product=> { %>
+                                    <div class="col-lg-4 col-6 col-md-4">
+                                        <div class="single-product">
+                                            <a href="/productDetails/<%= product._id %>"><img class="img-fluid"
+                                                    src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                                    alt="" style="width: 234px;  height: 264px;"></a>
+                                            <div class="product-details">
+                                                <h6
+                                                    style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                                    <a href="/productDetails/<%= product._id %>"
+                                                        class="text-dark"><span>
+                                                            <%= product.name %>
+                                                        </span></a>
+                                                </h6>
+                                                <div class="price">
+                                                    <h6 class="text-danger">₹ <%= product.price %>
+                                                    </h6>
+                                                    <h6 class="l-through">₹ <%= product.mrp %>
+                                                    </h6>
+                                                </div>
+                                                <div class="prd-bottom">
 
-                                            <a href="/addToCart/<%= product._id %>" class="social-info">
-                                                <span class="ti-bag"></span>
-                                                <p class="hover-text">add to cart</p>
-                                            </a>
-                                            <% if(user){ %>
-                                                <a class="social-info">
-                                                    <span class="lnr lnr-heart"
-                                                        onclick="addToWishlist('<%=product._id%>','<%=product.name%>')"></span>
-                                                    <p class="hover-text"
-                                                        onclick="addToWishlist('<%=product._id%>','<%=product.name%>')">
-                                                        Wishlist</p>
-                                                </a>
-                                                <% }else{ %>
-                                                    <a class="social-info">
-                                                        <span class="lnr lnr-heart"
-                                                            onclick="window.location.href='/login'"></span>
-                                                        <p class="hover-text" onclick="window.location.href='/login'">
-                                                            Wishlist</p>
+                                                    <a href="/addToCart/<%= product._id %>" class="social-info">
+                                                        <span class="ti-bag"></span>
+                                                        <p class="hover-text">add to cart</p>
                                                     </a>
+                                                    <% if(user){ %>
+                                                        <a class="social-info">
+                                                            <span class="lnr lnr-heart"
+                                                                onclick="addToWishlist('<%=product._id%>','<%=product.name%>')"></span>
+                                                            <p class="hover-text"
+                                                                onclick="addToWishlist('<%=product._id%>','<%=product.name%>')">
+                                                                Wishlist</p>
+                                                        </a>
+                                                        <% }else{ %>
+                                                            <a class="social-info">
+                                                                <span class="lnr lnr-heart"
+                                                                    onclick="window.location.href='/login'"></span>
+                                                                <p class="hover-text"
+                                                                    onclick="window.location.href='/login'">
+                                                                    Wishlist</p>
+                                                            </a>
 
-                                                    <% }%>
+                                                            <% }%>
 
-                                                        <!-- Modal -->
-                                                        <div class="modal fade" id="wishModal" tabindex="-1"
-                                                            role="dialog" aria-labelledby="exampleModalLabel"
-                                                            aria-hidden="true">
-                                                            <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">
-                                                                            Wishlist
-                                                                            updated <i
-                                                                                class="text-success fa-sharp fa-regular fa-circle-check"></i>
-                                                                        </h5>
-                                                                        <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div id="modalBody" class="modal-body">
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="wishModal" tabindex="-1"
+                                                                    role="dialog" aria-labelledby="exampleModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="exampleModalLabel">
+                                                                                    Wishlist
+                                                                                    updated <i
+                                                                                        class="text-success fa-sharp fa-regular fa-circle-check"></i>
+                                                                                </h5>
+                                                                                <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    <span
+                                                                                        aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div id="modalBody" class="modal-body">
 
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-dark"
-                                                                            data-dismiss="modal">Close</button>
-                                                                        <button type="button"
-                                                                            onclick="window.location.href='/wishlist'"
-                                                                            class="btn btn-danger">Go to
-                                                                            Wishlist</button>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-dark"
+                                                                                    data-dismiss="modal">Close</button>
+                                                                                <button type="button"
+                                                                                    onclick="window.location.href='/wishlist'"
+                                                                                    class="btn btn-danger">Go to
+                                                                                    Wishlist</button>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- Modal -->
+                                                                <!-- Modal -->
 
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <% }) %>
+                                    <% }) %>
 
-                                <!-- single product -->
+                                        <!-- single product -->
 
 
-                                <!-- single product -->
+                                        <!-- single product -->
 
                     </div>
                 </section>
@@ -253,6 +267,15 @@
                 $("#wishModal").modal('show')
             }
         }
+
+        $(document).ready(function () {
+            var windowWidth = $(window).width();
+            if (windowWidth >= 992) {
+                $('.main-categories').addClass('show')
+                $('.common-filter').addClass('show')
+            }
+
+        });
     </script>
 
 

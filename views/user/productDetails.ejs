@@ -32,15 +32,18 @@
                             <img src="/imageZoom/images/next-icon.png" class="icon-right" alt="" id="next-img">
                         </div>
                     </div>
-                    <div class="s_Product_carousel imageSliderMobile">
-                        <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;">
-                            <img class="img-fluid " src="/images/productImages/<%= product.mainImage[0].filename %>"
-                                alt="" style="height: 100%; width: 100%;">
+
+                     <!--  carousel for mobiles -->
+
+                    <div class="s_Product_carousel  imageSliderMobile">
+                        <div class="single-prd-item d-flex justify-content-center">
+                                <img class="img-fluid" src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                alt="" style="height: 350px; width: 260px;">
                         </div>
                         <% product.extraImages.forEach(image=> { %>
-                            <div class="single-prd-item" style="height: 400px; width: 300px; margin-left: 20%;">
+                            <div class="single-prd-item d-flex justify-content-center">
                                 <img class="img-fluid" src="/images/productImages/<%= image.filename %>" alt=""
-                                    style="height: 100%; width: 100%;">
+                                    style="height: 350px; width: 260px;">
                             </div>
                             <% }) %>
 

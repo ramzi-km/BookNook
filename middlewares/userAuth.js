@@ -20,7 +20,7 @@ module.exports = {
           if (user?.block) {
             req.session.user = null;
             req.session.userLoggedIn = false;
-            res.redirect("/home");
+            res.redirect("/");
           }else{
             next()
           }

@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('./partials/header.ejs') %>
 
 <head>
     <meta charset="UTF-8" />
@@ -24,7 +23,7 @@
         }
 
         .card {
-            width: 400px;
+            width: 350px;
             border: 1px solid rgb(163, 163, 163);
             border-radius: 10px;
             height: 300px;
@@ -59,7 +58,7 @@
             width: 350px;
             height: 100px;
             bottom: -50px;
-            left: 20px;
+            left: auto;
             position: absolute;
             border-radius: 5px;
         }
@@ -88,7 +87,7 @@
 </head>
 
 <body>
-    <div class="container height-100 d-flex justify-content-center align-items-center">
+    <div class="container h-75 d-flex justify-content-center align-items-center" style="padding: 0;">
         <div class="position-relative">
             <div class="card p-2 text-center">
                 <h6>
@@ -98,7 +97,7 @@
                 <div>
                     <span>A code has been sent to</span>
                     <small>
-                        <%= user.email %>
+                        <%= user2.email %>
                     </small>
                 </div>
                 <form action="/verifySignupOtp" method="post">
@@ -141,6 +140,6 @@
             }
         }
     </script>
-</body>
 
-</html>
+
+<%- include('./partials/footer.ejs') %>

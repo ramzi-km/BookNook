@@ -1,12 +1,24 @@
-		
-		
-		<%- include('./partials/header.ejs') %>
+<%- include('./partials/header.ejs') %>
+
+	<style>
+		@media (max-width: 991px) {
+			#signupTop{
+				display: none !important;
+			}
+			#signupBottom{
+				display: block !important;
+			}
+			.login_form_inner{
+				padding-top: 30px;
+			}
+		}
+	</style>
 
 	<!--================Login Box Area =================-->
 	<section class="login_box_area section_gap">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6">
+				<div id="signupTop" class="col-lg-6">
 					<div class="login_box_img">
 						<img class="img-fluid" src="img/login.jpg" alt="">
 						<div class="hover">
@@ -19,17 +31,14 @@
 				<div class="col-lg-6">
 					<div class="login_form_inner">
 						<h3>Log in to enter</h3>
-						<form class="row login_form" action="/login" method="post" id="contactForm"
-							>
+						<form class="row login_form" action="/login" method="post" id="contactForm">
 							<div class="col-md-12 form-group">
-								<input type="email" class="form-control" id="name" name="email"
-									placeholder="Email" onfocus="this.placeholder = ''"
-									onblur="this.placeholder = 'Email'" required>
+								<input type="email" class="form-control" id="name" name="email" placeholder="Email"
+									onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" required>
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" id="name" name="password"
-									placeholder="Password" onfocus="this.placeholder = ''"
-									onblur="this.placeholder = 'Password'" required>
+								<input type="text" class="form-control" id="name" name="password" placeholder="Password"
+									onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" required>
 								<label for="Invalid" class="text-danger">
 									<%= error %>
 								</label>
@@ -45,6 +54,16 @@
 								<a href="/emailInput">Forgot Password?</a>
 							</div>
 						</form>
+					</div>
+				</div>
+				<div id="signupBottom"  class="col-lg-6" style="display: none;">
+					<div class="login_box_img">
+						<img class="img-fluid" src="img/login.jpg" alt="">
+						<div class="hover">
+							<h4>New to Book<span class="text-danger">Nook</span>?</h4>
+							<p></p>
+							<a class="primary-btn" href="/signup">Create an Account</a>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -37,6 +37,13 @@ function formattedDate(d) {
   return `${year}-${month}-${day}`;
 }
 
+const formatCash = (n) => {
+  if (n < 1e3) return n;
+  if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
+  if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
+  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
+  if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+};
 //-------------------------------------------------------------//
 
 let addCategoryError = null;
@@ -50,9 +57,58 @@ let imageFileError = null;
 module.exports = {
   getPanel: async (req, res) => {
     try {
-      let admin = req.session.admin;
-      let users = await User.find().lean();
-      res.render("admin/adminPanel", { admin, users });
+      const admin = req.session.admin;
+      const totalUsers = await User.find().lean().count();
+      const orders = await Order.find().lean();
+      const totalOrders = orders.length;
+      const monthlyDataArray = await Order.aggregate([
+        { $match: { status: "delivered" } },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            revenue: { $sum: "$total" },
+          },
+        },
+      ]);
+      let totalRevenue = 0;
+      let totalPending = 0;
+      let onlineOrders = 0;
+      let deliveredOrders = orders.filter((order) => {
+        if (order.status == "pending" || order.status == "shipped") {
+          totalPending++;
+        }
+        if (order.paymentType == "online") {
+          onlineOrders++;
+        }
+        if (order.status == "delivered") {
+          totalRevenue = totalRevenue + order.total;
+        }
+        return order.status == "delivered";
+      });
+      let totalDispatch = deliveredOrders.length;
+
+      let monthlyDataObject = {};
+      monthlyDataArray.map((item) => {
+        monthlyDataObject[item._id] = item.revenue;
+      });
+      let monthlyData = [];
+      for (let i = 1; i <= 12; i++) {
+        monthlyData[i - 1] = monthlyDataObject[i] ?? 0;
+      }
+
+      formattedRevenue = formatCash(totalRevenue);
+
+      res.render("admin/adminPanel", {
+        admin,
+        totalUsers,
+        totalOrders,
+        totalPending,
+        totalDispatch,
+        onlineOrders,
+        totalRevenue,
+        formattedRevenue,
+        monthlyData
+      });
     } catch (error) {
       console.log(error);
     }
