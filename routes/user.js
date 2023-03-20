@@ -58,7 +58,7 @@ const {
   verifyPayment,
   getProfile,
   editProfile,
-  getCoupon,
+  getCoupons,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -138,7 +138,7 @@ router.get("/profile", verifyLoggedIn, checkBan, getProfile);
 router.post("/profile/editProfile/:id", verifyLoggedIn, checkBan, editProfile);
 
 //get coupon page
-router.get('/profile/coupons',verifyLoggedIn, checkBan, getCoupon)
+router.get('/profile/coupons',verifyLoggedIn, checkBan, getCoupons)
 
 /* ------------Address----------------*/
 

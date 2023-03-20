@@ -4,6 +4,7 @@ const Razorpay = require("razorpay");
 //-------------Models--------------//
 const Product = require("../models/productModel.js");
 const Category = require("../models/categoryModel.js");
+const Coupon = require("../models/couponModel.js");
 const User = require("../models/userModel.js");
 const Order = require("../models/orderModel.js");
 //---------------xx--------------------//
@@ -666,9 +667,13 @@ module.exports = {
   },
 
   //get coupon page
-  getCoupon: async (req, res) => {
+  getCoupons: async (req, res) => {
     const user = req.session.user;
-    res.render("user/coupons", { user });
+    const coupons = await Coupon.find({
+      unlist: false,
+      expiryDate: { $gt: new Date() },
+    }).lean();
+    res.render("user/coupons", { user,coupons });
   },
 
   //edit user profile

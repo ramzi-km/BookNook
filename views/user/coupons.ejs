@@ -1,8 +1,85 @@
 <%- include('./partials/header.ejs') %>
+    <style>
+        
+        .wish-item {
+            width: 100%;
+            background-color: var(--white);
+            padding: 10px;
+            display: flex;
+            margin-top: 20px;
+        }
 
+        .wish-img img {
+            height: 140px;
+        }
 
+        .wish-img {
+            flex: 20%;
+        }
 
+        .wish-detail {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            flex: 70%;
+            padding: 5px;
+        }
 
+        .wish-detail h3 {
+            font-weight: 50;
+        }
+    </style>
 
+    <section class="pb-5" style="min-height: 80vh;">
 
-<%- include('./partials/footer.ejs') %>
+        <div class="container">
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item "><a href="/profile"> Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Coupons</li>
+                </ol>
+            </nav>
+            <h3 class="pb-3 text-dark"><i class="fa-solid fa-ticket"> Coupons</i></h3>
+            <div class="row">
+                <% coupons.forEach(item=>{ %>
+
+                    <div class="col-12 col-md-6">
+                        <div class="wish-item">
+                            <div class="wish-img mx-3">
+                                <img src="https://img.freepik.com/free-icon/coupon_318-331672.jpg"  alt="">
+                            </div>
+                            <div class="wish-detail">
+                                <b style="font-size: 1.2rem;" class="text-dark">
+                                    <%= item.name %>
+                                </b>
+                                <span>
+                                    <b>
+                                        <%= item.discountPercentage %>%
+                                    </b> discount upto <b>₹<%= item.maxDiscountAmount %></b> Cashback
+                                </span>
+                                <span>
+                                    (for minimum purchase of ₹<%= item.minPurchaseAmount %>)
+                                </span>
+                                <span>
+                                    Coupon Code : <b class="text-dark">
+                                        <%=item.code %>
+                                    </b>
+                                </span>
+                                <span>
+                                    Expires in : <b class="text-dark">
+                                        <%=item.expiryDate.toLocaleString() %>
+                                    </b>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+
+    </section>
+
+    <%- include('./partials/footer.ejs') %>

@@ -3,8 +3,15 @@
     <section class="pb-5">
 
         <div class="container">
-            <h4 class="pb-3 text-dark"><i class="fa-solid fa-box-open"><span class="text-dark"> My Orders</i </span>
-            </h4>
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item "><a href="/profile"> Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My orders</li>
+                </ol>
+            </nav>
+            <h3 class="pb-3 text-dark"><i class="fa-solid fa-box-open"><span class="text-dark"> My Orders</i </span>
+            </h3>
 
             <div class="row" id="emptyWishlist">
                 <% if(!orders[0]){ %>
