@@ -59,6 +59,7 @@ const {
   getProfile,
   editProfile,
   getCoupons,
+  applyCoupon,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -119,14 +120,22 @@ router.get("/cart/decQuantity/:id", verifyLoggedIn, checkBan, decreaseQuantity);
 
 //get checkout page
 router.get("/cart/checkout", verifyLoggedIn, checkBan, getCheckout);
+
+//post coupon form
+router.post("/cart/checkout/coupon", verifyLoggedIn, checkBan,applyCoupon);
+
 //post checkout page
 router.post("/cart/checkout", verifyLoggedIn, checkBan, postCheckout);
+
 //get payment gateway
 router.get("/paymentGateway", verifyLoggedIn, checkBan, getPaymentGateway);
+
 // post payment gateway
 router.post("/payment", verifyLoggedIn, checkBan, payment);
+
 //callback url after payment
 router.post("/verifyPayment", verifyLoggedIn, checkBan, verifyPayment);
+
 // get order placed page
 router.get("/orderPlaced", verifyLoggedIn, checkBan, getOrderPlaced);
 
@@ -138,7 +147,7 @@ router.get("/profile", verifyLoggedIn, checkBan, getProfile);
 router.post("/profile/editProfile/:id", verifyLoggedIn, checkBan, editProfile);
 
 //get coupon page
-router.get('/profile/coupons',verifyLoggedIn, checkBan, getCoupons)
+router.get("/profile/coupons", verifyLoggedIn, checkBan, getCoupons);
 
 /* ------------Address----------------*/
 

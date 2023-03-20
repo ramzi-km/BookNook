@@ -465,7 +465,33 @@ module.exports = {
       res.send(error);
     }
   },
-
+  // checking coupon code and  applying coupon
+  applyCoupon: async (req, res) => {
+    let couponCode = req.body.couponCode;
+    try {
+      let coupon = await Coupon.findOne({ code: couponCode });
+      if (coupon) {
+        const expiry = new Date(coupon.expiryDate);
+        if (expiry < new Date()) {
+          res.json({
+            errorMessage: "Coupon expired",
+            success: true,
+            error: true,
+          });
+        } else {
+          res.json({ success: true, coupon, error: false });
+        }
+      } else {
+        res.json({
+          errorMessage: "Invalid coupon code",
+          success: true,
+          error: true,
+        });
+      }
+    } catch (error) {
+      res.send(error);
+    }
+  },
   postCheckout: async (req, res) => {
     const userId = req.session.user._id;
     const payment = req.body.paymentType;
@@ -673,7 +699,7 @@ module.exports = {
       unlist: false,
       expiryDate: { $gt: new Date() },
     }).lean();
-    res.render("user/coupons", { user,coupons });
+    res.render("user/coupons", { user, coupons });
   },
 
   //edit user profile

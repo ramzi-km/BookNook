@@ -56,7 +56,6 @@ let transporter = nodemailer.createTransport({
 let loginError = null;
 let signupError = null;
 let signupOtpError = null;
-let loginOtpError = null;
 let emailInputError = null;
 let rpOtpError = null;
 
@@ -112,7 +111,7 @@ module.exports = {
   },
 
   verifySignupOtp: async (req, res) => {
-    let typedOtp = req.body.typedotp;
+    const typedOtp = req.body.typedotp;
 
     if (req.session.otpExpiry < Date.now()) {
       signupOtpError = "Invalid otp";
@@ -122,7 +121,7 @@ module.exports = {
         //Create new user
         let tempUser = req.session.tempUser;
         tempUser.password = await bcrypt.hash(tempUser.password, 10);
-        const newUser = await User.create(tempUser);
+        await User.create(tempUser);
 
         req.session.otp = null;
         req.session.otpExpiry = null;
@@ -151,13 +150,13 @@ module.exports = {
           if (user.block) {
             loginError = "User is banned";
           } else {
-            loginError = "invalid email or password";
+            loginError = "Invalid email or password";
           }
           res.redirect("/login");
         }
       });
     } else {
-      loginError = "invalid email or password";
+      loginError = "Invalid email or password";
       res.redirect("/login");
     }
   },

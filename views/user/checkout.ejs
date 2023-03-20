@@ -160,7 +160,8 @@
                                                                 <i class="fa-solid fa-pen-to-square"></i>
                                                             </button>
 
-                                                            <a  href="/profile/deleteAddress/<%=addr.id %>" class="btn btn-light m-1"
+                                                            <a href="/profile/deleteAddress/<%=addr.id %>"
+                                                                class="btn btn-light m-1"
                                                                 onclick="return confirm(`Do you really want to remove this address ?`)">
                                                                 <i class="fa-solid fa-trash"></i>
                                                             </a>
@@ -247,8 +248,8 @@
                         <div class="cart__discount">
                             <h6>Discount codes</h6>
                             <div class="input-group">
-                                <input type="text" class="form-control" form="couponForm" name="couponCode"
-                                    placeholder="Coupon code" required />
+                                <input type="text" id="couponId" class="form-control" form="couponForm"
+                                    name="couponCode" placeholder="Coupon code" required />
                                 <button type="submit" form="couponForm" class="btn btn-rounded btn-danger btn-md" style="
                             font-size: 14px;
                             color: #ffffff;
@@ -262,7 +263,11 @@
                                     Apply
                                 </button>
                             </div>
+
+                            <label id="couponError" for="error" class="text-danger">
+                            </label>
                         </div>
+
                         <div class="checkout__order mb-5">
                             <h4 class="order__title">Your order</h4>
                             <div class="checkout__order__products">
@@ -277,11 +282,14 @@
                             </ul>
                             <ul class="checkout__total__all">
                                 <li>Sub total <span>₹ <%= totalPrice %></span></li>
-                                <input id="subTotalPriceInput" name="totalAmount" type="number" value="<%= totalPrice %>" hidden>
+                                <input id="subTotalPriceInput" name="totalAmount" type="number"
+                                    value="<%= totalPrice %>" hidden>
                                 <li>Coupon Discount <span class="text-success">₹ 0</span></li>
-                                <input id="discountPriceInput" name="couponDiscount" form="mainForm" type="number" value="<%= totalPrice %>" hidden>
+                                <input id="discountPriceInput" name="couponDiscount" form="mainForm" type="number"
+                                    value="<%= totalPrice %>" hidden>
                                 <li>Total<span>₹ <%= totalPrice %></span></li>
-                                <input id="amountToPayInput" name="amountToPay" form="mainForm" type="number" value="<%= totalPrice %>" hidden>
+                                <input id="amountToPayInput" name="amountToPay" form="mainForm" type="number"
+                                    value="<%= totalPrice %>" hidden>
                             </ul>
 
                             <ul style="
@@ -317,6 +325,38 @@
         </div>
     </section>
     <!-- Checkout Section End -->
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        const form = document.getElementById('couponForm');
+
+        let price = Number('<%= totalPrice %>')
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const couponCode = document.getElementById('couponId').value;
+
+            try {
+                const response = await axios.post("/cart/checkout/coupon",{couponCode})
+                if (response.data.success) {
+                    if (response.data.error) {
+                        let message = response.data.errorMessage
+                        let couponError = document.getElementById('couponError')
+                        couponError.innerHTML = `${message}`
+                    } else {
+                        couponError.innerHTML ='success'
+                    }
+                } else {
+                    window.location.reload()
+                }
+            } catch (error) {
+                console.log(error);
+                window.location.reload()
+            }
+        })
+    </script>
 
 
 
