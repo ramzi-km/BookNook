@@ -45,6 +45,10 @@
 				padding-left: 100px;
 				box-shadow: inset 200px 200px 300px 200px rgba(0, 0, 0, 0.8);
 			}
+
+			.section_gap {
+				padding: 80px 0;
+			}
 		</style>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 	</head>
@@ -59,7 +63,7 @@
 							<div class="banner"
 								style="background-image: url('/images/productImages/<%= product.cover[0].filename %>');">
 								<h3 class="text-warning">BEST SELLER</h3>
-								<h1 class="text-white my-3"style="width: 80%; text-align: start;">
+								<h1 class="text-white my-3" style="width: 80%; text-align: start;">
 									<%= product.name %>
 								</h1>
 								<div class="d-flex">
@@ -95,11 +99,11 @@
 								</div>
 								<button type="button" class="btn btn-rounded btn-danger"
 									onclick="window.location.href='/productDetails/<%= product._id %>'">Buy now</button>
-	
+
 							</div>
 						</swiper-slide>
 						<% }) %>
-				<% } %>
+							<% } %>
 		</div>
 	</div>
 
@@ -114,8 +118,9 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-8 col-md-12">
 					<div class="row">
-						<div class="col-6 col-lg-8 col-md-8" >
-							<div class="single-deal" onclick="window.location.href='/shop?search=&category=Philosophy&price=&sort=0'" >
+						<div class="col-6 col-lg-8 col-md-8">
+							<div class="single-deal"
+								onclick="window.location.href='/shop?search=&category=Philosophy&price=&sort=0'">
 								<div class="overlay"></div>
 								<img class="img-fluid w-100" src="/images/philosophy.png"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
@@ -127,7 +132,8 @@
 							</div>
 						</div>
 						<div class="col-6 col-lg-4 col-md-4">
-							<div class="single-deal" onclick="window.location.href='/shop?search=&category=Personal+development&price=&sort=0'" >
+							<div class="single-deal"
+								onclick="window.location.href='/shop?search=&category=Personal+development&price=&sort=0'">
 								<div class="overlay"></div>
 								<img class="img-fluid w-100" src="/images/personal.webp"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
@@ -139,7 +145,8 @@
 							</div>
 						</div>
 						<div class="col-6 col-lg-4 col-md-4">
-							<div class="single-deal" onclick="window.location.href='/shop?search=&category=Manga&price=&sort=0'" >
+							<div class="single-deal"
+								onclick="window.location.href='/shop?search=&category=Manga&price=&sort=0'">
 								<div class="overlay"></div>
 								<img class="img-fluid" src="/images/manga.jpg"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
@@ -151,7 +158,8 @@
 							</div>
 						</div>
 						<div class="col-6 col-lg-8 col-md-8">
-							<div class="single-deal" onclick="window.location.href='/shop?search=&category=Romance&price=&sort=0'" >
+							<div class="single-deal"
+								onclick="window.location.href='/shop?search=&category=Romance&price=&sort=0'">
 								<div class="overlay"></div>
 								<img class="img-fluid " src="/images/romance.jpg"
 									style="width:100%; height: 12em; object-fit: cover;" alt="">
@@ -220,7 +228,7 @@
 	<!-- end features Area -->
 
 	<!-- start product Area -->
-	<section class="owl-carousel active-product-area section_gap">
+	<section class="section_gap">
 		<!-- single product slide -->
 		<div class="single-product-slider">
 			<div class="container">
@@ -256,7 +264,7 @@
 											</h6>
 										</div>
 										<div class="prd-bottom">
-	
+
 											<a href="/addToCart/<%= product._id %>" class="social-info">
 												<span class="ti-bag"></span>
 												<p class="hover-text">add to cart</p>
@@ -272,72 +280,17 @@
 									</div>
 								</div>
 							</div>
-	
+
 							<!-- single product -->
 							<% }) %>
-					<% } %>
+								<% } %>
 
 				</div>
 			</div>
 		</div>
 		<!-- single product slide -->
 		<div class="single-product-slider">
-			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-lg-6 text-center">
-						<div class="section-title">
-							<h1>Featured Products</h1>
-							<p>The featured products area of our online bookstore showcases a carefully curated
-								selection of books that are popular, highly-rated, or recently released. </p>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<% if (latestProducts[0]) { %>
-						<% latestProducts.forEach(product=> { %>
-							<!-- single product -->
-							<div class="col-lg-3 col-md-6">
-								<div class="single-product">
-									<a href="/productDetails/<%= product._id %>"><img class="img-fluid"
-											src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
-											style="max-width: 234px;  max-height: 274px;"></a>
-									<div class="product-details">
-										<h6
-											style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-											<a href="/productDetails/<%= product._id %>" class="text-dark"><span>
-													<%= product.name %>
-												</span></a>
-										</h6>
-										<div class="price">
-											<h6 class="text-danger">₹ <%= product.price %>
-											</h6>
-											<h6 class="l-through">₹ <%= product.mrp %>
-											</h6>
-										</div>
-										<div class="prd-bottom">
-	
-											<a href="/addToCart/<%= product._id %>" class="social-info">
-												<span class="ti-bag"></span>
-												<p class="hover-text">add to cart</p>
-											</a>
-											<a class="social-info">
-												<span class="lnr lnr-heart"
-													onclick="window.location.href='/wishlist/add2/<%= product._id %>'"></span>
-												<p class="hover-text"
-													onclick="window.location.href='/wishlist/add2/<%= product._id %>'">
-													Wishlist</p>
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-	
-							<!-- single product -->
-							<% }) %>
-					<% } %>
-				
-				</div>
-			</div>
+
 		</div>
 	</section>
 	<!-- end product Area -->
@@ -366,18 +319,23 @@
 							<% for(let i=0; i< (offerProducts.length || 9); i++) { %>
 								<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
 									<div class="single-related-product d-flex">
-										<a href="/productDetails/<%= offerProducts[i]._id %>"><img width="50px;" src="images/productImages/<%= offerProducts[i].mainImage[0].filename %>" alt=""></a>
+										<a href="/productDetails/<%= offerProducts[i]._id %>"><img width="50px;"
+												src="images/productImages/<%= offerProducts[i].mainImage[0].filename %>"
+												alt=""></a>
 										<div class="desc">
-											<a href="/productDetails/<%= offerProducts[i]._id %>" class="title">₹ <%= offerProducts[i].name %></a>
+											<a href="/productDetails/<%= offerProducts[i]._id %>" class="title">₹ <%=
+													offerProducts[i].name %></a>
 											<div class="price">
-												<h6>₹ <%= offerProducts[i].price %></h6>
-												<h6 class="l-through">₹ <%= offerProducts[i].mrp %></h6>
+												<h6>₹ <%= offerProducts[i].price %>
+												</h6>
+												<h6 class="l-through">₹ <%= offerProducts[i].mrp %>
+												</h6>
 											</div>
 										</div>
 									</div>
 								</div>
-							<% } %>
-						<% } %>
+								<% } %>
+									<% } %>
 					</div>
 				</div>
 				<div class="col-lg-3">

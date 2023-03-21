@@ -284,10 +284,10 @@
                                 <li>Sub total <span>₹ <%= totalPrice %></span></li>
                                 <input id="subTotalPriceInput" name="totalAmount" type="number"
                                     value="<%= totalPrice %>" hidden>
-                                <li>Coupon Discount <span class="text-success">₹ 0</span></li>
+                                <li id="discountPrice">Coupon Discount <span class="text-success">₹ 0</span></li>
                                 <input id="discountPriceInput" name="couponDiscount" form="mainForm" type="number"
-                                    value="<%= totalPrice %>" hidden>
-                                <li>Total<span>₹ <%= totalPrice %></span></li>
+                                    value="0" hidden>
+                                <li id="totalPrice">Total<span>₹ <%= totalPrice %></span></li>
                                 <input id="amountToPayInput" name="amountToPay" form="mainForm" type="number"
                                     value="<%= totalPrice %>" hidden>
                             </ul>
@@ -330,25 +330,53 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script>
         const form = document.getElementById('couponForm');
+        const total = document.getElementById('totalPrice');
+        const couponDiscountList = document.getElementById('discountPrice');
+        const totalInput = document.getElementById('amountToPayInput');
+        const discountInput = document.getElementById('discountPriceInput');
 
-        let price = Number('<%= totalPrice %>')
+        const price = Number('<%= totalPrice %>')
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const couponCode = document.getElementById('couponId').value;
+            const couponError = document.getElementById('couponError')
 
             try {
-                const response = await axios.post("/cart/checkout/coupon",{couponCode})
+                const response = await axios.post("/cart/checkout/coupon", { couponCode })
+                const coupon = response.data.coupon
                 if (response.data.success) {
                     if (response.data.error) {
-                        let message = response.data.errorMessage
-                        let couponError = document.getElementById('couponError')
-                        couponError.innerHTML = `${message}`
+                        const message = response.data.errorMessage
+                        couponError.innerHTML = `<b class = "text-danger">${message}</b>`
+                        total.innerHTML = `Total<span>₹ ${price}</span>`
+                        couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ 0</span>`
+                        totalInput.value = price
+                        discountInput.value = 0
                     } else {
-                        couponError.innerHTML ='success'
+                        if (price < coupon.minPurchaseAmount) {
+                            couponError.innerHTML = `<b class = "text-danger">coupon only applicable for purchase above${coupon.minPurchaseAmount}</b>`
+                            total.innerHTML = `Total<span>₹ ${price}</span>`
+                            couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ 0</span>`
+                            totalInput.value = price
+                            discountInput.value = 0
+                        } else {
+                            let discountAmount = (price * coupon.discountPercentage) / 100;
+                            if (discountAmount > coupon.maxDiscountAmount) {
+                                discountAmount = coupon.maxDiscountAmount;
+                            }
+                            discountAmount = Math.floor(discountAmount)
+
+                            couponError.innerHTML = `<b class = "text-success">coupon applied (${coupon.discountPercentage}% discount)</b>`
+                            total.innerHTML = `Total<span>₹ ${price - discountAmount}</span>`
+                            couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ ${discountAmount}</span>`
+                            totalInput.value = (price - discountAmount)
+                            discountInput.value = discountAmount
+                        }
                     }
                 } else {
+                    console.log(error);
                     window.location.reload()
                 }
             } catch (error) {

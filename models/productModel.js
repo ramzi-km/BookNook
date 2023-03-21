@@ -46,10 +46,6 @@ var productSchema = new mongoose.Schema({
     extraImages:{
         type:Array,
     },
-    isFeatured:{
-        type:String,
-        default:false,
-    },
     ratings:{
         type:Array,
         default:[]

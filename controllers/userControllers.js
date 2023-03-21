@@ -60,6 +60,7 @@ module.exports = {
         { $sort: { totalSold: -1 } },
         { $limit: 5 },
       ]);
+
       let latestProducts = await Product.find({ unList: false })
         .sort({ createdAt: -1 })
         .limit(4)
@@ -74,7 +75,6 @@ module.exports = {
           return product;
         }
       });
-      console.log(offerProducts);
       res.render("user/home", {
         user,
         bestProducts,
@@ -497,6 +497,7 @@ module.exports = {
     const payment = req.body.paymentType;
     const addressId = req.body.address;
     const amountToPay = req.body.amountToPay;
+    const couponDiscount = req.body.couponDiscount;
     if (req.body.address == "empty") {
       addressError = true;
       res.redirect("/cart/checkout");
@@ -518,7 +519,7 @@ module.exports = {
           _id: { $in: cartList },
           unlist: false,
         }).lean();
-
+        const couponDiscountForOne = Math.floor(couponDiscount/(products.length))
         let totalPrice = 0;
         stockError = false;
         products.forEach((product, index) => {
@@ -535,7 +536,7 @@ module.exports = {
           if (payment == "cod") {
             let orders = [];
             let i = 1;
-            let orderCount = await Order.find().count();
+            const orderCount = await Order.find().count();
             for (let product of products) {
               await Product.updateOne(
                 { _id: product._id },
@@ -545,13 +546,14 @@ module.exports = {
                   },
                 }
               );
+              product._id = product._id.toString()
               orders.push({
                 address: address[0],
                 product: product,
                 userId: userId,
                 quantity: cartQuantities[product._id],
-                total: cartQuantities[product._id] * product.price,
-                amountToPay: cartQuantities[product._id] * product.price,
+                total: (cartQuantities[product._id] * product.price) - couponDiscountForOne,
+                amountToPay: (cartQuantities[product._id] * product.price) - couponDiscountForOne,
                 paymentType: "cod",
                 orderId: orderCount + i,
               });
@@ -566,12 +568,13 @@ module.exports = {
           } else if (payment == "online") {
             let orders = [];
             for (let product of products) {
+              product._id = product._id.toString()
               orders.push({
                 address: address[0],
                 product: product,
                 userId: userId,
                 quantity: cartQuantities[product._id],
-                total: cartQuantities[product._id] * product.price,
+                total: (cartQuantities[product._id] * product.price) - couponDiscountForOne,
                 amountToPay: 0,
                 paymentType: "online",
                 paid: true,
@@ -579,6 +582,7 @@ module.exports = {
               ``;
             }
             req.session.amountToPay = amountToPay;
+            req.session.couponDiscount = couponDiscount;
             req.session.totalAmount = totalPrice;
             req.session.tempOrders = orders;
             req.session.pass = true;
@@ -593,11 +597,17 @@ module.exports = {
 
   getPaymentGateway: async (req, res) => {
     if (req.session.tempOrders && req.session.pass) {
-      let user = req.session.user;
-      let totalAmount = req.session.totalAmount;
-      let amountToPay = req.session.amountToPay;
+      const user = req.session.user;
+      const totalAmount = req.session.totalAmount;
+      const amountToPay = req.session.amountToPay;
+      const couponDiscount = req.session.couponDiscount;
       req.session.pass = null;
-      res.render("user/paymentGateway", { user, totalAmount, amountToPay });
+      res.render("user/paymentGateway", {
+        user,
+        totalAmount,
+        amountToPay,
+        couponDiscount,
+      });
     } else {
       res.redirect("/cart/checkout");
     }
