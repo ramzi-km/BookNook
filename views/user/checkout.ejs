@@ -1,15 +1,14 @@
 <%- include('./partials/header') %>
 
-
     <head>
         <!--------------- 2nd template files ------------------>
 
         <!-- Google Font -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
-            rel="stylesheet">
+            rel="stylesheet" />
 
         <!-- Css Styles -->
-        <link rel="stylesheet" href="/template2/css/style.css" type="text/css">
+        <link rel="stylesheet" href="/template2/css/style.css" type="text/css" />
 
         <!--------------- 2nd template files ------------------>
 
@@ -34,26 +33,47 @@
                 width: 15px;
                 height: 15px;
             }
+
+            .checkout-wallet {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                border: 1px solid rgb(0, 0, 0, 0.5);
+                border-radius: 5px;
+                height: 45px;
+                padding: 20px;
+                background-color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+            .checkout-wallet i {
+                font-weight: 650;
+                position: relative;
+                top: 3px;
+            }
+
+            .cw-cash {
+                display: flex;
+                gap: 10px;
+            }
+
+            .cw-cash input {
+                width: 20px;
+            }
         </style>
-
-
     </head>
-
 
     <!-- Checkout Section Begin -->
     <section class="checkout spad">
         <div class="container">
-            <div class="d-flex justify-content-start mb-3">
-
-            </div>
+            <div class="d-flex justify-content-start mb-3"></div>
 
             <div class="checkout__form">
-
-
                 <div class="row">
-
                     <div class="col-lg-8 col-md-6">
-
                         <h4 class="checkout__title">Billing Details</h4>
                         <div id="accordion">
                             <div class="card">
@@ -69,7 +89,6 @@
                                     <div class="card-body">
                                         <form id="addAddressForm" action="/profile/addAddress" method="post">
                                             <div class="row">
-
                                                 <div class="col-lg-6">
                                                     <div class="checkout__input">
                                                         <p>Name<span>*</span></p>
@@ -104,7 +123,9 @@
                                                     required />
                                             </div>
                                             <div class="">
-                                                <button type="submit" class="btn btn-rounded btn-danger">Save</button>
+                                                <button type="submit" class="btn btn-rounded btn-danger">
+                                                    Save
+                                                </button>
                                             </div>
                                         </form>
                                     </div>
@@ -113,34 +134,29 @@
                         </div>
                         <form id="mainForm" action="/cart/checkout" method="post"></form>
                         <div>
-
                             <h6 class="mt-5 checkout__title">Choose Address</h6>
 
                             <% if (addressError) { %>
                                 <div class="alert alert-dismissable fade show alert-warning d-flex justify-content-between"
                                     role="alert">
                                     <strong>
-                                        Please choose an address before proceeding.if you doesn't have any saved
-                                        addresses
-                                        please add one using the button given above.
+                                        Please choose an address before proceeding.if you doesn't have
+                                        any saved addresses please add one using the button given above.
                                     </strong>
                                 </div>
                                 <% } %>
-
                                     <% if (!address[0]) { %>
 
                                         <div class="address-radio">
                                             <input type="radio" class="pixel-radio" hidden value="empty" form="mainForm"
-                                                name="address" id="empty" checked required>
-
+                                                name="address" id="empty" checked required />
                                         </div>
                                         <% }else{%>
                                             <% address.forEach(addr=>{ %>
                                                 <label class="address-box mt-3" for="<%= addr.id  %>">
                                                     <div class="address-detail">
-                                                        <b class="d-flex  text-dark">
+                                                        <b class="d-flex text-dark">
                                                             <%=addr.name %>
-
                                                         </b>
                                                         <b class="text-dark">
                                                             <%=addr.mobile %>
@@ -153,7 +169,6 @@
 
                                                     <div class="address-radio">
                                                         <div class="mb-5 d-flex">
-
                                                             <button class="btn m-1 collapsed" data-toggle="collapse"
                                                                 data-target="#collapse<%= addr.id %>"
                                                                 aria-expanded="false" aria-controls="collapseTwo">
@@ -166,11 +181,10 @@
                                                                 <i class="fa-solid fa-trash"></i>
                                                             </a>
                                                         </div>
-                                                        <input type="radio" style="background-color: #ffffff;"
+                                                        <input type="radio" style="background-color: #ffffff"
                                                             class="pixel-radio" value="<%= addr.id  %>" form="mainForm"
-                                                            name="address" id="<%= addr.id  %>" required>
+                                                            name="address" id="<%= addr.id  %>" required />
                                                     </div>
-
                                                 </label>
                                                 <div id="accordion<%= addr.id %>">
                                                     <div class="card">
@@ -181,7 +195,6 @@
                                                                     action="/profile/editAddress/<%= addr.id %>"
                                                                     method="post">
                                                                     <div class="row">
-
                                                                         <div class="col-lg-6">
                                                                             <div class="checkout__input">
                                                                                 <p>Name<span>*</span></p>
@@ -227,8 +240,9 @@
                                                                     <div class="">
                                                                         <button type="submit"
                                                                             form="editAddressForm<%= addr.id %>"
-                                                                            class="btn btn-rounded btn-danger">Save
-                                                                            changes</button>
+                                                                            class="btn btn-rounded btn-danger">
+                                                                            Save changes
+                                                                        </button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -238,34 +252,30 @@
 
                                                 <% }) %>
                                                     <% } %>
-
                         </div>
-
-
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <form id="couponForm" action="/cart/checkout/coupon" method="post"></form>
-                        <div class="cart__discount">
+                        <div id="couponDiv" class="cart__discount">
                             <h6>Discount codes</h6>
                             <div class="input-group">
                                 <input type="text" id="couponId" class="form-control" form="couponForm"
                                     name="couponCode" placeholder="Coupon code" required />
                                 <button type="submit" form="couponForm" class="btn btn-rounded btn-danger btn-md" style="
-                            font-size: 14px;
-                            color: #ffffff;
-                            font-weight: 700;
-                            letter-spacing: 2px;
-                            text-transform: uppercase;
-                            background: #da1111;
-                            width: auto;
-                            border: none;
-                          ">
+                  font-size: 14px;
+                  color: #ffffff;
+                  font-weight: 700;
+                  letter-spacing: 2px;
+                  text-transform: uppercase;
+                  background: #da1111;
+                  width: auto;
+                  border: none;
+                ">
                                     Apply
                                 </button>
                             </div>
 
-                            <label id="couponError" for="error" class="text-danger">
-                            </label>
+                            <label id="couponError" for="error" class="text-danger"> </label>
                         </div>
 
                         <div class="checkout__order mb-5">
@@ -276,51 +286,64 @@
                             <ul class="checkout__total__products">
                                 <% products.forEach(product=> { %>
                                     <li>
-                                        <%= product.name %> <span>₹ <%= product.price * product.cartQuantity %></span>
+                                        <%= product.name %>
+                                            <span>₹ <%= product.price * product.cartQuantity %></span>
                                     </li>
                                     <% }) %>
                             </ul>
                             <ul class="checkout__total__all">
                                 <li>Sub total <span>₹ <%= totalPrice %></span></li>
                                 <input id="subTotalPriceInput" name="totalAmount" type="number"
-                                    value="<%= totalPrice %>" hidden>
-                                <li id="discountPrice">Coupon Discount <span class="text-success">₹ 0</span></li>
+                                    value="<%= totalPrice %>" hidden />
+                                <li id="discountPrice">
+                                    Coupon Discount <span class="text-success">₹ 0</span>
+                                </li>
                                 <input id="discountPriceInput" name="couponDiscount" form="mainForm" type="number"
-                                    value="0" hidden>
+                                    value="0" hidden />
                                 <li id="totalPrice">Total<span>₹ <%= totalPrice %></span></li>
                                 <input id="amountToPayInput" name="amountToPay" form="mainForm" type="number"
-                                    value="<%= totalPrice %>" hidden>
+                                    value="<%= totalPrice %>" hidden />
                             </ul>
+
+                            <label for="wallet" class="checkout-wallet">
+                                <div class="cw-label text-dark">
+                                    <i class="fa-solid fa-wallet"><b class="text-dark ml-2">Wallet</b></i>
+                                </div>
+                                <div class="cw-cash">
+                                    <b class="text-dark">
+                                        ₹
+                                        <span id="walletAmount">
+                                            <%= user.wallet %>
+                                        </span>
+                                    </b>
+                                    <input type="checkbox" form="mainForm" id="wallet" name="wallet" value="true" />
+                                </div>
+                            </label>
 
                             <ul style="
-                      background-color: #ffffff;
-                      border-radius: 10px;
-                      border: 1px solid rgb(0, 0, 0,0.75);
-                      padding-top: 5px;
-                      padding-bottom: 5px;
-                    ">
-
+                background-color: #ffffff;
+                border-radius: 5px;
+                border: 1px solid rgb(0, 0, 0, 0.5);
+                padding-top: 5px;
+                padding-bottom: 5px;
+              ">
                                 <li class="ml-2">
-                                    <input class="pixel-radio" style="height: 15px; width: 15px;" name="paymentType"
+                                    <input class="pixel-radio" style="height: 15px; width: 15px" name="paymentType"
                                         form="mainForm" type="radio" id="cod" value="cod" required />
-                                    <label for="cod" class="text-dark">
-                                        Cash on delivery
-                                    </label>
+                                    <label for="cod" class="text-dark"> Cash on delivery </label>
                                 </li>
                                 <li class="ml-2">
-                                    <input class="pixel-radio" style="height: 15px; width: 15px;" name="paymentType"
+                                    <input class="pixel-radio" style="height: 15px; width: 15px" name="paymentType"
                                         form="mainForm" type="radio" id="online" value="online" required />
-                                    <label for="online" class="text-dark">
-                                        Online payment
-                                    </label>
+                                    <label for="online" class="text-dark"> Online payment </label>
                                 </li>
                             </ul>
-                            <button type="submit" form="mainForm" class="site-btn">PLACE ORDER</button>
+                            <button type="submit" form="mainForm" class="site-btn">
+                                PLACE ORDER
+                            </button>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </section>
@@ -329,63 +352,109 @@
     <!-- Axios -->
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script>
-        const form = document.getElementById('couponForm');
-        const total = document.getElementById('totalPrice');
-        const couponDiscountList = document.getElementById('discountPrice');
-        const totalInput = document.getElementById('amountToPayInput');
-        const discountInput = document.getElementById('discountPriceInput');
+        const form = document.getElementById("couponForm");
+        const total = document.getElementById("totalPrice");
+        const couponDiscountList = document.getElementById("discountPrice");
+        const totalInput = document.getElementById("amountToPayInput");
+        const discountInput = document.getElementById("discountPriceInput");
+        const couponDiv = document.getElementById("couponDiv");
 
-        const price = Number('<%= totalPrice %>')
+        const price = Number("<%= totalPrice %>");
+        const walletCash = Number("<%= user.wallet %>");
+        let discountAmount = 0;
 
-        form.addEventListener('submit', async function (e) {
+
+
+        form.addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            const couponCode = document.getElementById('couponId').value;
-            const couponError = document.getElementById('couponError')
+            const couponCode = document.getElementById("couponId").value;
+            const couponError = document.getElementById("couponError");
 
             try {
-                const response = await axios.post("/cart/checkout/coupon", { couponCode })
-                const coupon = response.data.coupon
+                const response = await axios.post("/cart/checkout/coupon", {
+                    couponCode,
+                });
+                const coupon = response.data.coupon;
                 if (response.data.success) {
                     if (response.data.error) {
-                        const message = response.data.errorMessage
-                        couponError.innerHTML = `<b class = "text-danger">${message}</b>`
-                        total.innerHTML = `Total<span>₹ ${price}</span>`
-                        couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ 0</span>`
-                        totalInput.value = price
-                        discountInput.value = 0
+                        const message = response.data.errorMessage;
+                        couponError.innerHTML = `<b class = "text-danger">${message}</b>`;
+                        total.innerHTML = `Total<span>₹ ${price}</span>`;
+                        couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ 0</span>`;
+                        totalInput.value = price;
+                        discountInput.value = 0;
+                        discountAmount = 0;
                     } else {
                         if (price < coupon.minPurchaseAmount) {
-                            couponError.innerHTML = `<b class = "text-danger">coupon only applicable for purchase above${coupon.minPurchaseAmount}</b>`
-                            total.innerHTML = `Total<span>₹ ${price}</span>`
-                            couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ 0</span>`
-                            totalInput.value = price
-                            discountInput.value = 0
+                            couponError.innerHTML = `<b class = "text-danger">coupon only applicable for purchase above${coupon.minPurchaseAmount}</b>`;
+                            total.innerHTML = `Total<span>₹ ${price}</span>`;
+                            couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ 0</span>`;
+                            totalInput.value = price;
+                            discountInput.value = 0;
+                            discountAmount = 0;
                         } else {
-                            let discountAmount = (price * coupon.discountPercentage) / 100;
+                            discountAmount = (price * coupon.discountPercentage) / 100;
                             if (discountAmount > coupon.maxDiscountAmount) {
                                 discountAmount = coupon.maxDiscountAmount;
                             }
-                            discountAmount = Math.floor(discountAmount)
+                            discountAmount = Math.floor(discountAmount);
 
-                            couponError.innerHTML = `<b class = "text-success">coupon applied (${coupon.discountPercentage}% discount)</b>`
-                            total.innerHTML = `Total<span>₹ ${price - discountAmount}</span>`
-                            couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ ${discountAmount}</span>`
-                            totalInput.value = (price - discountAmount)
-                            discountInput.value = discountAmount
+                            couponError.innerHTML = `<b class = "text-success">coupon applied (${coupon.discountPercentage}% discount)</b>`;
+                            total.innerHTML = `Total<span>₹ ${price - discountAmount}</span>`;
+                            couponDiscountList.innerHTML = `Coupon Discount <span class="text-success">₹ ${discountAmount}</span>`;
+                            totalInput.value = price - discountAmount;
+                            discountInput.value = discountAmount;
                         }
                     }
                 } else {
-                    console.log(error);
-                    window.location.reload()
+                    window.location.reload();
                 }
             } catch (error) {
-                console.log(error);
-                window.location.reload()
+                window.location.reload();
             }
-        })
+        });
+
+        const wallet = document.getElementById("wallet");
+        wallet.addEventListener("change", (e) => {
+            const walletAmount = document.getElementById("walletAmount");
+            if (e.target.checked) {
+                couponDiv.innerHTML = "<div class='d-flex justify-content-center align-items-center mt-5' ><label>You can only apply coupon before using wallet</label></div>"
+                if (walletCash - (price - discountAmount) >= 0) {
+                    total.innerHTML = `Total<span>₹ ${0}</span>`;
+                    walletAmount.innerText = walletCash - (price - discountAmount);
+                    totalInput.value = 0;
+                } else {
+                    total.innerHTML = `Total<span>₹ ${-1 * (walletCash - (price - discountAmount))
+                        }</span>`;
+                    walletAmount.innerText = 0;
+                    totalInput.value = -1 * (walletCash - (price - discountAmount))
+                }
+            } else {
+                couponDiv.innerHTML = `<h6>Discount codes</h6>
+                            <div class="input-group">
+                                <input type="text" id="couponId" class="form-control" form="couponForm"
+                                    name="couponCode" placeholder="Coupon code" required />
+                                <button type="submit" form="couponForm" class="btn btn-rounded btn-danger btn-md" style="
+                  font-size: 14px;
+                  color: #ffffff;
+                  font-weight: 700;
+                  letter-spacing: 2px;
+                  text-transform: uppercase;
+                  background: #da1111;
+                  width: auto;
+                  border: none;
+                ">
+                                    Apply
+                                </button>
+                            </div>
+
+                            <label id="couponError" for="error" class="text-danger"> </label>`
+                total.innerHTML = `Total<span>₹ ${price - discountAmount}</span>`;
+                walletAmount.innerText = walletCash;
+                totalInput.value = price - discountAmount;
+            }
+        });
     </script>
-
-
 
     <%- include('./partials/footer') %>
