@@ -494,21 +494,23 @@ module.exports = {
   },
   postCheckout: async (req, res) => {
     const userId = req.session.user._id;
-    const payment = req.body.paymentType;
-    const addressId = req.body.address;
-    const amountToPay = req.body.amountToPay;
-    const couponDiscount = req.body.couponDiscount;
-    if (req.body.address == "empty") {
+    const {
+      paymentType: payment,
+      address: addressId,
+      amountToPay,
+      couponDiscount,
+    } = req.body;
+    if (addressId == "empty") {
       addressError = true;
       res.redirect("/cart/checkout");
     } else {
       try {
-        let { address } = await User.findOne(
+        const { address } = await User.findOne(
           { _id: userId },
           { _id: 0, address: { $elemMatch: { id: addressId } } }
         );
-        let user = await User.findById(userId);
-        let cart = user.cart;
+        const user = await User.findById(userId);
+        const cart = user.cart;
         const cartQuantities = {};
         const cartList = cart.map((item) => {
           cartQuantities[item.id] = item.quantity;
@@ -519,7 +521,7 @@ module.exports = {
           _id: { $in: cartList },
           unlist: false,
         }).lean();
-        const couponDiscountForOne = Math.floor(couponDiscount/(products.length))
+
         let totalPrice = 0;
         stockError = false;
         products.forEach((product, index) => {
@@ -533,31 +535,143 @@ module.exports = {
         if (stockError || !products[0]) {
           res.redirect("/cart");
         } else {
+          //----------- Cash on delivery -------------//
+
           if (payment == "cod") {
-            let orders = [];
-            let i = 1;
             const orderCount = await Order.find().count();
-            for (let product of products) {
-              await Product.updateOne(
-                { _id: product._id },
-                {
-                  $inc: {
-                    inStock: -1 * cartQuantities[product._id],
+            let orders = [];
+
+            //--------- Using wallet -----------//
+
+            if (req.body.wallet) {
+              const wallet = user.wallet;
+              totalPrice = totalPrice - couponDiscount;
+              if (wallet >= totalPrice) {
+                await User.findByIdAndUpdate(userId, {
+                  $set: {
+                    wallet: wallet - totalPrice,
                   },
+                });
+                orders = [];
+                let i = 1;
+                for (let product of products) {
+                  await Product.updateOne(
+                    { _id: product._id },
+                    {
+                      $inc: {
+                        inStock: -1 * cartQuantities[product._id],
+                      },
+                    }
+                  );
+                  product._id = product._id.toString();
+                  orders.push({
+                    address: address[0],
+                    product: product,
+                    userId: userId,
+                    quantity: cartQuantities[product._id],
+                    total: cartQuantities[product._id] * product.price,
+                    amountToPay: 0,
+                    paymentType: "cod",
+                    orderId: orderCount + i,
+                    paid: true,
+                  });
+                  i++;
                 }
-              );
-              product._id = product._id.toString()
-              orders.push({
-                address: address[0],
-                product: product,
-                userId: userId,
-                quantity: cartQuantities[product._id],
-                total: (cartQuantities[product._id] * product.price) - couponDiscountForOne,
-                amountToPay: (cartQuantities[product._id] * product.price) - couponDiscountForOne,
-                paymentType: "cod",
-                orderId: orderCount + i,
-              });
-              i++;
+              } else {
+                await User.findByIdAndUpdate(userId, {
+                  $set: {
+                    wallet: 0,
+                  },
+                });
+                totalPrice = totalPrice - wallet;
+                orders = [];
+                let i = 1;
+                for (let product of products) {
+                  await Product.updateOne(
+                    { _id: product._id },
+                    {
+                      $inc: {
+                        inStock: -1 * cartQuantities[product._id],
+                      },
+                    }
+                  );
+                  let amountToPay = 0;
+                  if (totalPrice > 0) {
+                    if (
+                      cartQuantities[product._id] * product.price <=
+                      totalPrice
+                    ) {
+                      amountToPay = cartQuantities[product._id] * product.price;
+                      totalPrice = totalPrice - amountToPay;
+                    } else {
+                      amountToPay = totalPrice;
+                      totalPrice = 0;
+                    }
+                  }
+
+                  let paid = amountToPay == 0 ? true : false;
+
+                  product._id = product._id.toString();
+                  orders.push({
+                    address: address[0],
+                    product: product,
+                    userId: userId,
+                    quantity: cartQuantities[product._id],
+                    total: cartQuantities[product._id] * product.price,
+                    amountToPay,
+                    paid,
+                    paymentType: "cod",
+                    orderId: orderCount + i,
+                  });
+                  i++;
+                }
+              }
+
+              //--------- Not Using wallet -----------//
+            } else {
+              orders = [];
+              let i = 1;
+              totalPrice = totalPrice - couponDiscount;
+              for (let product of products) {
+                await Product.updateOne(
+                  { _id: product._id },
+                  {
+                    $inc: {
+                      inStock: -1 * cartQuantities[product._id],
+                    },
+                  }
+                );
+
+                let amountToPay = 0;
+                if (totalPrice > 0) {
+                  if (
+                    cartQuantities[product._id] * product.price <=
+                    totalPrice
+                  ) {
+                    amountToPay = cartQuantities[product._id] * product.price;
+                    totalPrice = totalPrice - amountToPay;
+                  } else {
+                    amountToPay = totalPrice;
+                    totalPrice = 0;
+                  }
+                }
+
+                let paid = amountToPay == 0 ? true : false;
+
+                product._id = product._id.toString();
+                orders.push({
+                  address: address[0],
+                  product: product,
+                  userId: userId,
+                  quantity: cartQuantities[product._id],
+                  total: cartQuantities[product._id] * product.price,
+                  amountToPay,
+                  paid,
+                  paymentType: "cod",
+                  orderId: orderCount + i,
+                });
+                i++;
+              }
             }
             await Order.create(orders);
             await User.findByIdAndUpdate(userId, {
@@ -565,28 +679,105 @@ module.exports = {
             });
             req.session.orderSuccess = true;
             res.redirect("/orderPlaced");
+
+            //----------- online Payment -------------//
           } else if (payment == "online") {
+            const orderCount = await Order.find().count();
             let orders = [];
-            for (let product of products) {
-              product._id = product._id.toString()
-              orders.push({
-                address: address[0],
-                product: product,
-                userId: userId,
-                quantity: cartQuantities[product._id],
-                total: (cartQuantities[product._id] * product.price) - couponDiscountForOne,
-                amountToPay: 0,
-                paymentType: "online",
-                paid: true,
-              });
-              ``;
+
+            //--------- Using wallet -----------//
+
+            if (req.body.wallet) {
+              const wallet = user.wallet;
+              totalPrice = totalPrice - couponDiscount;
+              if (wallet >= totalPrice) {
+                await User.findByIdAndUpdate(userId, {
+                  $set: {
+                    wallet: wallet - totalPrice,
+                  },
+                });
+                orders = [];
+                let i = 1;
+                for (let product of products) {
+                  await Product.updateOne(
+                    { _id: product._id },
+                    {
+                      $inc: {
+                        inStock: -1 * cartQuantities[product._id],
+                      },
+                    }
+                  );
+                  product._id = product._id.toString();
+                  orders.push({
+                    address: address[0],
+                    product: product,
+                    userId: userId,
+                    quantity: cartQuantities[product._id],
+                    total: cartQuantities[product._id] * product.price,
+                    amountToPay: 0,
+                    paymentType: "online",
+                    orderId: orderCount + i,
+                    paid: true,
+                  });
+                  i++;
+                }
+                await Order.create(orders);
+                await User.findByIdAndUpdate(userId, {
+                  $set: { cart: [] },
+                });
+                req.session.orderSuccess = true;
+                res.redirect("/orderPlaced");
+              } else if (wallet < totalPrice) {
+                await User.findByIdAndUpdate(userId, {
+                  $set: {
+                    wallet: 0,
+                  },
+                });
+                orders = [];
+                for (let product of products) {
+                  product._id = product._id.toString();
+                  orders.push({
+                    address: address[0],
+                    product: product,
+                    userId: userId,
+                    quantity: cartQuantities[product._id],
+                    total: cartQuantities[product._id] * product.price,
+                    amountToPay: 0,
+                    paymentType: "online",
+                    paid: true,
+                  });
+                }
+                req.session.amountToPay = amountToPay;
+                req.session.couponDiscount = couponDiscount;
+                req.session.totalAmount = totalPrice;
+                req.session.tempOrders = orders;
+                req.session.pass = true;
+                res.redirect("/paymentGateway");
+              }
+
+              //--------- Not Using wallet -----------//
+            } else {
+              orders = [];
+              for (let product of products) {
+                product._id = product._id.toString();
+                orders.push({
+                  address: address[0],
+                  product: product,
+                  userId: userId,
+                  quantity: cartQuantities[product._id],
+                  total: cartQuantities[product._id] * product.price,
+                  amountToPay: 0,
+                  paymentType: "online",
+                  paid: true,
+                });
+              }
+              req.session.amountToPay = amountToPay;
+              req.session.couponDiscount = couponDiscount;
+              req.session.totalAmount = totalPrice;
+              req.session.tempOrders = orders;
+              req.session.pass = true;
+              res.redirect("/paymentGateway");
             }
-            req.session.amountToPay = amountToPay;
-            req.session.couponDiscount = couponDiscount;
-            req.session.totalAmount = totalPrice;
-            req.session.tempOrders = orders;
-            req.session.pass = true;
-            res.redirect("/paymentGateway");
           }
         }
       } catch (error) {

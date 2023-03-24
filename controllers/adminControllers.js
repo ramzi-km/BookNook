@@ -90,8 +90,8 @@ module.exports = {
       let monthlyDataObject = {};
       monthlyDataArray.map((item) => {
         monthlyDataObject[item._id] = item.revenue;
-      });
-      let monthlyData = [];
+      }); 
+      let monthlyData=[]
       for (let i = 1; i <= 12; i++) {
         monthlyData[i - 1] = monthlyDataObject[i] ?? 0;
       }
