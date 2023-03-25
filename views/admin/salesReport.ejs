@@ -85,7 +85,7 @@
       .orders-table img {
         max-height: 20px;
       }
-      
+
       .order-container {
         width: 100%;
         flex: 100%;
@@ -196,7 +196,7 @@
     <div class="page-breadcrumb">
       <div class="row">
         <div class="col-12 d-flex no-block align-items-center">
-          <h4 class="page-title">Sales analysis</h4>
+          <h3 class="page-title">Sales Report</h3>
         </div>
       </div>
     </div>
@@ -222,7 +222,7 @@
             <div class="card-body">
               <div class="d-md-flex align-items-center">
                 <div>
-                  <h3 class="card-title">Sales Report</h3>
+                  <!-- <h3 class="card-title">Sales Report</h3> -->
                 </div>
               </div>
               <div class="row"></div>
@@ -256,7 +256,7 @@
                   <table id="salesTable" class="table table-responsive table-striped table-bordered">
                     <thead class="table-dark">
                       <tr>
-                        <th colspan="3" class="thead text-white" style="text-align: center;"><b>Sales report (from <span
+                        <th colspan="3" class="thead text-white" style="text-align: center;"><b>Sales Report (from <span
                               class="text-warning">
                               <%= startDate %>
                             </span> to <span class="text-warning">
@@ -297,7 +297,7 @@
               <div class="row mt-2 p-3">
                 <div class="orders-table" id="content">
                   <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="table">
+                    <table id="zero_config" class="table table-bordered table-hover" id="table">
                       <thead class="table-dark">
                         <tr class="align-middle">
                           <th scope="col" class="text-white">No</th>
@@ -398,7 +398,7 @@
         doc.text(15, 30, salesReportHead);
         doc.autoTable({
           headStyles: { fillColor: [180, 0, 0] },
-          head: [['General', 'Details']],
+          head: [['General details', 'Data']],
           body: [
             ['Total Orders', totalOrders],
             ['Total Revenue', `${totalRevenue} Indian Rupees`],
