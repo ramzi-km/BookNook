@@ -517,7 +517,7 @@ module.exports = {
           return item.id;
         });
 
-        let products = await Product.find({
+        const products = await Product.find({
           _id: { $in: cartList },
           unlist: false,
         }).lean();
@@ -826,19 +826,7 @@ module.exports = {
             let orders = req.session.tempOrders;
             let i = 1;
             let orderCount = await Order.find().count();
-            for (let order of orders) {
-              await Product.updateOne(
-                { _id: order.product._id },
-                {
-                  $inc: {
-                    inStock: -1 * order.quantity,
-                  },
-                }
-              );
-              order.payment = paymentDocument;
-              order.orderId = orderCount + i;
-              i++;
-            }
+         
             await Order.create(orders);
             await User.findByIdAndUpdate(req.session.user._id, {
               $set: { cart: [] },

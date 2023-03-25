@@ -1,18 +1,19 @@
-const mongoose = require("mongoose");
-const multer = require("multer");
+const mongoose = require('mongoose');
+const multer = require('multer');
+const moment = require('moment');
 //------------------------------ Models-----------------------------//
 
-const User = require("../models/userModel.js");
-const Product = require("../models/productModel.js");
-const Category = require("../models/categoryModel.js");
-const Coupon = require("../models/couponModel.js");
-const Order = require("../models/orderModel.js");
+const User = require('../models/userModel.js');
+const Product = require('../models/productModel.js');
+const Category = require('../models/categoryModel.js');
+const Coupon = require('../models/couponModel.js');
+const Order = require('../models/orderModel.js');
 
 //----------------------------------------------------------------//
 
 //-------------------------middlewares----------------------------//
 
-const { uploadImages } = require("../middlewares/multer.js");
+const { uploadImages } = require('../middlewares/multer.js');
 
 //----------------------------------------------------------------//
 
@@ -31,18 +32,18 @@ function formattedDate(d) {
   let day = String(d.getDate());
   const year = String(d.getFullYear());
 
-  if (month.length < 2) month = "0" + month;
-  if (day.length < 2) day = "0" + day;
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
 
   return `${year}-${month}-${day}`;
 }
 
 const formatCash = (n) => {
   if (n < 1e3) return n;
-  if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
-  if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
-  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
-  if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+  if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + 'K';
+  if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + 'B';
+  if (n >= 1e12) return +(n / 1e12).toFixed(1) + 'T';
 };
 //-------------------------------------------------------------//
 
@@ -62,11 +63,11 @@ module.exports = {
       const orders = await Order.find().lean();
       const totalOrders = orders.length;
       const monthlyDataArray = await Order.aggregate([
-        { $match: { status: "delivered" } },
+        { $match: { status: 'delivered' } },
         {
           $group: {
-            _id: { $month: "$createdAt" },
-            revenue: { $sum: "$total" },
+            _id: { $month: '$createdAt' },
+            revenue: { $sum: '$total' },
           },
         },
       ]);
@@ -74,31 +75,31 @@ module.exports = {
       let totalPending = 0;
       let onlineOrders = 0;
       let deliveredOrders = orders.filter((order) => {
-        if (order.status == "pending" || order.status == "shipped") {
+        if (order.status == 'pending' || order.status == 'shipped') {
           totalPending++;
         }
-        if (order.paymentType == "online") {
+        if (order.paymentType == 'online') {
           onlineOrders++;
-        }
-        if (order.status == "delivered") {
+        } 
+        if (order.paid) {
           totalRevenue = totalRevenue + order.total;
         }
-        return order.status == "delivered";
+        return order.status == 'delivered';
       });
       let totalDispatch = deliveredOrders.length;
 
       let monthlyDataObject = {};
       monthlyDataArray.map((item) => {
         monthlyDataObject[item._id] = item.revenue;
-      }); 
-      let monthlyData=[]
+      });
+      let monthlyData = [];
       for (let i = 1; i <= 12; i++) {
         monthlyData[i - 1] = monthlyDataObject[i] ?? 0;
       }
 
       formattedRevenue = formatCash(totalRevenue);
 
-      res.render("admin/adminPanel", {
+      res.render('admin/adminPanel', {
         admin,
         totalUsers,
         totalOrders,
@@ -107,7 +108,7 @@ module.exports = {
         onlineOrders,
         totalRevenue,
         formattedRevenue,
-        monthlyData
+        monthlyData,
       });
     } catch (error) {
       console.log(error);
@@ -118,7 +119,7 @@ module.exports = {
   getUserM: async (req, res) => {
     let admin = req.session.admin;
     let users = await User.find().lean();
-    res.render("admin/userM", { admin, users });
+    res.render('admin/userM', { admin, users });
   },
   //block or unblock user
   blockUser: async (req, res) => {
@@ -129,11 +130,11 @@ module.exports = {
     if (bUser.block) {
       bUser.block = false;
       await bUser.save();
-      res.redirect("/admin/userM");
+      res.redirect('/admin/userM');
     } else {
       bUser.block = true;
       await bUser.save();
-      res.redirect("/admin/userM");
+      res.redirect('/admin/userM');
     }
   },
   //--------------------------- product management----------------------------//
@@ -142,7 +143,7 @@ module.exports = {
     let admin = req.session.admin;
     try {
       let products = await Product.find().lean();
-      res.render("admin/productM", {
+      res.render('admin/productM', {
         admin,
         products,
         message: addProductMessage,
@@ -163,7 +164,7 @@ module.exports = {
     let admin = req.session.admin;
     try {
       let categories = await Category.find().lean();
-      res.render("admin/addProduct", {
+      res.render('admin/addProduct', {
         admin,
         categories,
         imageError: imageFileError,
@@ -178,14 +179,14 @@ module.exports = {
     uploadImages(req, res, async function (err) {
       if (err instanceof multer.MulterError) {
         // a multer error occured when uploading
-        imageFileError = "choose only image files";
-        res.redirect("/admin/productM/addProduct");
+        imageFileError = 'choose only image files';
+        res.redirect('/admin/productM/addProduct');
         return;
       } else if (err) {
         // an unknown error occured while uploading
         imageFileError =
-          "error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files";
-        res.redirect("/admin/productM/addProduct");
+          'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files';
+        res.redirect('/admin/productM/addProduct');
         return;
       }
       // everything went fine
@@ -206,11 +207,11 @@ module.exports = {
         const newProduct = new Product(fields);
         await newProduct.save();
         imageFileError = null;
-        addProductMessage = "product added successfully";
-        res.redirect("/admin/productM");
+        addProductMessage = 'product added successfully';
+        res.redirect('/admin/productM');
       } catch (err) {
-        addProductFailMessage = "Failed to add product";
-        res.redirect("/admin/productM");
+        addProductFailMessage = 'Failed to add product';
+        res.redirect('/admin/productM');
       }
     });
   },
@@ -221,7 +222,7 @@ module.exports = {
       const categories = await Category.find().lean();
       const product = await Product.findOne({ _id: req.params.id });
       req.session.editingProduct = product;
-      res.render("admin/editProduct", {
+      res.render('admin/editProduct', {
         categories,
         admin,
         product,
@@ -237,13 +238,13 @@ module.exports = {
     uploadImages(req, res, async function (err) {
       if (err instanceof multer.MulterError) {
         // a multer error occured when uploading
-        imageFileError = "choose only image files";
+        imageFileError = 'choose only image files';
         res.redirect(`/admin/productM/editProduct/${req.params.id}`);
         return;
       } else if (err) {
         // an unknown error occured while uploading
         imageFileError =
-          "error occured when uploading images,make sure you only chose 3 images on side images input and all the chosen files are image files";
+          'error occured when uploading images,make sure you only chose 3 images on side images input and all the chosen files are image files';
         res.redirect(`/admin/productM/editProduct/${req.params.id}`);
         return;
       }
@@ -267,12 +268,12 @@ module.exports = {
         if (Object.keys(imageFieldsToUpdate).length > 0) {
           await Product.updateOne({ _id: productId }, imageFieldsToUpdate);
         }
-        editProductMessage = "Product edited successfully";
+        editProductMessage = 'Product edited successfully';
         imageFileError = null;
-        res.redirect("/admin/productM");
+        res.redirect('/admin/productM');
       } catch (error) {
-        editProductFailMessage = "Failed to edit product";
-        res.redirect("/admin/productM");
+        editProductFailMessage = 'Failed to edit product';
+        res.redirect('/admin/productM');
       }
     });
   },
@@ -284,7 +285,7 @@ module.exports = {
       $pull: { extraImages: { filename: imageName } },
     });
     console.log(prodId);
-    res.redirect("back");
+    res.redirect('back');
   },
 
   // unlist product
@@ -294,7 +295,7 @@ module.exports = {
       let product = await Product.findById(productId);
       product.unList = true;
       await product.save();
-      res.redirect("/admin/productM");
+      res.redirect('/admin/productM');
     } catch (error) {
       res.send(error);
     }
@@ -306,7 +307,7 @@ module.exports = {
       let product = await Product.findById(productId);
       product.unList = false;
       await product.save();
-      res.redirect("/admin/productM");
+      res.redirect('/admin/productM');
     } catch (error) {
       res.send(error);
     }
@@ -317,12 +318,12 @@ module.exports = {
   getCategoryM: async (req, res) => {
     let admin = req.session.admin;
     let categories = await Category.find().lean();
-    res.render("admin/categoryM", { admin, categories });
+    res.render('admin/categoryM', { admin, categories });
   },
   //get add category page
   getAddCategory: (req, res) => {
     let admin = req.session.admin;
-    res.render("admin/addCategory", { admin, error: addCategoryError });
+    res.render('admin/addCategory', { admin, error: addCategoryError });
     addCategoryError = null;
   },
   //add category
@@ -332,11 +333,11 @@ module.exports = {
       req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
     let category = await Category.findOne({ name: categoryName });
     if (category) {
-      addCategoryError = "category already exist";
-      res.redirect("/admin/categoryM/addCategory");
+      addCategoryError = 'category already exist';
+      res.redirect('/admin/categoryM/addCategory');
     } else {
       const newCategory = await Category.create({ name: categoryName });
-      res.redirect("/admin/categoryM");
+      res.redirect('/admin/categoryM');
     }
   },
   //get edit category page
@@ -344,7 +345,7 @@ module.exports = {
     let admin = req.session.admin;
     const category = await Category.findOne({ _id: req.params.id });
     req.session.editingCategory = category;
-    res.render("admin/editCategory", {
+    res.render('admin/editCategory', {
       category,
       admin,
       error: editCategoryError,
@@ -360,11 +361,11 @@ module.exports = {
     let categoryExist = await Category.findOne({ name: categoryName });
 
     if (req.session.editingCategory.name == categoryName) {
-      res.redirect("/admin/categoryM");
+      res.redirect('/admin/categoryM');
     } else if (categoryExist) {
-      editCategoryError = "category already exist";
+      editCategoryError = 'category already exist';
       res.redirect(
-        "/admin/categoryM/editCategory/" + req.session.editingCategory._id
+        '/admin/categoryM/editCategory/' + req.session.editingCategory._id
       );
     } else {
       await Category.updateOne(
@@ -373,7 +374,7 @@ module.exports = {
       );
       req.session.editingCategory = null;
       editCategoryError = null;
-      res.redirect("/admin/categoryM");
+      res.redirect('/admin/categoryM');
     }
   },
   //unList Category
@@ -382,7 +383,7 @@ module.exports = {
     let category = await Category.findById(categoryId);
     category.unList = true;
     await category.save();
-    res.redirect("/admin/categoryM");
+    res.redirect('/admin/categoryM');
   },
   //list category
   listCategory: async (req, res) => {
@@ -390,7 +391,7 @@ module.exports = {
     let category = await Category.findById(categoryId);
     category.unList = false;
     await category.save();
-    res.redirect("/admin/categoryM");
+    res.redirect('/admin/categoryM');
   },
 
   //--------------------------- Coupon management----------------------------//
@@ -399,21 +400,21 @@ module.exports = {
   getCouponM: async (req, res) => {
     let admin = req.session.admin;
     let coupons = await Coupon.find().lean();
-    res.render("admin/couponM", { admin, coupons });
+    res.render('admin/couponM', { admin, coupons });
   },
   // get coupon add page
   getAddCoupon: (req, res) => {
     let admin = req.session.admin;
-    res.render("admin/addCoupon", { admin });
+    res.render('admin/addCoupon', { admin });
   },
   // post coupon add page
   addCoupon: async (req, res) => {
     try {
       const newCoupon = await Coupon.create(req.body);
-      res.redirect("/admin/couponM");
+      res.redirect('/admin/couponM');
     } catch (err) {
       console.log(err);
-      res.redirect("/admin/couponM");
+      res.redirect('/admin/couponM');
     }
   },
   // get edit coupon page
@@ -422,10 +423,10 @@ module.exports = {
     try {
       const coupon = await Coupon.findById(req.params.id);
       let expiryDate = formattedDate(coupon.expiryDate);
-      res.render("admin/editCoupon", { admin, coupon, expiryDate });
+      res.render('admin/editCoupon', { admin, coupon, expiryDate });
     } catch (err) {
       console.log(err);
-      res.redirect("/admin/couponM");
+      res.redirect('/admin/couponM');
     }
   },
   // post edit coupon page
@@ -433,9 +434,9 @@ module.exports = {
     let couponId = req.params.id;
     try {
       const coupon = await Coupon.updateOne({ _id: couponId }, req.body);
-      res.redirect("/admin/couponM");
+      res.redirect('/admin/couponM');
     } catch (err) {
-      res.redirect("/admin/couponM");
+      res.redirect('/admin/couponM');
     }
   },
   //unList Coupon
@@ -444,7 +445,7 @@ module.exports = {
     let coupon = await Coupon.findById(couponId);
     coupon.unList = true;
     await coupon.save();
-    res.redirect("/admin/couponM");
+    res.redirect('/admin/couponM');
   },
   //list Coupon
   listCoupon: async (req, res) => {
@@ -452,7 +453,7 @@ module.exports = {
     let coupon = await Coupon.findById(couponId);
     coupon.unList = false;
     await coupon.save();
-    res.redirect("/admin/couponM");
+    res.redirect('/admin/couponM');
   },
 
   //--------------------------- Order management----------------------------//
@@ -461,7 +462,7 @@ module.exports = {
   getOrderM: async (req, res) => {
     let admin = req.session.admin;
     let orders = await Order.find().lean();
-    res.render("admin/orderM", { admin, orders });
+    res.render('admin/orderM', { admin, orders });
   },
 
   // get order view page
@@ -470,26 +471,108 @@ module.exports = {
     let objectId = req.params.id;
     try {
       let order = await Order.findById(objectId).lean();
-      res.render("admin/viewOrder", { admin, order });
+      res.render('admin/viewOrder', { admin, order });
     } catch (error) {
       res.send(error);
     }
   },
   // update order status
   updateOrderStatus: async (req, res) => {
-    let status = req.body.status;
-    let objectId = req.params.id;
+    const status = req.body.status;
+    const objectId = req.params.id;
     try {
-      let order = await Order.findById(objectId);
-      if (status == "delivered") {
+      const order = await Order.findById(objectId);
+      if (status == 'delivered') {
         order.paid = true;
         order.amountToPay = 0;
       }
       order.status = status;
       order.save();
-      res.redirect("/admin/orderM");
+      res.redirect('/admin/orderM');
     } catch (error) {
       res.send(error);
     }
+  },
+
+  //--------------------------- Sales report ----------------------------//
+  getReport: async (req, res) => {
+    const admin = req.session.admin;
+
+    let startDate = new Date(new Date().setDate(new Date().getDate() - 8));
+    let endDate = new Date();
+    let filter = req.query.filter ?? '';
+
+    if (req.query.startDate) {
+      startDate = new Date(req.query.startDate);
+      startDate.setHours(0, 0, 0, 0);
+    }
+    if (req.query.endDate) {
+      endDate = new Date(req.query.endDate);
+      endDate.setHours(24, 0, 0, 0);
+    }
+    if (filter == 'thisYear') {
+      let currentDate = new Date();
+      startDate = new Date(currentDate.getFullYear(), 0, 1);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(new Date().setDate(new Date().getDate() + 1));
+      endDate.setHours(0, 0, 0, 0);
+    }
+
+    if (filter == 'thisMonth') {
+      let currentDate = new Date();
+      startDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        1
+      );
+      endDate.setHours(0, 0, 0, 0);
+    }
+
+    if (!req.query.filter && (!req.query.startDate || !req.query.endDate)) {
+      filter = 'lastWeek';
+    }
+
+    const orders = await Order.find({
+      createdAt: { $gt: startDate, $lt: endDate },
+    })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const totalOrders = orders.length;
+    let totalRevenue = 0;
+    let totalPending = 0;
+    let deliveredOrders = orders.filter((order) => {
+      if (order.status == 'pending' || order.status == 'shipped') {
+        totalPending++;
+      }
+      if (order.paid) {
+        totalRevenue = totalRevenue + order.total;
+      }
+      return order.status == 'delivered';
+    });
+
+    const totalDispatch = deliveredOrders.length;
+
+    res.render('admin/salesReport', {
+      admin,
+      orders,
+      totalDispatch,
+      totalOrders,
+      totalPending,
+      totalRevenue,
+      startDate: moment(
+        new Date(startDate).setDate(new Date(startDate).getDate() + 1)
+      )
+        .utc()
+        .format('YYYY-MM-DD'),
+      endDate: moment(endDate).utc().format('YYYY-MM-DD'),
+      filter,
+    });
   },
 };

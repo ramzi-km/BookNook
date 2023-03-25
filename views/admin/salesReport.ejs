@@ -1,0 +1,416 @@
+<%- include('./partials/adminHeader.ejs') %>
+
+  <style>
+    .tablesHeader h3 {
+      font-size: .9rem !important;
+    }
+
+    .tablesHeader a button {
+      font-size: .7rem !important;
+      height: 30px !important;
+      border-radius: 5px;
+    }
+
+    .filter-head {
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-head input {
+      border: none;
+      outline: none;
+      background-color: #fff;
+      height: 40px;
+      padding: 10px;
+      border: 1px solid rgb(222, 222, 222);
+      margin: 5px;
+      margin-top: -10px;
+    }
+
+    .thead {
+      padding: 20px;
+    }
+
+    .report-btns {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .order-table th,
+    .order-table td {
+      padding: 5px;
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    table input {
+      outline: none;
+      background: none !important;
+      padding: 5px;
+      border: none;
+    }
+
+    .del-status {
+      border-radius: 5px;
+      font-weight: 500;
+      color: rgb(0, 0, 207);
+      background-color: rgba(0, 0, 255, 0.181);
+    }
+
+    .del-status.pending,
+    .del-status.returnProcessing {
+      background-color: #ff99002f;
+      color: #FF9900;
+    }
+
+    .del-status.returned,
+    .del-status.cancelled {
+      background-color: #ca01012d;
+      color: #CA0101;
+    }
+
+    .del-status.delivered {
+      background-color: #0090292b;
+      color: #009028;
+    }
+
+    @media(max-width:1200px) {
+
+      .orders-table th,
+      .orders-table td {
+        font-size: .7rem;
+      }
+
+      .orders-table img {
+        max-height: 20px;
+      }
+      
+      .order-container {
+        width: 100%;
+        flex: 100%;
+        overflow: hidden;
+        padding-right: 5px;
+        padding-left: 5px;
+
+      }
+
+      .orders-table {
+        width: 100%;
+        overflow-x: scroll;
+      }
+
+      .tablesHeader h3 {
+        font-size: .9rem !important;
+      }
+
+      .tablesHeader a button {
+        font-size: .7rem !important;
+        height: 30px !important;
+        border-radius: 5px;
+      }
+
+    }
+
+    @media(max-width:991px) {
+
+      .orders-table th,
+      .orders-table td {
+        font-size: .7rem;
+      }
+
+      .orders-table img {
+        max-height: 20px;
+      }
+
+      .order-container {
+        width: 100vw;
+        flex: 100%;
+        overflow: hidden;
+
+      }
+
+      .orders-table {
+        width: 100vw;
+        overflow-x: scroll;
+      }
+
+
+      .tablesHeader h3 {
+        font-size: .9rem !important;
+      }
+
+      .tablesHeader a button,
+      .tablesHeader button,
+      .tablesHeader a {
+        font-size: .7rem !important;
+        height: 30px !important;
+        border-radius: 5px;
+      }
+
+      .tablesHeader a {
+        height: 50px !important;
+      }
+
+      .tablesHeader form input {
+        font-size: .7rem;
+        min-width: 100px !important;
+        max-width: 100px !important;
+      }
+
+      .tablesHeader form,
+      .tablesHeader form select {
+        width: 180px;
+        height: 40px;
+      }
+
+      .tablesHeader h3 {
+        font-size: 1.2rem !important;
+      }
+
+      .head3 {
+        font-size: 1.2rem !important;
+      }
+
+
+
+      .tablesHeader form select {
+        width: 100px;
+        height: 40px !important;
+        font-size: .7rem;
+      }
+
+
+    }
+  </style>
+  <!-- ============================================================== -->
+  <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- Page wrapper  -->
+  <!-- ============================================================== -->
+  <div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="page-breadcrumb">
+      <div class="row">
+        <div class="col-12 d-flex no-block align-items-center">
+          <h4 class="page-title">Sales analysis</h4>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+      <!-- ============================================================== -->
+      <!-- Sales Cards  -->
+      <!-- ============================================================== -->
+
+      <!-- Column -->
+
+      <!-- ============================================================== -->
+      <!-- Sales chart -->
+      <!-- ============================================================== -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-md-flex align-items-center">
+                <div>
+                  <h3 class="card-title">Sales Report</h3>
+                </div>
+              </div>
+              <div class="row"></div>
+              <div class="container-fluid d-flex align-items-end tablesHeader">
+                <h6>Filter by : </h6>
+                <a href="/admin/salesReport?filter=lastWeek"
+                  class="btn btn-<% if(filter!='lastWeek'){ %>outline-<% } %>secondary ms-2">Last week</a>
+                <a href="/admin/salesReport?filter=thisMonth"
+                  class="btn btn-<% if(filter!='thisMonth'){ %>outline-<% } %>secondary ms-2">This Month</a>
+                <a href="/admin/salesReport?filter=thisYear"
+                  class="btn btn-<% if(filter!='thisYear'){ %>outline-<% } %>secondary ms-2">This year</a>
+              </div>
+              <div class="container-fluid filter-head pt-4 tablesHeader">
+                <h6>Filter by date : </h6>
+                <form action="/admin/salesReport" class="d-flex" method="get">
+                  <input type="date" class="form-control" name="startDate" value="<%= startDate %>"
+                    onchange="this.form.submit()">
+                  to
+                  <input type="date" class="form-control" name="endDate" value="<%= endDate %>"
+                    onchange="this.form.submit()">
+                </form>
+              </div>
+              <div class="report-btns  container-fluid tablesHeader">
+
+                <div>
+                  <button onclick="downloadPdf()" class="btn btn-outline-danger">Download in PDF</button>
+                </div>
+              </div>
+              <div class="row mt-2 p-3">
+                <div class="orders-table">
+                  <table id="salesTable" class="table table-responsive table-striped table-bordered">
+                    <thead class="table-dark">
+                      <tr>
+                        <th colspan="3" class="thead text-white" style="text-align: center;"><b>Sales report (from <span
+                              class="text-warning">
+                              <%= startDate %>
+                            </span> to <span class="text-warning">
+                              <%= endDate %>
+                            </span>)</b></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="col"><b>Total Revenue</b></th>
+                        <td scope="col"><b>
+                            ₹ <%= totalRevenue %>
+                          </b></td>
+                      </tr>
+                      <tr>
+                        <th scope="col"><b>Total Orders</b></th>
+                        <td scope="col"><b>
+                            <%= totalOrders %>
+                          </b></td>
+                      </tr>
+                      <tr>
+                        <th scope="col"><b>Total Pending</b> </th>
+                        <td scope="col"> <b>
+                            <%= totalPending %>
+                          </b></td>
+                      </tr>
+                      <tr>
+                        <th scope="col"><b>Total Dispatch</b> </th>
+                        <td scope="col"><b>
+                            <%= totalDispatch %>
+                          </b></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <h3 class="mt-3 head3">Orders</h3>
+              <div class="row mt-2 p-3">
+                <div class="orders-table" id="content">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="table">
+                      <thead class="table-dark">
+                        <tr class="align-middle">
+                          <th scope="col" class="text-white">No</th>
+                          <th scope="col" class="text-white">Order Id</th>
+                          <th scope="col" class="text-white">Name</th>
+                          <th scope="col" class="text-white">date</th>
+                          <th scope="col" class="text-white">Payment Type</th>
+                          <th scope="col" class="text-white">Status</th>
+                          <th scope="col" class="text-white">Quantity</th>
+                          <th scope="col" class="text-white">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <% orders.forEach((order,index)=>{ %>
+
+                          <tr class="align-middle">
+                            <th scope="row">
+                              <%= index+1 %>
+                            </th>
+                            <th scope="row">
+                              <span class="text-danger">
+                                <%= order.orderId %>
+                              </span>
+                            </th>
+                            <th scope="row">
+                              <a href="/admin/orderM/viewOrder/<%=order._id%>">
+                                <%=order.product.name %>
+                              </a>
+                            </th>
+                            <td>
+                              <%=order.createdAt.toLocaleDateString() %>
+                            </td>
+                            <td>
+                              <%= order.paymentType %>
+                            </td>
+                            <td class="d-flex justify-content-center align-items-center h-100">
+                              <div>
+
+                                <div class="del-status <%= order.status  %>">
+                                  <%= order.status %>
+                                </div>
+                              </div>
+                            </td>
+
+                            <td>
+                              <%=order.quantity %>
+                            </td>
+                            <td>
+                              <%=order.total %>
+                            </td>
+                          </tr>
+                          <%}) %>
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================================== -->
+      <!-- Sales chart -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- Recent comment and chats -->
+      <!-- ============================================================== -->
+
+      <!-- ============================================================== -->
+      <!-- Recent comment and chats -->
+      <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- footer -->
+    <!-- ============================================================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.1/xlsx.full.min.js"></script>
+    <script>
+      let totalDispatch = '<%= totalDispatch%>'
+      let totalOrders = '<%= totalOrders%>'
+      let totalRevenue = '<%= totalRevenue%>'
+      let totalPending = '<%= totalPending%>'
+      let startDate = '<%= startDate%>'
+      let endDate = '<%= endDate%>'
+
+      const { jsPDF } = window.jspdf;
+      function downloadPdf() {
+        const doc = new jsPDF()
+        let salesReportHead = '(' + startDate + " - " + endDate + ")"
+        doc.text(15, 20, "BookNook Sales Report ");
+        doc.text(15, 30, salesReportHead);
+        doc.autoTable({
+          headStyles: { fillColor: [180, 0, 0] },
+          head: [['General', 'Details']],
+          body: [
+            ['Total Orders', totalOrders],
+            ['Total Revenue', `${totalRevenue} Indian Rupees`],
+            ['Total Pending', totalPending],
+            ['Total Dispatch', totalDispatch],
+          ],
+          startY: 40
+        })
+        doc.save('BookNook Sales Report(' + startDate + ' - ' + endDate + ').pdf');
+      }
+    </script>
+
+    <%- include('./partials/adminFooter.ejs') %>
+
+  </div>

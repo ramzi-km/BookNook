@@ -42,6 +42,7 @@ const {
   getOrderView,
   updateOrderStatus,
   deleteExtraImage,
+  getReport,
 } = require("../controllers/adminControllers");
 
 // get admin panel
@@ -128,5 +129,10 @@ router.get("/orderM", verfiyLoggedIn, getOrderM);
 router.post("/orderM/:id", verfiyLoggedIn, updateOrderStatus);
 // get order views page
 router.get("/orderM/viewOrder/:id", verfiyLoggedIn, getOrderView);
+
+//-------------------------- Sales Report------------------------//
+
+// get sales report page
+router.get("/salesReport", verfiyLoggedIn, getReport);
 
 module.exports = router;
