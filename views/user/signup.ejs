@@ -1,4 +1,65 @@
-<%- include('./partials/header.ejs') %>
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+  <head>
+    <!-- Mobile Specific Meta -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="/images/logo.png" />
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar" />
+    <!-- Meta Description -->
+    <meta name="description" content="" />
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="" />
+    <!-- meta character set -->
+    <meta charset="UTF-8" />
+    <!-- Site Title -->
+    <title>BookNook</title>
+    <!--
+		CSS
+		============================================= -->
+    <link rel="stylesheet" href="/css/linearicons.css" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/themify-icons.css" />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.css" />
+    <link rel="stylesheet" href="/css/nice-select.css" />
+    <link rel="stylesheet" href="/css/nouislider.min.css" />
+    <link rel="stylesheet" href="/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <!-- font Awesome  -->
+    <script
+      src="https://kit.fontawesome.com/4bb28dc21d.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- font awesome -->
+
+    <!--------------- Image zoom --------------->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Basic Styles For Gallery -->
+    <link rel="stylesheet" type="text/css" href="/imageZoom/style.css" />
+
+    <!---------------  Image zoom ------------------>
+  </head>
+
+  <body style="background-color: #f1f1f1">
+    <!-- Start Header Area -->
+   
+    <!-- End Header Area -->
+    <!-- start banner Area -->
+    <!-- End banner Area -->
+  </body>
+</html>
+
 
 <style>
   @media (max-width: 991px) {
@@ -10,15 +71,28 @@
     padding-top: 50px;
   }
   .section_gap {
-    padding: 50px;
+    padding: 10px;
+    margin-top: 0px;
+  }
+  input.is-invalid {
+    border-color: red;
+    background-color: #ffe6e6;
   }
 </style>
 
 <!--================Login Box Area =================-->
-<section class="login_box_area section_gap">
+<section class="login_box_area section_gap mt-3 mb-5">
   <div class="container">
+    <div class="d-flex flex-column justify-content-center align-items-center mb-3">
+      <a  href="/"
+      ><img src="/images/logo.png" width="50px;" alt="" /></a>
+      <h3 class="text-dark" onclick="window.location.href='/'">Book</b><span class="text-danger">Nook</span></h3>
+    </div>
+   
     <div class="row d-flex justify-content-center">
-      <div class="col-lg-6">
+     
+      <div class="col-lg-8">
+      
         <div class="login_form_inner mb-3">
           <h3>Create Account</h3>
           <form
@@ -27,7 +101,7 @@
             method="post"
             id="signupForm"
           >
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group" style="margin-bottom: 5px;">
               <div class="d-flex justify-content-start mb-1">
                 <label for="name"
                   ><span class="text-dark">Full Name :</span></label
@@ -44,8 +118,9 @@
                 minlength="5"
                 required
               />
+              <label id="nameError" class="text-danger"></label>
             </div>
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group" style="margin-bottom: 5px;">
               <div class="d-flex justify-content-start mb-1">
                 <label for="email"
                   ><span class="text-dark">Email :</span></label
@@ -61,9 +136,10 @@
                 onblur="this.placeholder = 'Email'"
                 required
               />
+              <label id="emailError" class="text-danger"></label>
               <label for="Invalid" class="text-danger"><%= error %></label>
             </div>
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group" style="margin-bottom: 5px;">
               <div class="d-flex justify-content-start mb-1">
                 <label for="password"
                   ><span class="text-dark">Password :</span></label
@@ -80,8 +156,26 @@
                 minlength="6"
                 required
               />
+              <label id="passwordError" class="text-danger"></label>
             </div>
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group" style="margin-bottom: 5px;">
+              <div class="d-flex justify-content-start mb-1">
+                <label for="confirmPassword"
+                  ><span class="text-dark">Confirm Password :</span></label
+                >
+              </div>
+              <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Confirm Password'"
+                required
+              />
+              <label id="confirmPasswordError" class="text-danger"></label>
+            </div>
+            <div class="col-md-12 form-group" style="margin-bottom: 5px;">
               <div class="d-flex justify-content-start mb-1">
                 <label for="mobile"
                   ><span class="text-dark">mobile :</span></label
@@ -100,8 +194,9 @@
                 required
               />
               <small>Format: 8234567898</small>
+              <label id="mobileError" class="text-danger"></label>
             </div>
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group" style="margin-bottom: 5px;">
               <div class="d-flex justify-content-start mb-1">
                 <label for="place"
                   ><span class="text-dark">Place :</span></label
@@ -118,13 +213,16 @@
                 minlength="5"
                 required
               />
+              <label id="placeError" class="text-danger"></label>
             </div>
 
             <div class="col-md-12 form-group">
               <button type="submit" value="submit" class="primary-btn">
-                Register
+                Sign Up
               </button>
-              <a href="/login" style=" font-size: medium;">Already have an account? Login</a>
+              <a href="/login" style="font-size: medium"
+                >Already have an account? Login</a
+              >
             </div>
           </form>
         </div>
@@ -132,4 +230,96 @@
     </div>
   </div>
 </section>
+<%- include('./partials/footer.ejs') %>
+<script>
+  // Get the form element
+  const form = document.getElementById('signupForm');
+
+  // Add an event listener for form submission
+  form.addEventListener('submit', function (event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Get the input fields
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const mobile = document.getElementById('mobile');
+    const place = document.getElementById('place');
+
+    // Get the error message elements
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById(
+      'confirmPasswordError'
+    );
+    const mobileError = document.getElementById('mobileError');
+    const placeError = document.getElementById('placeError');
+
+    // Validate the input fields
+    let isValid = true;
+
+    if (name.value.trim().length < 5) {
+      name.classList.add('is-invalid');
+      nameError.textContent = 'Name must be at least 5 characters';
+      isValid = false;
+    } else {
+      name.classList.remove('is-invalid');
+      nameError.textContent = '';
+    }
+
+    if (!email.checkValidity()) {
+      email.classList.add('is-invalid');
+      emailError.textContent = 'Please enter a valid email address';
+      isValid = false;
+    } else {
+      email.classList.remove('is-invalid');
+      emailError.textContent = '';
+    }
+
+    if (password.value.trim().length < 6) {
+      password.classList.add('is-invalid');
+      passwordError.textContent =
+        'Password must be at least 6 characters and contain only alphanumeric characters';
+      isValid = false;
+    } else {
+      password.classList.remove('is-invalid');
+      passwordError.textContent = '';
+    }
+
+    if (confirmPassword.value !== password.value) {
+      confirmPassword.classList.add('is-invalid');
+      confirmPasswordError.textContent = 'Passwords do not match';
+      isValid = false;
+    } else {
+      confirmPassword.classList.remove('is-invalid');
+      confirmPasswordError.textContent = '';
+    }
+    if (!mobile.checkValidity()) {
+      mobile.classList.add('is-invalid');
+      mobileError.textContent = 'Please enter a valid mobile number';
+      isValid = false;
+    } else {
+      mobile.classList.remove('is-invalid');
+      mobileError.textContent = '';
+    }
+
+    if (place.value.trim().length < 5) {
+      place.classList.add('is-invalid');
+      placeError.textContent =
+        'Place must be at least 5 characters';
+      isValid = false;
+    } else {
+      place.classList.remove('is-invalid');
+      placeError.textContent = '';
+    }
+
+    // If the form is valid, submit it
+    if (isValid) {
+      form.submit();
+    }
+  });
+</script>
 <!--================End Login Box Area =================-->

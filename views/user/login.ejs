@@ -12,6 +12,14 @@
       padding-top: 30px;
     }
   }
+  .section_gap {
+    padding: 0px;
+    margin-bottom: 40px;
+  }
+  input.is-invalid {
+    border-color: red;
+    background-color: #ffe6e6;
+  }
 </style>
 
 <!--================Login Box Area =================-->
@@ -35,7 +43,7 @@
             class="row login_form"
             action="/login"
             method="post"
-            id="contactForm"
+            id="loginForm"
           >
             <div class="col-md-12 form-group">
               <input
@@ -53,13 +61,14 @@
               <input
                 type="password"
                 class="form-control"
-                id="name"
+                id="password"
                 name="password"
                 placeholder="Password"
                 onfocus="this.placeholder = ''"
                 onblur="this.placeholder = 'Password'"
                 required
               />
+              <label id="passwordError" class="text-danger"></label>
               <label for="Invalid" class="text-danger"> <%= error %> </label>
             </div>
             <div class="col-md-12 form-group">
@@ -91,5 +100,40 @@
   </div>
 </section>
 <!--================End Login Box Area =================-->
+
+<script>
+  // Get the form element
+  const form = document.getElementById('loginForm');
+
+  // Add an event listener for form submission
+  form.addEventListener('submit', function (event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Get the input fields
+    const password = document.getElementById('password');
+
+    // Get the error message elements
+    const passwordError = document.getElementById('passwordError');
+
+    // Validate the input fields
+    let isValid = true;
+
+    if (password.value.trim().length < 6) {
+      password.classList.add('is-invalid');
+      passwordError.textContent =
+        'Password will be at least 6 characters and will not contain spaces';
+      isValid = false;
+    } else {
+      password.classList.remove('is-invalid');
+      passwordError.textContent = '';
+    }
+
+    // If the form is valid, submit it
+    if (isValid) {
+      form.submit();
+    }
+  });
+</script>
 
 <%- include('./partials/footer.ejs') %>

@@ -68,6 +68,10 @@
     .footer-area p {
       color: #989898;
     }
+    input.is-invalid {
+      border-color: red;
+      background-color: #ffe6e6;
+    }
   </style>
 </head>
 
@@ -253,16 +257,17 @@
                             id="fullName"
                             required
                           />
+                          <label id="nameError" class="text-danger"></label>
                         </div>
                       </div>
                       <div class="col-12">
                         <div class="form-group">
-                          <label for="eMail">Email:</label>
+                          <label for="email">Email:</label>
                           <input
                             form="profileForm"
                             type="email"
                             class="form-control"
-                            id="eMail"
+                            id="email"
                             name="email"
                             value="<%= user.email %>"
                             readonly
@@ -294,9 +299,10 @@
                             class="form-control"
                             name="place"
                             value="<%= user.place %>"
-                            id="Place"
+                            id="place"
                             required
                           />
+                          <label id="placeError" class="text-danger"></label>
                         </div>
                       </div>
                     </div>
@@ -359,11 +365,16 @@
                         <div>
                           <p>Name<span>*</span></p>
                           <input
+                            id="addAddressName"
                             type="text"
                             form="addAddressForm"
                             name="name"
                             required
                           />
+                          <label
+                            id="addAddressNameError"
+                            class="text-danger"
+                          ></label>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -400,11 +411,16 @@
                         <div>
                           <p>Town/City<span>*</span></p>
                           <input
+                            id="addAddressCity"
                             type="text"
                             form="addAddressForm"
                             name="city"
                             required
                           />
+                          <label
+                            id="addAddressCityError"
+                            class="text-danger"
+                          ></label>
                         </div>
                       </div>
 
@@ -412,11 +428,16 @@
                         <div>
                           <p>State<span>*</span></p>
                           <input
+                            id="addAddressState"
                             type="text"
                             form="addAddressForm"
                             name="state"
                             required
                           />
+                          <label
+                            id="addAddressStateError"
+                            class="text-danger"
+                          ></label>
                         </div>
                       </div>
 
@@ -426,8 +447,8 @@
                           <input
                             type="number"
                             form="addAddressForm"
-                            minlength="4"
-                            maxlength="8"
+                            minlength="6"
+                            maxlength="6"
                             name="pinCode"
                             required
                           />
@@ -650,8 +671,9 @@
                                                 <div class="col-lg-6">
                                                     <div>
                                                         <p>Name<span>*</span></p>
-                                                        <input type="text" form="editAddressForm" value='${name}' name="name"
+                                                        <input type="text" id="editAddressName" form="editAddressForm" value='${name}' name="name"
                                                             required />
+                                                            <label id="editAddressNameError" class="text-danger"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -676,16 +698,18 @@
                                                 <div class="col-lg-6">
                                                     <div>
                                                         <p>Town/City<span>*</span></p>
-                                                        <input type="text" value='${city}' form="editAddressForm" name="city"
+                                                        <input type="text" id="editAddressCity" value='${city}' form="editAddressForm" name="city"
                                                             required />
+                                                            <label id="editAddressCityError" class="text-danger"></label>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-lg-6">
                                                     <div>
                                                         <p>State<span>*</span></p>
-                                                        <input type="text" value='${state}' form="editAddressForm" name="state"
+                                                        <input type="text" id="editAddressState" value='${state}' form="editAddressForm" name="state"
                                                             required />
+                                                            <label id="editAddressStateError" class="text-danger"></label>
                                                     </div>
                                                 </div>
 
@@ -699,7 +723,158 @@
 
                                             </div>`;
       $('#editAddressModal').modal('show');
+
+      // Get the edit Address form element
+      const editAddressForm = document.getElementById('editAddressForm');
+
+      // Add an event listener for form submission
+      editAddressForm.addEventListener('submit', function (event) {
+        // Prevent the form from submitting
+        event.preventDefault();
+
+        // Get the input fields
+        const name = document.getElementById('editAddressName');
+        const city = document.getElementById('editAddressCity');
+        const state = document.getElementById('editAddressState');
+
+        // Get the error message elements
+        const nameError = document.getElementById('editAddressNameError');
+        const cityError = document.getElementById('editAddressCityError');
+        const stateError = document.getElementById('editAddressStateError');
+
+        // Validate the input fields
+        let isValid = true;
+
+        if (name.value.trim().length < 5) {
+          name.classList.add('is-invalid');
+          nameError.textContent = 'Name must be at least 5 characters';
+          isValid = false;
+        } else {
+          name.classList.remove('is-invalid');
+          nameError.textContent = '';
+        }
+
+        if (city.value.trim().length < 3) {
+          city.classList.add('is-invalid');
+          cityError.textContent = 'city must not be empty spaces';
+          isValid = false;
+        } else {
+          city.classList.remove('is-invalid');
+          cityError.textContent = '';
+        }
+
+        if (state.value.trim().length < 3) {
+          state.classList.add('is-invalid');
+          stateError.textContent = 'state must not be empty spaces';
+          isValid = false;
+        } else {
+          state.classList.remove('is-invalid');
+          stateError.textContent = '';
+        }
+
+        // If the form is valid, submit it
+        if (isValid) {
+          editAddressForm.submit();
+        }
+      });
     }
+
+    // Get the profile form element
+    const profileForm = document.getElementById('profileForm');
+
+    // Add an event listener for form submission
+    profileForm.addEventListener('submit', function (event) {
+      // Prevent the form from submitting
+      event.preventDefault();
+
+      // Get the input fields
+      const name = document.getElementById('fullName');
+      const place = document.getElementById('place');
+
+      // Get the error message elements
+      const nameError = document.getElementById('nameError');
+      const placeError = document.getElementById('placeError');
+
+      // Validate the input fields
+      let isValid = true;
+
+      if (name.value.trim().length < 5) {
+        name.classList.add('is-invalid');
+        nameError.textContent = 'Name must be at least 5 characters';
+        isValid = false;
+      } else {
+        name.classList.remove('is-invalid');
+        nameError.textContent = '';
+      }
+
+      if (place.value.trim().length < 5) {
+        place.classList.add('is-invalid');
+        placeError.textContent = 'Place must be at least 5 characters';
+        isValid = false;
+      } else {
+        place.classList.remove('is-invalid');
+        placeError.textContent = '';
+      }
+
+      // If the form is valid, submit it
+      if (isValid) {
+        profileForm.submit();
+      }
+    });
+
+    // Get the add Address form element
+    const addressForm = document.getElementById('addAddressForm');
+
+    // Add an event listener for form submission
+    addressForm.addEventListener('submit', function (event) {
+      // Prevent the form from submitting
+      event.preventDefault();
+
+      // Get the input fields
+      const name = document.getElementById('addAddressName');
+      const city = document.getElementById('addAddressCity');
+      const state = document.getElementById('addAddressState');
+
+      // Get the error message elements
+      const nameError = document.getElementById('addAddressNameError');
+      const cityError = document.getElementById('addAddressCityError');
+      const stateError = document.getElementById('addAddressStateError');
+
+      // Validate the input fields
+      let isValid = true;
+
+      if (name.value.trim().length < 5) {
+        name.classList.add('is-invalid');
+        nameError.textContent = 'Name must be at least 5 characters';
+        isValid = false;
+      } else {
+        name.classList.remove('is-invalid');
+        nameError.textContent = '';
+      }
+
+      if (city.value.trim().length < 3) {
+        city.classList.add('is-invalid');
+        cityError.textContent = 'city must not be empty spaces';
+        isValid = false;
+      } else {
+        city.classList.remove('is-invalid');
+        cityError.textContent = '';
+      }
+
+      if (state.value.trim().length < 3) {
+        state.classList.add('is-invalid');
+        stateError.textContent = 'state must not be empty spaces';
+        isValid = false;
+      } else {
+        state.classList.remove('is-invalid');
+        stateError.textContent = '';
+      }
+
+      // If the form is valid, submit it
+      if (isValid) {
+        addressForm.submit();
+      }
+    });
   </script>
 
   <%- include('./partials/footer.ejs') %>
