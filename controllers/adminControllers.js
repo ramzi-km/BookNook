@@ -80,7 +80,7 @@ module.exports = {
         }
         if (order.paymentType == 'online') {
           onlineOrders++;
-        } 
+        }
         if (order.paid) {
           totalRevenue = totalRevenue + order.total;
         }
@@ -484,10 +484,14 @@ module.exports = {
       const order = await Order.findById(objectId);
       if (status == 'delivered') {
         order.paid = true;
+        order.lastDate = Date.now()+259200000;
         order.amountToPay = 0;
       }
+      if (status == 'returned') {
+        await User.updateOne({ _id: order.userId }, { $inc: { wallet: order.total } })
+      }
       order.status = status;
-      order.save();
+      await order.save();
       res.redirect('/admin/orderM');
     } catch (error) {
       res.send(error);
@@ -526,11 +530,7 @@ module.exports = {
         1
       );
       startDate.setHours(0, 0, 0, 0);
-      endDate = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        1
-      );
+      endDate = new Date(new Date().setDate(new Date().getDate() + 1));
       endDate.setHours(0, 0, 0, 0);
     }
 

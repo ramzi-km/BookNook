@@ -1,205 +1,227 @@
 <%- include('./partials/header') %>
 
-    <head>
-        <!--------------- 2nd template files ------------------>
+<head>
+  <!--------------- 2nd template files ------------------>
 
-        <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
-            rel="stylesheet" />
+  <!-- Google Font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
 
-        <!-- Css Styles -->
-        <link rel="stylesheet" href="/template2/css/style.css" type="text/css" />
+  <!-- Css Styles -->
+  <link rel="stylesheet" href="/template2/css/style.css" type="text/css" />
 
-        <!--------------- 2nd template files ------------------>
-    </head>
+  <!--------------- 2nd template files ------------------>
+</head>
 
-    <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <h4 class="pb-3"><i class="fa-solid fa-cart-shopping"> Cart</i></h4>
-            <% if (stockError) { %>
-                <div class="alert alert-dismissable fade show alert-danger" role="alert">
-                    <strong>
-                        Sorry,we do not have enough stock to fulfill your order right now.Please
-                        edit your cart and try again
-                    </strong>
-                </div>
-                <% } %>
-                    <% if(!products[0]){ %>
-                        <div class="row">
-                            <div class="empty-container w-100 h-50 d-flex flex-column justify-content-center align-items-center mb-5"
-                                style="gap: 10px">
-                                <img src="https://cdni.iconscout.com/illustration/premium/thumb/confusing-woman-due-to-empty-cart-4558760-3780056.png"
-                                    height="300px" alt="" />
-                                <h3>Your Cart is empty!</h3>
-                                <p>you haven't added anything to your cart</p>
-                                <a href="/shop"><button class="btn btn-rounder btn-danger">Go to shop</button></a>
-                            </div>
-                        </div>
-                        <% }else{ %>
-                            <div class="row">
-                                <div class="col-lg-8 mb-5" style="background-color: #ffffff; padding: 1.5rem">
-                                    <div class="shopping__cart__table">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Quantity</th>
-                                                    <th>Total</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% products.forEach(product=> { %>
-                                                    <tr>
-                                                        <td class="product__cart__item" style="vertical-align: middle">
-                                                            <div class="product__cart__item__pic">
-                                                                <img src="/images/productImages/<%= product.mainImage[0].filename %>"
-                                                                    width="75px" alt=""
-                                                                    onclick="window.location.href='/productDetails/<%= product._id %>'" />
-                                                            </div>
-                                                            <div class="product__cart__item__text">
-                                                                <h6
-                                                                    onclick="window.location.href='/productDetails/<%= product._id %>'">
-                                                                    <%= product.name %>
-                                                                </h6>
-                                                                <br />
-                                                                <h5>₹<%= product.price %>
-                                                                </h5>
-                                                                <h6><del>₹<%= product.mrp %></del></h6>
-                                                            </div>
-                                                        </td>
-                                                        <td class="quantity__item">
-                                                            <div
-                                                                class="cart-quantity d-flex flex-column align-items-center">
-                                                                <div class="cartquantiy-box">
-                                                                    <button
-                                                                        onclick="decQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')">
-                                                                        -
-                                                                    </button>
-                                                                    <input type="number" readonly
-                                                                        id="<%='q'+product._id %>"
-                                                                        value="<%= product.cartQuantity %>" />
-                                                                    <button
-                                                                        onclick="incQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')">
-                                                                        +
-                                                                    </button>
-                                                                </div>
-                                                                <b id="<%=product._id%>" class="text-danger">
-                                                                    <% if(product.inStock==0){ %> Out Of Stock <% }else
-                                                                            if(product.inStock <
-                                                                            product.cartQuantity){%> only <%=
-                                                                                product.inStock %> left <% } %>
-                                                                </b>
-                                                            </div>
-                                                        </td>
-                                                        <td class="cart__price" id="<%='p'+ product._id %>">
-                                                            ₹ <%= product.price*product.cartQuantity %>
-                                                        </td>
-                                                        <td class="cart__close">
-                                                            <a href="/removeFromCart/<%= product._id %>"
-                                                                onclick="return confirm('Do you really want to remove <%= product.name %> from cart ?')"><i
-                                                                    class="fa fa-close"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                    <% }) %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="continue__btn">
-                                                <a href="/shop">Continue Shopping</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-5">
-                                    <div class="cart__total" style="background-color: #ffffff">
-                                        <h6>Cart total</h6>
-                                        <ul>
-                                            <li>Subtotal <span id="totalMrp">₹ <%= totalMrp %></span></li>
-                                            <li>
-                                                Discount
-                                                <span class="text-success" id="totalDiscount">- ₹ <%= totalMrp -
-                                                        totalPrice %></span>
-                                            </li>
-                                            <li>
-                                                Total
-                                                <span class="text-dark" id="totalPrice">₹ <%= totalPrice %></span>
-                                            </li>
-                                        </ul>
-                                        <a href="/cart/checkout" class="primary-btn">Proceed to checkout</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <% } %>
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+  <div class="container">
+    <h4 class="pb-3"><i class="fa-solid fa-cart-shopping"> Cart</i></h4>
+    <% if (stockError) { %>
+    <div class="alert alert-dismissable fade show alert-danger" role="alert">
+      <strong>
+        Sorry,we do not have enough stock to fulfill your order right now.Please
+        edit your cart and try again
+      </strong>
+    </div>
+    <% } %> <% if(!products[0]){ %>
+    <div class="row">
+      <div
+        class="empty-container w-100 h-50 d-flex flex-column justify-content-center align-items-center mb-5"
+        style="gap: 10px"
+      >
+        <img
+          src="https://cdni.iconscout.com/illustration/premium/thumb/confusing-woman-due-to-empty-cart-4558760-3780056.png"
+          height="300px"
+          alt=""
+        />
+        <h3>Your Cart is empty!</h3>
+        <p>you haven't added anything to your cart</p>
+        <a href="/shop"
+          ><button class="btn btn-rounder btn-danger">Go to shop</button></a
+        >
+      </div>
+    </div>
+    <% }else{ %>
+    <div class="row">
+      <div
+        class="col-lg-8 mb-5"
+        style="background-color: #ffffff; padding: 1.5rem"
+      >
+        <div class="shopping__cart__table">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% products.forEach(product=> { %>
+              <tr>
+                <td class="product__cart__item" style="vertical-align: middle">
+                  <div class="product__cart__item__pic">
+                    <img
+                      src="/images/productImages/<%= product.mainImage[0].filename %>"
+                      width="75px"
+                      alt=""
+                      onclick="window.location.href='/productDetails/<%= product._id %>'"
+                    />
+                  </div>
+                  <div class="product__cart__item__text">
+                    <h6
+                      onclick="window.location.href='/productDetails/<%= product._id %>'"
+                    >
+                      <%= product.name %>
+                    </h6>
+                    <br />
+                    <h5>₹<%= product.price %></h5>
+                    <h6><del>₹<%= product.mrp %></del></h6>
+                  </div>
+                </td>
+                <td class="quantity__item">
+                  <div
+                    class="cart-quantity d-flex flex-column align-items-center"
+                  >
+                    <div class="cartquantiy-box">
+                      <button
+                        onclick="decQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        readonly
+                        id="<%='q'+product._id %>"
+                        value="<%= product.cartQuantity %>"
+                      />
+                      <button
+                        onclick="incQuantity('<%= product._id %>','<%= product.price %>','<%= product.mrp %>')"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <b id="<%=product._id%>" class="text-danger">
+                      <% if(product.inStock==0){ %> Out Of Stock <% }else
+                      if(product.inStock < product.cartQuantity){%> only <%=
+                      product.inStock %> left <% } %>
+                    </b>
+                  </div>
+                </td>
+                <td class="cart__price" id="<%='p'+ product._id %>">
+                  ₹ <%= product.price*product.cartQuantity %>
+                </td>
+                <td class="cart__close">
+                  <a
+                    href="/removeFromCart/<%= product._id %>"
+                    onclick="return confirm('Do you really want to remove <%= product.name %> from cart ?')"
+                    ><i class="fa fa-close"></i
+                  ></a>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
         </div>
-    </section>
-    <!-- Shopping Cart Section End -->
-    <!-- Axios -->
-    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-    <script>
-        let totalPrice = Number("<%= totalPrice%>");
-        let totalMrp = Number("<%= totalMrp%>");
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="continue__btn">
+              <a href="/shop">Continue Shopping</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-5">
+        <div class="cart__total" style="background-color: #ffffff">
+          <h6>Cart total</h6>
+          <ul>
+            <li>Subtotal <span id="totalMrp">₹ <%= totalMrp %></span></li>
+            <li>
+              Discount
+              <span class="text-success" id="totalDiscount"
+                >- ₹ <%= totalMrp - totalPrice %></span
+              >
+            </li>
+            <li>
+              Total
+              <span class="text-dark" id="totalPrice">₹ <%= totalPrice %></span>
+            </li>
+          </ul>
+          <a href="/cart/checkout" class="primary-btn">Proceed to checkout</a>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+<!-- Shopping Cart Section End -->
+<!-- Axios -->
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+  let totalPrice = Number('<%= totalPrice%>');
+  let totalMrp = Number('<%= totalMrp%>');
 
-        async function incQuantity(id, price, mrp) {
-            const response = await axios.get("/cart/incQuantity/" + id);
-            if (response.data.success) {
-                var priceTag = document.getElementById("p" + id);
-                var totalDiscountTag = document.getElementById("totalDiscount");
-                var totalMrpTag = document.getElementById("totalMrp");
-                var totalPriceTag = document.getElementById("totalPrice");
-                var quantity = response.data.quantity;
-                priceTag.innerHTML = "₹ " + quantity * price;
-                document.getElementById("q" + id).value = quantity;
-                if (response.data.increased) {
-                    totalMrp = Number(totalMrp) + Number(mrp);
-                    totalPrice = Number(totalPrice) + Number(price);
-                    totalMrpTag.innerHTML = "₹ " + totalMrp;
-                    totalDiscountTag.innerHTML = "- ₹ " + (totalMrp - totalPrice);
-                    totalPriceTag.innerHTML = "₹ " + totalPrice;
-                } else {
-                }
-            } else {
-                window.location.reload();
-            }
-        }
+  async function incQuantity(id, price, mrp) {
+    const response = await axios.get('/cart/incQuantity/' + id);
+    if (response.data.success) {
+      var priceTag = document.getElementById('p' + id);
+      var totalDiscountTag = document.getElementById('totalDiscount');
+      var totalMrpTag = document.getElementById('totalMrp');
+      var totalPriceTag = document.getElementById('totalPrice');
+      var quantity = response.data.quantity;
+      priceTag.innerHTML = '₹ ' + quantity * price;
+      document.getElementById('q' + id).value = quantity;
+      if (response.data.increased) {
+        totalMrp = Number(totalMrp) + Number(mrp);
+        totalPrice = Number(totalPrice) + Number(price);
+        totalMrpTag.innerHTML = '₹ ' + totalMrp;
+        totalDiscountTag.innerHTML = '- ₹ ' + (totalMrp - totalPrice);
+        totalPriceTag.innerHTML = '₹ ' + totalPrice;
+      } else {
+      }
+    } else {
+      window.location.reload();
+    }
+  }
 
-        async function decQuantity(id, price, mrp) {
-            const response = await axios.get("/cart/decQuantity/" + id);
-            if (response.data.success) {
-                var priceTag = document.getElementById("p" + id);
-                var totalDiscountTag = document.getElementById("totalDiscount");
-                var totalMrpTag = document.getElementById("totalMrp");
-                var totalPriceTag = document.getElementById("totalPrice");
-                var quantity = response.data.quantity;
-                priceTag.innerHTML = "₹ " + quantity * price;
-                document.getElementById("q" + id).value = quantity;
-                if (response.data.decreased) {
-                    totalMrp = totalMrp - mrp;
-                    totalPrice = totalPrice - price;
-                    totalMrpTag.innerHTML = "₹ " + totalMrp;
-                    totalDiscountTag.innerHTML = "- ₹ " + (totalMrp - totalPrice);
-                    totalPriceTag.innerHTML = "₹ " + totalPrice;
-                } else {
-                }
-            } else {
-                window.location.reload();
-            }
-        }
-    </script>
-    <!--  -->
+  async function decQuantity(id, price, mrp) {
+    const response = await axios.get('/cart/decQuantity/' + id);
+    if (response.data.success) {
+      var priceTag = document.getElementById('p' + id);
+      var totalDiscountTag = document.getElementById('totalDiscount');
+      var totalMrpTag = document.getElementById('totalMrp');
+      var totalPriceTag = document.getElementById('totalPrice');
+      var quantity = response.data.quantity;
+      priceTag.innerHTML = '₹ ' + quantity * price;
+      document.getElementById('q' + id).value = quantity;
+      if (response.data.decreased) {
+        totalMrp = totalMrp - mrp;
+        totalPrice = totalPrice - price;
+        totalMrpTag.innerHTML = '₹ ' + totalMrp;
+        totalDiscountTag.innerHTML = '- ₹ ' + (totalMrp - totalPrice);
+        totalPriceTag.innerHTML = '₹ ' + totalPrice;
+      } else {
+      }
+    } else {
+      window.location.reload();
+    }
+  }
+</script>
+<!--  -->
 
-    <!-- Js Plugins -->
-    <script src="/template2/js/jquery-3.3.1.min.js"></script>
-    <script src="/template2/js/jquery.nice-select.min.js"></script>
-    <script src="/template2/js/jquery.nicescroll.min.js"></script>
-    <script src="/template2/js/jquery.magnific-popup.min.js"></script>
-    <script src="/template2/js/jquery.countdown.min.js"></script>
-    <script src="/template2/js/jquery.slicknav.js"></script>
-    <script src="/template2/js/mixitup.min.js"></script>
-    <script src="/template2/js/owl.carousel.min.js"></script>
-    <script src="/template2/js/main.js"></script>
+<!-- Js Plugins -->
+<script src="/template2/js/jquery-3.3.1.min.js"></script>
+<script src="/template2/js/jquery.nice-select.min.js"></script>
+<script src="/template2/js/jquery.nicescroll.min.js"></script>
+<script src="/template2/js/jquery.magnific-popup.min.js"></script>
+<script src="/template2/js/jquery.countdown.min.js"></script>
+<script src="/template2/js/jquery.slicknav.js"></script>
+<script src="/template2/js/mixitup.min.js"></script>
+<script src="/template2/js/owl.carousel.min.js"></script>
+<script src="/template2/js/main.js"></script>
 
-    <%- include('./partials/footer') %>
+<%- include('./partials/footer') %>

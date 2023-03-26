@@ -1,45 +1,48 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
 // Declare the Schema of the Mongo model
 var orderSchema = new mongoose.Schema({
-    status:{
-        type:String,
-        default:"pending"
+    status: {
+        type: String,
+        default: "pending"
     },
-    paid:{
-        type:Boolean,
-        default:false,
+    paid: {
+        type: Boolean,
+        default: false,
     },
-    address:{
-        type:Object,
+    address: {
+        type: Object,
     },
-    product:{
-        type:Object,
+    product: {
+        type: Object,
     },
-    userId:{
-        type:String,
+    userId: {
+        type: String,
     },
-    quantity:{
-        type:Number,
+    quantity: {
+        type: Number,
     },
-    payment:{
-        type:Object,
-        default:{},
+    payment: {
+        type: Object,
+        default: {},
     },
-    paymentType:{
-        type:String,
+    paymentType: {
+        type: String,
     },
-    total:{
-        type:Number,
+    total: {
+        type: Number,
 
     },
-    amountToPay:{
-        type:Number,
+    amountToPay: {
+        type: Number,
     },
-    orderId:{
-        type:Number,
-    }
-},{timestamps:true});
+    orderId: {
+        type: Number,
+    },
+    lastDate: { 
+        type: Number, 
+    },
+}, { timestamps: true });
 
 //Export the model
 module.exports = mongoose.model('Order', orderSchema);

@@ -1,144 +1,162 @@
 <%- include('./partials/header.ejs') %>
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BookNook|Verify email</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNook|Verify email</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" />
-    <!-- jQuery library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+  />
+  <!-- jQuery library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <style>
-        body {
-            background-color: #f3f3f3;
-        }
+  <style>
+    body {
+      background-color: #f3f3f3;
+    }
 
-        .height-100 {
-            height: 100vh;
-        }
+    .height-100 {
+      height: 100vh;
+    }
 
-        .card {
-            width: 400px;
-            border: 1px solid rgb(163, 163, 163);
-            border-radius: 10px;
-            height: 300px;
-            box-shadow: 0px 5px 20px 0px #d2dae3;
-            z-index: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .card {
+      width: 400px;
+      border: 1px solid rgb(163, 163, 163);
+      border-radius: 10px;
+      height: 300px;
+      box-shadow: 0px 5px 20px 0px #d2dae3;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .card h6 {
-            color: red;
-            font-size: 20px;
-        }
+    .card h6 {
+      color: red;
+      font-size: 20px;
+    }
 
-        .inputs input {
-            width: 120px;
-            height: 40px;
-        }
+    .inputs input {
+      width: 120px;
+      height: 40px;
+    }
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            margin: 0;
-        }
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
 
-        .card-2 {
-            background-color: #ffffff;
-            padding: 10px;
-            width: 350px;
-            height: 100px;
-            bottom: -50px;
-            left: 20px;
-            position: absolute;
-            border-radius: 5px;
-        }
+    .card-2 {
+      background-color: #ffffff;
+      padding: 10px;
+      width: 350px;
+      height: 100px;
+      bottom: -50px;
+      left: 20px;
+      position: absolute;
+      border-radius: 5px;
+    }
 
-        .card-2 .content {
-            margin-top: 50px;
-        }
+    .card-2 .content {
+      margin-top: 50px;
+    }
 
-        .card-2 .content a {
-            color: red;
-        }
+    .card-2 .content a {
+      color: red;
+    }
 
-        .form-control:focus {
-            box-shadow: none;
-            border: 2px solid red;
-        }
+    .form-control:focus {
+      box-shadow: none;
+      border: 2px solid red;
+    }
 
-        .validate {
-            border-radius: 20px;
-            height: 40px;
-            background-color: red;
-            border: 1px solid red;
-            width: 140px;
-        }
-    </style>
+    .validate {
+      border-radius: 20px;
+      height: 40px;
+      background-color: red;
+      border: 1px solid red;
+      width: 140px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container height-100 d-flex justify-content-center align-items-center">
-        <div class="position-relative">
-            <div class="card p-2 text-center">
-                <h6>
-                    Please enter the one time password <br />
-                    to login into your account
-                </h6>
-                <div>
-                    <span>A code has been sent to</span>
-                    <small>
-                        <%= user.email %>
-                    </small>
-                </div>
-                <form action="/verifyLoginOtp" method="post">
-                    <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
-                        <input class="m-2 text-center form-control rounded" type="text" id="first" name="typedotp"
-                            minlength="4" maxlength="4" required />
-                    </div>
-                    <label for="Invalid" class="text-danger">
-                        <%=error%><span></span>
-                    </label>
-                    <div class="mt-1">
-                        <button class="btn btn-danger px-4 validate" type="submit">
-                            Validate
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="card-2">
-                <div class="content d-flex justify-content-center align-items-center">
-                    <span>Didn't get the code</span>
-                    <span id="countdown" class="text-danger ms-3 " style="display:inline"  ></span> 
-                </div>
-            </div>
+  <div
+    class="container height-100 d-flex justify-content-center align-items-center"
+  >
+    <div class="position-relative">
+      <div class="card p-2 text-center">
+        <h6>
+          Please enter the one time password <br />
+          to login into your account
+        </h6>
+        <div>
+          <span>A code has been sent to</span>
+          <small> <%= user.email %> </small>
         </div>
+        <form action="/verifyLoginOtp" method="post">
+          <div
+            id="otp"
+            class="inputs d-flex flex-row justify-content-center mt-2"
+          >
+            <input
+              class="m-2 text-center form-control rounded"
+              type="text"
+              id="first"
+              name="typedotp"
+              minlength="4"
+              maxlength="4"
+              required
+            />
+          </div>
+          <label for="Invalid" class="text-danger">
+            <%=error%><span></span>
+          </label>
+          <div class="mt-1">
+            <button class="btn btn-danger px-4 validate" type="submit">
+              Validate
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="card-2">
+        <div class="content d-flex justify-content-center align-items-center">
+          <span>Didn't get the code</span>
+          <span
+            id="countdown"
+            class="text-danger ms-3"
+            style="display: inline"
+          ></span>
+        </div>
+      </div>
     </div>
-    <script>
-        let countdown = document.getElementById("countdown");
-        let count = 60;
-        const coundownInterval = setInterval(() => {
-            count--;
-            countdown.innerText = " OTP Resend in 0:" + count;
-            checkOver();
-        }, 1000);
-        function checkOver() {
-            if (count == 0) {
-                clearInterval(coundownInterval);
-                countdown.innerHTML = `
+  </div>
+  <script>
+    let countdown = document.getElementById('countdown');
+    let count = 60;
+    const coundownInterval = setInterval(() => {
+      count--;
+      countdown.innerText = ' OTP Resend in 0:' + count;
+      checkOver();
+    }, 1000);
+    function checkOver() {
+      if (count == 0) {
+        clearInterval(coundownInterval);
+        countdown.innerHTML = `
                <a href="/resendLoginOtp">Resend OTP</a>
                 `;
-            }
-        }
-    </script>
+      }
+    }
+  </script>
 
-<%- include('./partials/footer.ejs') %>
+  <%- include('./partials/footer.ejs') %>
+</body>

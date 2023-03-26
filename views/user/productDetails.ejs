@@ -1,123 +1,168 @@
 <%- include('./partials/header.ejs') %>
 
-    <!--================Single Product Area =================-->
-    <div class="product_image_area" style="margin-top: -100px;">
-        <div class="container">
-            <div class="row s_product_inner">
+<!--================Single Product Area =================-->
+<div class="product_image_area" style="margin-top: -100px">
+  <div class="container">
+    <div class="row s_product_inner">
+      <div class="col-lg-6">
+        <div class="d-flex flex-column align-items-center product-main">
+          <!-- Primary carousel image -->
+          <div
+            class="shows"
+            href="/images/productImages/<%= product.mainImage[0].filename %>"
+            style="height: 540px; width: 350px"
+          >
+            <img
+              src="/images/productImages/<%= product.mainImage[0].filename %>"
+              id="show-img"
+              style="max-height: 80%"
+              alt=""
+            />
+          </div>
 
-                <div class="col-lg-6">
-                    <div class="d-flex flex-column align-items-center product-main">
-                        <!-- Primary carousel image -->
-                        <div class="shows" href="/images/productImages/<%= product.mainImage[0].filename %>"
-                            style="height: 540px; width:350px">
-                            <img src="/images/productImages/<%= product.mainImage[0].filename %>" id="show-img"
-                                style="max-height:80%;" alt="">
-                        </div>
+          <!-- Secondary carousel image thumbnail gallery -->
 
-                        <!-- Secondary carousel image thumbnail gallery -->
-
-                        <div class="small-img d-flex align-items-center">
-                            <img src="/imageZoom/images/next-icon.png" class="icon-left" alt="" id="prev-img">
-                            <div class="small-container">
-                                <div id="small-img-roll">
-                                    <img src="/images/productImages/<%= product.mainImage[0].filename %>"
-                                        class="show-small-img" alt="">
-                                    <% product.extraImages.forEach(image=> { %>
-                                        <img src="/images/productImages/<%= image.filename %>" class="show-small-img"
-                                            alt="">
-                                        <% }) %>
-
-                                </div>
-                            </div>
-                            <img src="/imageZoom/images/next-icon.png" class="icon-right" alt="" id="next-img">
-                        </div>
-                    </div>
-
-                     <!--  carousel for mobiles -->
-
-                    <div class="s_Product_carousel  imageSliderMobile">
-                        <div class="single-prd-item d-flex justify-content-center">
-                                <img class="img-fluid" src="/images/productImages/<%= product.mainImage[0].filename %>"
-                                alt="" style="height: 350px; width: 260px;">
-                        </div>
-                        <% product.extraImages.forEach(image=> { %>
-                            <div class="single-prd-item d-flex justify-content-center">
-                                <img class="img-fluid" src="/images/productImages/<%= image.filename %>" alt=""
-                                    style="height: 350px; width: 260px;">
-                            </div>
-                            <% }) %>
-
-                    </div>
-                </div>
-                <div class="col-lg-5 offset-lg-1">
-                    <div class="s_product_text">
-                        <h3>
-                            <%= product.name %>
-                        </h3>
-                        <h2>₹<%= product.price %>
-                        </h2>
-                        <ul class="list">
-                            <li><a href="#"><span>Category</span> : <%= product.category %></a></li>
-                            <% if (product.inStock> 0) { %>
-                                <li><a href="#"><span>Availibility</span> : <span class="text-success">In
-                                            Stock</span></a></li>
-                                <% }else{ %>
-                                    <li><a href="#"><span>Availibility</span> : <span class="text-danger">Out of
-                                                Stock</span></a></li>
-                                    <% } %>
-                        </ul>
-                        <p style="word-wrap: break-word;">
-                            <%= product.description %>
-                        </p>
-
-                        <div class="card_area d-flex align-items-center">
-                            <% if (productInCart[0]) { %>
-                                <a class="primary-btn" href="/addToCart/<%= product._id %>">Go to Cart</a>
-
-                                <% }else{ %>
-                                    <a class="primary-btn" href="/addToCart/<%= product._id %>">Add to Cart</a>
-                                    <% } %>
-                                        <% if (user) { %>
-                                            <% if (productInWishlist[0]) { %>
-                                                <div id="wishlistIcon" style="margin-left: auto;">
-                                                    <a style="font-size: xx-large;"
-                                                        onclick="removeFromWishlist('<%=product._id%>')"><i
-                                                            class="text-danger fa-solid fa-heart"></i></a>
-                                                </div>
-                                                <% } else{ %>
-                                                    <div id="wishlistIcon" style="margin-left: auto;">
-                                                        <a style="font-size: xx-large;"
-                                                            onclick="addToWishlist('<%=product._id%>')"><i
-                                                                class="fa-regular fa-heart"></i></a>
-                                                    </div>
-                                                    <% } %>
-                                                        <% }else{ %>
-                                                            <div id="wishlistIcon" style="margin-left: auto;">
-                                                                <a style="font-size: xx-large;"
-                                                                    onclick="window.location.href='/login'"><i
-                                                                        class="fa-regular fa-heart"></i></a>
-                                                            </div>
-                                                            <% }%>
-
-
-
-                        </div>
-                    </div>
-                </div>
+          <div class="small-img d-flex align-items-center">
+            <img
+              src="/imageZoom/images/next-icon.png"
+              class="icon-left"
+              alt=""
+              id="prev-img"
+            />
+            <div class="small-container">
+              <div id="small-img-roll">
+                <img
+                  src="/images/productImages/<%= product.mainImage[0].filename %>"
+                  class="show-small-img"
+                  alt=""
+                />
+                <% product.extraImages.forEach(image=> { %>
+                <img
+                  src="/images/productImages/<%= image.filename %>"
+                  class="show-small-img"
+                  alt=""
+                />
+                <% }) %>
+              </div>
             </div>
+            <img
+              src="/imageZoom/images/next-icon.png"
+              class="icon-right"
+              alt=""
+              id="next-img"
+            />
+          </div>
         </div>
-    </div>
-    <!--================End Single Product Area =================-->
 
-    <!--================Product Description Area =================-->
-    <section class="product_description_area">
-        <div class="container">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                        aria-selected="true">Description</a>
-                </li>
-                <!-- <li class="nav-item">
+        <!--  carousel for mobiles -->
+
+        <div class="s_Product_carousel imageSliderMobile">
+          <div class="single-prd-item d-flex justify-content-center">
+            <img
+              class="img-fluid"
+              src="/images/productImages/<%= product.mainImage[0].filename %>"
+              alt=""
+              style="height: 350px; width: 260px"
+            />
+          </div>
+          <% product.extraImages.forEach(image=> { %>
+          <div class="single-prd-item d-flex justify-content-center">
+            <img
+              class="img-fluid"
+              src="/images/productImages/<%= image.filename %>"
+              alt=""
+              style="height: 350px; width: 260px"
+            />
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1">
+        <div class="s_product_text">
+          <h3><%= product.name %></h3>
+          <h2>₹<%= product.price %></h2>
+          <ul class="list">
+            <li>
+              <a href="#"><span>Category</span> : <%= product.category %></a>
+            </li>
+            <% if (product.inStock> 0) { %>
+            <li>
+              <a href="#"
+                ><span>Availibility</span> :
+                <span class="text-success">In Stock</span></a
+              >
+            </li>
+            <% }else{ %>
+            <li>
+              <a href="#"
+                ><span>Availibility</span> :
+                <span class="text-danger">Out of Stock</span></a
+              >
+            </li>
+            <% } %>
+          </ul>
+          <p style="word-wrap: break-word"><%= product.description %></p>
+
+          <div class="card_area d-flex align-items-center">
+            <% if (productInCart[0]) { %>
+            <a class="primary-btn" href="/addToCart/<%= product._id %>"
+              >Go to Cart</a
+            >
+
+            <% }else{ %>
+            <a class="primary-btn" href="/addToCart/<%= product._id %>"
+              >Add to Cart</a
+            >
+            <% } %> <% if (user) { %> <% if (productInWishlist[0]) { %>
+            <div id="wishlistIcon" style="margin-left: auto">
+              <a
+                style="font-size: xx-large"
+                onclick="removeFromWishlist('<%=product._id%>')"
+                ><i class="text-danger fa-solid fa-heart"></i
+              ></a>
+            </div>
+            <% } else{ %>
+            <div id="wishlistIcon" style="margin-left: auto">
+              <a
+                style="font-size: xx-large"
+                onclick="addToWishlist('<%=product._id%>')"
+                ><i class="fa-regular fa-heart"></i
+              ></a>
+            </div>
+            <% } %> <% }else{ %>
+            <div id="wishlistIcon" style="margin-left: auto">
+              <a
+                style="font-size: xx-large"
+                onclick="window.location.href='/login'"
+                ><i class="fa-regular fa-heart"></i
+              ></a>
+            </div>
+            <% }%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--================End Single Product Area =================-->
+
+<!--================Product Description Area =================-->
+<section class="product_description_area">
+  <div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          id="home-tab"
+          data-toggle="tab"
+          href="#home"
+          role="tab"
+          aria-controls="home"
+          aria-selected="true"
+          >Description</a
+        >
+      </li>
+      <!-- <li class="nav-item">
                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                         aria-controls="profile" aria-selected="false">Specification</a>
                 </li>
@@ -125,14 +170,17 @@
                     <a class="nav-link " id="review-tab" data-toggle="tab" href="#review" role="tab"
                         aria-controls="review" aria-selected="false">Reviews</a>
                 </li> -->
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <p style="word-wrap: break-word;">
-                        <%= product.richDescription %>
-                    </p>
-                </div>
-                <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div
+        class="tab-pane fade show active"
+        id="home"
+        role="tabpanel"
+        aria-labelledby="home-tab"
+      >
+        <p style="word-wrap: break-word"><%= product.richDescription %></p>
+      </div>
+      <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
@@ -182,9 +230,9 @@
                     </div>
                 </div> -->
 
-                <!------------------------------- Reviews ------------------------- -->
+      <!------------------------------- Reviews ------------------------- -->
 
-                <!-- <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+      <!-- <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="row total_rate">
@@ -291,36 +339,33 @@
                         </div>
                     </div>
                 </div> -->
-            </div>
-        </div>
-    </section>
-    <!--================End Product Description Area =================-->
+    </div>
+  </div>
+</section>
+<!--================End Product Description Area =================-->
 
-    <!-- Axios -->
-    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-    <script>
-        var wishlistIcon = document.getElementById('wishlistIcon');
-        async function addToWishlist(id) {
-            const response = await axios.get("/wishlist/add/" + id)
-            if (response.data?.user?.acknowledged) {
-                wishlistIcon.innerHTML = `<a  style="font-size: xx-large;" onclick="removeFromWishlist('${id}')"><i class="text-danger fa-solid fa-heart"></i></a>`
-            }
-        }
-        async function removeFromWishlist(id) {
-            const response = await axios.get("/wishlist/remove2/" + id)
-            if (response.data?.user?.acknowledged) {
-                wishlistIcon.innerHTML = `<a  style="font-size: xx-large;" onclick="addToWishlist('${id}')"><i class="fa-regular fa-heart"></i></a>`
-            }
-        }
+<!-- Axios -->
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+  var wishlistIcon = document.getElementById('wishlistIcon');
+  async function addToWishlist(id) {
+    const response = await axios.get('/wishlist/add/' + id);
+    if (response.data?.user?.acknowledged) {
+      wishlistIcon.innerHTML = `<a  style="font-size: xx-large;" onclick="removeFromWishlist('${id}')"><i class="text-danger fa-solid fa-heart"></i></a>`;
+    }
+  }
+  async function removeFromWishlist(id) {
+    const response = await axios.get('/wishlist/remove2/' + id);
+    if (response.data?.user?.acknowledged) {
+      wishlistIcon.innerHTML = `<a  style="font-size: xx-large;" onclick="addToWishlist('${id}')"><i class="fa-regular fa-heart"></i></a>`;
+    }
+  }
+</script>
 
-    </script>
+<!-- Axios -->
 
-    <!-- Axios -->
+<!-- Product Image Gallery Js -->
+<script src="/imageZoom/scripts/zoom-image.js"></script>
+<script src="/imageZoom/scripts/main.js"></script>
 
-
-    <!-- Product Image Gallery Js -->
-    <script src="/imageZoom/scripts/zoom-image.js"></script>
-    <script src="/imageZoom/scripts/main.js"></script>
-
-
-    <%- include('./partials/footer') %>
+<%- include('./partials/footer') %>

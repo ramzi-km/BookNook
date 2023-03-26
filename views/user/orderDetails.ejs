@@ -1,119 +1,126 @@
 <%- include('./partials/header') %>
 <style>
-@media only screen and (max-width: 991px) {
-#imageDiv{
-    height:340px;
-    width: 240px;
-}
-}
-@media only screen and (min-width: 992px) {
-#imageDiv{
-    height:500px;
-    width: 350px;
-}
-}
+  @media only screen and (max-width: 991px) {
+    #imageDiv {
+      height: 340px;
+      width: 240px;
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    #imageDiv {
+      height: 500px;
+      width: 350px;
+    }
+  }
 </style>
 
-    <div class="product_image_area" style="margin-top: -150px;">
-        <div class="container">
-            <div class="row s_product_inner">
+<div class="product_image_area" style="margin-top: -150px">
+  <div class="container">
+    <div class="row s_product_inner">
+      <div class="col-lg-6 mt-3 mb-lg-5">
+        <div class="d-flex flex-column align-items-center">
+          <div class="d-flex justify-content-start">
+            <h4 class="primary-btn">Order Id: <%= order.orderId %></h4>
+          </div>
 
-                <div class="col-lg-6 mt-3 mb-lg-5">
-
-                    
-
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="d-flex justify-content-start">
-                            <h4 class="primary-btn">Order Id: <%= order.orderId %></h4>
-                        </div>
-                       
-                        <!-- Primary carousel image -->
-                        <div id="imageDiv" class="shows" >
-                            <img src="/images/productImages/<%= order.product.mainImage[0].filename %>" id="show-img"
-                                style="height:100%; width: 100%;" alt="">
-                        </div>
-                        <div class="d-flex m-3 justify-content-center">
-                            <a class="btn btn-rounded btn-lg btn-dark" href="">Cancel order</a>
-                        </div>
-                    </div>
-                    
-
-                </div>
-                <div class="col-lg-5 offset-lg-1 mb-5">
-                    <div class="s_product_text" style="margin-top: 20px;">
-                        <h3>
-                            <%= order.product.name %>
-                        </h3>
-                        <h2>
-                            ₹<%= order.product.price %>
-                        </h2><br>
-
-                        <h4>
-                            <b class="text-primary">Total:</b> ₹ <%= order.total %><br>
-                                <b>Amount to pay:</b> ₹ <%= order.amountToPay %><br>
-                                    <b class="text-dark">Quantity: </b>
-                                    <%= order.quantity %><br>
-                        </h4><br>
-                        <h3>
-                            Address:
-                        </h3>
-                        <h6>
-                            <%= order.address.name%>
-                        </h6>
-                        <h6>
-                            <%= order.address.mobile%>
-                        </h6>
-                        <h6>
-                            <%= order.address.address%>
-                        </h6>
-                        <h6>
-                            Pin code : <%= order.address.pinCode%>
-                        </h6><br>
-                        <h4>
-                            Order status:
-                        </h4>
-                        <h6>
-                            <% if (order.status=="pending" ) { %>
-                                <button class="btn btn-rounded btn-warning">
-                                    <%= order.status %>
-                                </button>
-                                <% }else if (order.status=="shipped" ) { %>
-                                    <button class="btn btn-rounded btn-info">
-                                        <%= order.status %>
-                                    </button>
-                                    <% } else if (order.status=="delivered" ) { %>
-                                        <button class="btn btn-rounded btn-success">
-                                            <%= order.status %>
-                                        </button>
-                                        <% } else if (order.status=="return processing" ) { %>
-                                            <button class="btn btn-rounded btn-primary">
-                                                <%= order.status %>
-                                            </button>
-                                            <% } else if (order.status=="returned" ) { %>
-                                                <button class="btn btn-rounded btn-danger">
-                                                    <%= order.status %>
-                                                </button>
-                                                <% } %>
-                        </h6><br>
-                        <h4>
-                            <% if (order.paymentType=="cod" ) { %>
-                                Payment Type: <span class="text-muted">Cash on delivery</span>
-                                <% }else{ %>
-                                    Payment Type: <span class="text-muted">Online payment</span>
-                                    <% } %>
-                        </h4>
-                        <h4>
-                            <% if (order.paid) { %>
-                                Payment Status: <span class="text-success">Paid</span>
-                                <% }else{ %>
-                                    Payment Status: <span class="text-warning">Not paid</span>
-                                    <% } %>
-                        </h4>
-
-                    </div>
-                </div>
-            </div>
+          <!-- Primary carousel image -->
+          <div id="imageDiv" class="shows">
+            <img
+              src="/images/productImages/<%= order.product.mainImage[0].filename %>"
+              id="show-img"
+              style="height: 100%; width: 100%"
+              alt=""
+            />
+          </div>
+          <div class="d-flex m-3 justify-content-center">
+            <% if (order.status=="pending" || order.status=="shipped" ) { %>
+            <a
+              class="btn btn-rounded btn-lg btn-dark"
+              href="/profile/myOrders/cancelOrder/<%= order._id %>"
+              onclick="return confirm('Do you really want to cancel this order ?')"
+              >Cancel order</a
+            >
+            <% }else if( order.status == 'delivered' && ((order.lastDate) >=
+            Date.now())){ %>
+            <a
+              class="btn btn-rounded btn-lg btn-dark"
+              href="/profile/myOrders/returnOrder/<%= order._id %>"
+              onclick="return confirm('Do you really want to return this product ?')"
+              >Return product</a
+            >
+            <% }else{ %>
+            <button class="btn btn-rounded btn-lg btn-dark" disabled>
+              Cancel
+            </button>
+            <% } %>
+          </div>
         </div>
-    </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 mb-5">
+        <div class="s_product_text" style="margin-top: 20px">
+          <h3><%= order.product.name %></h3>
+          <h2>₹<%= order.product.price %></h2>
+          <br />
 
-    <%- include('./partials/footer') %>
+          <h4>
+            <b class="text-primary">Total:</b> ₹ <%= order.total %><br />
+            <b>Amount to pay:</b> ₹ <%= order.amountToPay %><br />
+            <b class="text-dark">Quantity: </b>
+            <%= order.quantity %><br />
+          </h4>
+          <br />
+          <h3>Address:</h3>
+          <h6><%= order.address.name%></h6>
+          <h6><%= order.address.mobile%></h6>
+          <h6><%= order.address.address%></h6>
+          <h6>Pin code : <%= order.address.pinCode%></h6>
+          <br />
+          <h4>Order status:</h4>
+          <h6>
+            <% if (order.status=="pending" ) { %>
+            <button class="btn btn-rounded btn-warning">
+              <%= order.status %>
+            </button>
+            <% }else if (order.status=="shipped" ) { %>
+            <button class="btn btn-rounded btn-primary">
+              <%= order.status %>
+            </button>
+            <% } else if (order.status=="delivered" ) { %>
+            <button class="btn btn-rounded btn-success">
+              <%= order.status %>
+            </button>
+            <% } else if (order.status=="return processing" ) { %>
+            <button class="btn btn-rounded btn-info">
+              <%= order.status %>
+            </button>
+            <% } else if (order.status=="returned" ) { %>
+            <button class="btn btn-rounded btn-danger">
+              <%= order.status %>
+            </button>
+            <% } else if (order.status=="cancelled" ) { %>
+            <button class="btn btn-rounded btn-secondary">
+              <%= order.status %>
+            </button>
+            <% } %>
+          </h6>
+          <br />
+          <h4>
+            <% if (order.paymentType=="cod" ) { %> Payment Type:
+            <span class="text-muted">Cash on delivery</span> <% }else{ %>
+            Payment Type: <span class="text-muted">Online payment</span>
+            <% } %>
+          </h4>
+          <h4>
+            <% if (order.paid) { %> Payment Status:
+            <span class="text-success">Paid</span> <% }else{ %> Payment Status:
+            <span class="text-warning">Not paid</span>
+            <% } %>
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

@@ -60,6 +60,8 @@ const {
   editProfile,
   getCoupons,
   applyCoupon,
+  returnOrder,
+  cancelOrder,
 } = require("../controllers/userControllers");
 
 /* ----------------------Home page-----------------------------*/
@@ -169,6 +171,10 @@ router.get(
 router.get("/profile/myOrders", verifyLoggedIn, checkBan, getMyOrders);
 // get order details page
 router.get("/profile/myOrders/:id", verifyLoggedIn, checkBan, getOrderDetails);
+// cancel order
+router.get("/profile/myOrders/cancelOrder/:id", verifyLoggedIn, checkBan,cancelOrder);
+// return order 
+router.get("/profile/myOrders/returnOrder/:id", verifyLoggedIn, checkBan, returnOrder);
 
 /* -------------------User Authentication----------------------*/
 

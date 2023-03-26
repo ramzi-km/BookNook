@@ -1,109 +1,120 @@
+<%- include('./partials/adminHeader.ejs') %>
 
+<!-- ============================================================== -->
+<!-- End Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Page wrapper  -->
+<!-- ============================================================== -->
+<div class="page-wrapper">
+  <!-- ============================================================== -->
+  <!-- Bread crumb and right sidebar toggle -->
+  <!-- ============================================================== -->
+  <div class="page-breadcrumb">
+    <div class="row d-flex justify-content-center">
+      <div
+        class="col-10 d-flex no-block align-items-center justify-content-between"
+      >
+        <h3 class="page-title">View order</h3>
+        <a href="/admin/orderM" class="btn btn-rounded btn-dark"
+          ><i class="fa fa-chevron-circle-left"> Back</i></a
+        >
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- End Bread crumb and right sidebar toggle -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- Container fluid  -->
+  <!-- ============================================================== -->
+  <div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Sales Cards  -->
+    <!-- ============================================================== -->
 
-            <%- include('./partials/adminHeader.ejs') %>
+    <!-- Column -->
 
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page wrapper  -->
-        <!-- ============================================================== -->
-        <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <div class="page-breadcrumb">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-10 d-flex no-block align-items-center justify-content-between">
-                        <h3 class="page-title">View order</h3>
-                        <a href="/admin/orderM" class="btn btn-rounded btn-dark"><i class="fa fa-chevron-circle-left">
-                                Back</i></a>
-                    </div>
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
-            <div class="container-fluid">
-                <!-- ============================================================== -->
-                <!-- Sales Cards  -->
-                <!-- ============================================================== -->
-
-                <!-- Column -->
-
-                <!-- ============================================================== -->
-                <!-- Sales chart -->
-                <!-- ============================================================== -->
-                <div class="row d-flex justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title text-success">Order Id:<%= order.orderId %>
-                                </h4>
-                            </div>
-                            <div class="d-flex justify-content-center" style="width:100%">
-                                <img width="200px" src="/images/productImages/<%= order.product.mainImage[0].filename %>">
-                            </div>
-                            <div class="card-body">
-                                <h3 class="card-title">Product: <br><span class="text-info">
-                                        <%= order.product.name %>
-                                    </span></h3>
-                                <h4 class="card-title">Price:<br> <span class="text-danger">₹<%= order.product.price %>
-                                            </span></h4>
-                                <h4 class="card-title">Address:</h4>
-                                <p class="card-text">
-                                    <%= order.address.name %><br>
-                                        <%= order.address.mobile %><br>
-                                            <%= order.address.address %><br>
-                                                <%= order.address.pinCode %>
-                                </p>
-                                <h4 class="card-title">Status:</h4>
-                                <% if (order.status == "pending") { %>
-                                    <p class="card-text text-warning"><%= order.status %></p>
-                                <% }else if(order.status == "shipped"){ %>
-                                <p class="card-text text-info"><%= order.status %></p>
-                                <% }else if(order.status == "delivered"){ %>
-                                <p class="card-text text-success"><%= order.status %></p>
-                                <% }else if(order.status == "return processing"){ %>
-                                <p class="card-text text-primary"><%= order.status %></p>
-                                <% }else if(order.status == "returned"){ %>
-                                <p class="card-text text-danger"><%= order.status %></p>
-                                <% } %>
-                                <h4 class="card-title">Quantity:</h4>
-                                <p class="card-text text-dark "><%= order.quantity %></p>
-                                <h4 class="card-title">Total</h4>
-                                <p class="card-text text-danger ">₹<%= order.total %></p>
-                                <h4 class="card-title">Amount to pay:</h4>
-                                <p class="card-text text-warning ">₹<%= order.amountToPay %></p>
-                                <h4 class="card-title">Payment type:</h4>
-                                <p class="card-text text-dark "><%= order.paymentType %></p>
-                                <h4 class="card-title">Ordered Date:</h4>
-                                <p class="card-text text-dark "><%= order.createdAt.toLocaleString("en-GB") %></p>
-
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- Sales chart -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Recent comment and chats -->
-            <!-- ============================================================== -->
-
-            <!-- ============================================================== -->
-            <!-- Recent comment and chats -->
-            <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Sales chart -->
+    <!-- ============================================================== -->
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title text-success">
+              Order Id:<%= order.orderId %>
+            </h4>
+          </div>
+          <div class="d-flex justify-content-center" style="width: 100%">
+            <img
+              width="200px"
+              src="/images/productImages/<%= order.product.mainImage[0].filename %>"
+            />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">
+              Product: <br /><span class="text-info">
+                <%= order.product.name %>
+              </span>
+            </h3>
+            <h4 class="card-title">
+              Price:<br />
+              <span class="text-danger">₹<%= order.product.price %> </span>
+            </h4>
+            <h4 class="card-title">Address:</h4>
+            <p class="card-text">
+              <%= order.address.name %><br />
+              <%= order.address.mobile %><br />
+              <%= order.address.address %><br />
+              <%= order.address.pinCode %>
+            </p>
+            <h4 class="card-title">Status:</h4>
+            <% if (order.status == "pending") { %>
+            <p class="card-text text-warning" style="background-color: rgb(254, 255, 211); display: inline;"><%= order.status %></p>
+            <% }else if(order.status == "shipped"){ %>
+            <p class="card-text text-info" style="background-color: rgb(180, 210, 255); display: inline;"><%= order.status %></p>
+            <% }else if(order.status == "delivered"){ %>
+            <p class="card-text text-success" style="background-color: rgb(195, 255, 206); display: inline;"><%= order.status %></p>
+            <% }else if(order.status == "return processing"){ %>
+            <p class="card-text text-primary" style="background-color: rgb(186, 247, 255); display: inline;"><%= order.status %></p>
+            <% }else if(order.status == "returned"){ %>
+            <p class="card-text text-danger" style="background-color: rgb(255, 195, 195); display: inline;"><%= order.status %></p>
+            <% } else{%>
+            <p class="card-text text-dark" style="background-color: gray; display: inline;"><%= order.status %></p>
+            <% } %>
+            <h4 class="card-title">Quantity:</h4>
+            <p class="card-text text-dark"><%= order.quantity %></p>
+            <h4 class="card-title">Total</h4>
+            <p class="card-text text-danger">₹<%= order.total %></p>
+            <h4 class="card-title">Amount to pay:</h4>
+            <p class="card-text text-warning">₹<%= order.amountToPay %></p>
+            <h4 class="card-title">Payment type:</h4>
+            <p class="card-text text-dark"><%= order.paymentType %></p>
+            <h4 class="card-title">Ordered Date:</h4>
+            <p class="card-text text-dark">
+              <%= order.createdAt.toLocaleString("en-GB") %>
+            </p>
+          </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
-        <%- include('./partials/adminFooter.ejs') %>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- Sales chart -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- Recent comment and chats -->
+  <!-- ============================================================== -->
+
+  <!-- ============================================================== -->
+  <!-- Recent comment and chats -->
+  <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+<%- include('./partials/adminFooter.ejs') %>

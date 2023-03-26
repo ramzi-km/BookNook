@@ -826,7 +826,7 @@ module.exports = {
             let orders = req.session.tempOrders;
             let i = 1;
             let orderCount = await Order.find().count();
-         
+
             await Order.create(orders);
             await User.findByIdAndUpdate(req.session.user._id, {
               $set: { cart: [] },
@@ -995,6 +995,32 @@ module.exports = {
     console.log(order);
     res.render("user/orderDetails", { user, order });
   },
+
+  // cancel order
+  cancelOrder: async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.session.user._id;
+    const order = await Order.findById(orderId);
+    let walletInc = (order.total) - (order.amountToPay);
+    if (walletInc != 0) {
+      await User.updateOne(
+        { _id: userId },
+        { $inc: { wallet: walletInc } }
+      );
+    }
+    order.status = "cancelled"
+    await order.save();
+    res.redirect("back");
+  },
+
+  // return order
+  returnOrder: async (req, res) => {
+    const orderId = req.params.id;
+    const order = await Order.findById(orderId);
+    order.status = "return processing"
+    await order.save();
+    res.redirect("back");
+  }
 
   //----------------xx---------------------------//
 };
