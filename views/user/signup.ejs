@@ -1,143 +1,135 @@
 <%- include('./partials/header.ejs') %>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BookNook|Sign up</title>
-  <link
-    href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    rel="stylesheet"
-    id="bootstrap-css"
-  />
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!------ Include the above in your HEAD tag ---------->
-
-  <link
-    href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-    rel="stylesheet"
-    id="bootstrap-css"
-  />
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
-  <!------ Include the above in your HEAD tag ---------->
-</head>
 <style>
-  body {
-    background-color: #ffffff;
+  @media (max-width: 991px) {
+    .login_form_inner {
+      padding-top: 40px;
+    }
   }
-
-  *[role='form'] {
-    max-width: 530px;
-    padding: 15px;
-    margin-top: 100px;
-    border-radius: 0.3em;
-    background-color: #f2f2f2;
+  .login_form_inner {
+    padding-top: 50px;
   }
-
-  *[role='form'] h3 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 25px;
-    font-weight: 600;
-    color: #000000;
-    margin-top: 5%;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-  }
-
-  .container {
-    display: flex;
-    justify-content: center;
-  }
-
-  #title {
-    margin-top: 100px;
+  .section_gap {
+    padding: 50px;
   }
 </style>
-<div id="title" class="text-center">
-  <h2>BookNook</h2>
-</div>
-<div class="container">
-  <form class="form-horizontal" role="form" action="/signup" method="post">
-    <h3 class="text-center">Registration</h3>
-    <div class="form-group">
-      <label for="firstName" class="col-sm-3 control-label">Full Name</label>
-      <div class="col-sm-9">
-        <input
-          type="text"
-          id="firstName"
-          placeholder="First Name"
-          class="form-control"
-          name="name"
-          autofocus
-          required
-        />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="email" class="col-sm-3 control-label">Email* </label>
-      <div class="col-sm-9">
-        <input
-          type="email"
-          id="email"
-          placeholder="Email"
-          class="form-control"
-          name="email"
-          required
-        />
-      </div>
-      <br />
-      <label for="Invalid" class="text-danger"> <%= error %> </label>
-    </div>
-    <div class="form-group">
-      <label for="password" class="col-sm-3 control-label">Password*</label>
-      <div class="col-sm-9">
-        <input
-          type="password"
-          id="password"
-          placeholder="Password"
-          class="form-control"
-          name="password"
-          required
-        />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="phoneNumber" class="col-sm-3 control-label"
-        >Phone number
-      </label>
-      <div class="col-sm-9">
-        <input
-          type="tel"
-          id="phoneNumber"
-          placeholder="+91"
-          class="form-control"
-          name="mobile"
-          pattern="[0-9]{10}"
-          required
-        />
-        <small>Format: 8234567898</small>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="place" class="col-sm-3 control-label">Place</label>
-      <div class="col-sm-9">
-        <input
-          type="text"
-          id="place"
-          placeholder="Street & City"
-          name="place"
-          class="form-control"
-          required
-        />
-      </div>
-    </div>
-    <input type="submit" class="btn btn-danger btn-block" value="Register" />
-  </form>
-  <!-- /form -->
-</div>
-<!-- ./container -->
 
-<%- include('./partials/footer.ejs') %>
+<!--================Login Box Area =================-->
+<section class="login_box_area section_gap">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-6">
+        <div class="login_form_inner mb-3">
+          <h3>Create Account</h3>
+          <form
+            class="row login_form"
+            action="/signup"
+            method="post"
+            id="signupForm"
+          >
+            <div class="col-md-12 form-group">
+              <div class="d-flex justify-content-start mb-1">
+                <label for="name"
+                  ><span class="text-dark">Full Name :</span></label
+                >
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                placeholder="Full Name"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Full Name'"
+                minlength="5"
+                required
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <div class="d-flex justify-content-start mb-1">
+                <label for="email"
+                  ><span class="text-dark">Email :</span></label
+                >
+              </div>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Email"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Email'"
+                required
+              />
+              <label for="Invalid" class="text-danger"><%= error %></label>
+            </div>
+            <div class="col-md-12 form-group">
+              <div class="d-flex justify-content-start mb-1">
+                <label for="password"
+                  ><span class="text-dark">Password :</span></label
+                >
+              </div>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Password"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Password'"
+                minlength="6"
+                required
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <div class="d-flex justify-content-start mb-1">
+                <label for="mobile"
+                  ><span class="text-dark">mobile :</span></label
+                >
+              </div>
+              <input
+                type="tel"
+                class="form-control"
+                id="mobile"
+                name="mobile"
+                placeholder="+91"
+                pattern="[0-9]{10}"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = '+91'"
+                minlength="10"
+                required
+              />
+              <small>Format: 8234567898</small>
+            </div>
+            <div class="col-md-12 form-group">
+              <div class="d-flex justify-content-start mb-1">
+                <label for="place"
+                  ><span class="text-dark">Place :</span></label
+                >
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="place"
+                name="place"
+                placeholder="Street & City"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Street & City'"
+                minlength="5"
+                required
+              />
+            </div>
+
+            <div class="col-md-12 form-group">
+              <button type="submit" value="submit" class="primary-btn">
+                Register
+              </button>
+              <a href="/login" style=" font-size: medium;">Already have an account? Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--================End Login Box Area =================-->

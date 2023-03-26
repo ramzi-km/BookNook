@@ -29,13 +29,13 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-const oneDay = 1000 * 60 * 60 * 24;
+const threeDay = 1000 * 60 * 60 * 72;
 app.use(
   session({
     secret: "Key",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: oneDay },
+    cookie: { maxAge: threeDay },
     store: MongoStore.create({ mongoUrl: process.env.MONGOOSE_CONNECT }),
   })
 );

@@ -63,7 +63,7 @@ module.exports = {
       const orders = await Order.find().lean();
       const totalOrders = orders.length;
       const monthlyDataArray = await Order.aggregate([
-        { $match: { status: 'delivered' } },
+        { $match: { paid: true } },
         {
           $group: {
             _id: { $month: '$createdAt' },
