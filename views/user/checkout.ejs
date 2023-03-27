@@ -65,6 +65,10 @@
     .cw-cash input {
       width: 20px;
     }
+    input.is-invalid {
+      border-color: red;
+      background-color: #ffe6e6;
+    }
   </style>
 </head>
 
@@ -103,7 +107,17 @@
                       <div class="col-lg-6">
                         <div class="checkout__input">
                           <p>Name<span>*</span></p>
-                          <input type="text" name="name" required />
+                          <input
+                            id="addAddressName"
+                            type="text"
+                            name="name"
+                            required
+                          />
+                          <label
+                            for="addAddressName"
+                            id="addAddressNameError"
+                            class="text-danger"
+                          ></label>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -133,18 +147,38 @@
                     </div>
                     <div class="checkout__input">
                       <p>Town/City<span>*</span></p>
-                      <input type="text" name="city" required />
+                      <input
+                        id="addAddressCity"
+                        type="text"
+                        name="city"
+                        required
+                      />
+                      <label
+                        for="addAddressCity"
+                        id="addAddressCityError"
+                        class="text-danger"
+                      ></label>
                     </div>
                     <div class="checkout__input">
                       <p>State<span>*</span></p>
-                      <input type="text" name="state" required />
+                      <input
+                        id="addAddressState"
+                        type="text"
+                        name="state"
+                        required
+                      />
+                      <label
+                        for="addAddressState"
+                        id="addAddressStateError"
+                        class="text-danger"
+                      ></label>
                     </div>
                     <div class="checkout__input">
                       <p>PIN code<span>*</span></p>
                       <input
                         type="number"
-                        minlength="4"
-                        maxlength="8"
+                        minlength="6"
+                        maxlength="6"
                         name="pinCode"
                         required
                       />
@@ -205,6 +239,7 @@
                     data-target="#collapse<%= addr.id %>"
                     aria-expanded="false"
                     aria-controls="collapseTwo"
+                    onclick="validateEditAddress('<%= addr.id %>')"
                   >
                     <i class="fa-solid fa-pen-to-square"></i>
                   </button>
@@ -247,11 +282,17 @@
                           <div class="checkout__input">
                             <p>Name<span>*</span></p>
                             <input
+                              id="editAddressName<%= addr.id %>"
                               type="text"
                               name="name"
                               value="<%= addr.name %>"
                               required
                             />
+                            <label
+                              for="editAddressName<%= addr.id %>"
+                              id="editAddressNameError<%= addr.id %>"
+                              class="text-danger"
+                            ></label>
                           </div>
                         </div>
                         <div class="col-lg-6">
@@ -285,20 +326,32 @@
                       <div class="checkout__input">
                         <p>Town/City<span>*</span></p>
                         <input
+                          id="editAddressCity<%= addr.id %>"
                           type="text"
                           name="city"
                           value="<%= addr.city %>"
                           required
                         />
+                        <label
+                          for="editAddressCity<%= addr.id %>"
+                          id="editAddressCityError<%= addr.id %>"
+                          class="text-danger"
+                        ></label>
                       </div>
                       <div class="checkout__input">
                         <p>State<span>*</span></p>
                         <input
+                          id="editAddressState<%= addr.id %>"
                           type="text"
                           name="state"
                           value="<%= addr.state %>"
                           required
                         />
+                        <label
+                          for="editAddressState<%= addr.id %>"
+                          id="editAddressStateError<%= addr.id %>"
+                          class="text-danger"
+                        ></label>
                       </div>
                       <div class="checkout__input">
                         <p>PIN code<span>*</span></p>
@@ -496,6 +549,120 @@
 <!-- Axios -->
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script>
+  //--------------------Validations---------------//
+
+  // Get the add Address form element
+  const addressForm = document.getElementById('addAddressForm');
+
+  // Add an event listener for form submission
+  addressForm.addEventListener('submit', function (event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Get the input fields
+    const name = document.getElementById('addAddressName');
+    const city = document.getElementById('addAddressCity');
+    const state = document.getElementById('addAddressState');
+
+    // Get the error message elements
+    const nameError = document.getElementById('addAddressNameError');
+    const cityError = document.getElementById('addAddressCityError');
+    const stateError = document.getElementById('addAddressStateError');
+
+    // Validate the input fields
+    let isValid = true;
+
+    if (name.value.trim().length < 5) {
+      name.classList.add('is-invalid');
+      nameError.textContent = 'Name must be at least 5 characters';
+      isValid = false;
+    } else {
+      name.classList.remove('is-invalid');
+      nameError.textContent = '';
+    }
+
+    if (city.value.trim().length < 3) {
+      city.classList.add('is-invalid');
+      cityError.textContent = 'city must not be empty spaces';
+      isValid = false;
+    } else {
+      city.classList.remove('is-invalid');
+      cityError.textContent = '';
+    }
+
+    if (state.value.trim().length < 3) {
+      state.classList.add('is-invalid');
+      stateError.textContent = 'state must not be empty spaces';
+      isValid = false;
+    } else {
+      state.classList.remove('is-invalid');
+      stateError.textContent = '';
+    }
+
+    // If the form is valid, submit it
+    if (isValid) {
+      addressForm.submit();
+    }
+  });
+
+  function validateEditAddress(id) {
+    // Get the edit Address form element
+    editAddressForm = document.getElementById(`editAddressForm${id}`);
+
+    // Add an event listener for form submission
+    editAddressForm.addEventListener('submit', function (event) {
+      // Prevent the form from submitting
+      event.preventDefault();
+
+      // Get the input fields
+      const name = document.getElementById(`editAddressName${id}`);
+      const city = document.getElementById(`editAddressCity${id}`);
+      const state = document.getElementById(`editAddressState${id}`);
+
+      // Get the error message elements
+      const nameError = document.getElementById(`editAddressNameError${id}`);
+      const cityError = document.getElementById(`editAddressCityError${id}`);
+      const stateError = document.getElementById(`editAddressStateError${id}`);
+
+      // Validate the input fields
+      let isValid = true;
+
+      if (name.value.trim().length < 5) {
+        name.classList.add('is-invalid');
+        nameError.textContent = 'Name must be at least 5 characters';
+        isValid = false;
+      } else {
+        name.classList.remove('is-invalid');
+        nameError.textContent = '';
+      }
+
+      if (city.value.trim().length < 3) {
+        city.classList.add('is-invalid');
+        cityError.textContent = 'city must not be empty spaces';
+        isValid = false;
+      } else {
+        city.classList.remove('is-invalid');
+        cityError.textContent = '';
+      }
+
+      if (state.value.trim().length < 3) {
+        state.classList.add('is-invalid');
+        stateError.textContent = 'state must not be empty spaces';
+        isValid = false;
+      } else {
+        state.classList.remove('is-invalid');
+        stateError.textContent = '';
+      }
+
+      // If the form is valid, submit it
+      if (isValid) {
+        editAddressForm.submit();
+      }
+    });
+  }
+
+  //---------------------------------------------//
+
   const form = document.getElementById('couponForm');
   const total = document.getElementById('totalPrice');
   const couponDiscountList = document.getElementById('discountPrice');
