@@ -1,5 +1,11 @@
 <%- include('./partials/adminHeader.ejs') %>
 
+<style>
+  input.is-invalid {
+    border-color: red;
+    background-color: #ffe6e6;
+  }
+</style>
 <!-- ============================================================== -->
 <!-- End Left Sidebar - style you can find in sidebar.scss  -->
 <!-- ============================================================== -->
@@ -47,21 +53,31 @@
               action="/admin/categoryM/editCategory"
               method="post"
               class="mt-3"
+              id="categoryForm"
             >
-              <div class="d-flex align-items-center justify-content-center">
+              <div
+                class="d-flex align-items-center justify-content-center"
+              >
                 <div class="">
                   <label for="Name">Category</label>
                   <input
                     type="text"
+                    id="categoryName"
                     name="category"
                     value="<%= category.name %>"
                     required
                   />
+                  <label
+                    id="categoryError"
+                    class="text-danger"
+                  ></label>
                   <b class="text-danger"><%= error %> </b>
                 </div>
               </div>
               <div class="d-flex justify-content-center">
-                <button class="btn btn-dark" type="submit">Save</button>
+                <button class="btn btn-dark" type="submit">
+                  Save
+                </button>
               </div>
             </form>
           </div>
@@ -86,4 +102,40 @@
 <!-- ============================================================== -->
 <!-- footer -->
 <!-- ============================================================== -->
+
+<script>
+  // Get the form element
+  const form = document.getElementById('categoryForm');
+
+  // Add an event listener for form submission
+  form.addEventListener('submit', function (event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Get the input fields
+    const name = document.getElementById('categoryName');
+
+    // Get the error message elements
+    const categoryError = document.getElementById('categoryError');
+
+    // Validate the input fields
+    let isValid = true;
+
+    if (name.value.trim().length < 3) {
+      name.classList.add('is-invalid');
+      categoryError.textContent =
+        'category name should not be empty spaces';
+      isValid = false;
+    } else {
+      name.classList.remove('is-invalid');
+      categoryError.textContent = '';
+    }
+
+    // If the form is valid, submit it
+    if (isValid) {
+      form.submit();
+    }
+  });
+</script>
+
 <%- include('./partials/adminFooter.ejs') %>
