@@ -56,6 +56,8 @@ let editProductFailMessage = null;
 let imageFileError = null;
 let addProductError = null;
 let editProductError = null;
+let addCouponError = null;
+let editCouponError = null;
 
 module.exports = {
   getPanel: async (req, res) => {
@@ -202,8 +204,7 @@ module.exports = {
         ],
       });
       if (productExist[0]) {
-        addProductError =
-          'product with the same details already exists';
+        addProductError = 'product with the same details already exists';
         res.redirect('back');
       } else {
         try {
@@ -286,8 +287,7 @@ module.exports = {
         sameProduct = true;
       }
       if (productExist[0] && !sameProduct) {
-        editProductError =
-          'product with the same details already exists';
+        editProductError = 'product with the same details already exists';
         res.redirect('back');
       } else {
         try {
@@ -304,14 +304,9 @@ module.exports = {
           };
           await Product.updateOne({ _id: productId }, fieldsToUpdate);
 
-          const imageFieldsToUpdate = getImageFieldsToUpdate(
-            req.files
-          );
+          const imageFieldsToUpdate = getImageFieldsToUpdate(req.files);
           if (Object.keys(imageFieldsToUpdate).length > 0) {
-            await Product.updateOne(
-              { _id: productId },
-              imageFieldsToUpdate
-            );
+            await Product.updateOne({ _id: productId }, imageFieldsToUpdate);
           }
           editProductMessage = 'Product edited successfully';
           imageFileError = null;
@@ -379,8 +374,7 @@ module.exports = {
   addCategory: async (req, res) => {
     req.body.category = req.body.category.toLowerCase();
     let categoryName =
-      req.body.category.charAt(0).toUpperCase() +
-      req.body.category.slice(1);
+      req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
     let category = await Category.findOne({ name: categoryName });
     if (category) {
       addCategoryError = 'category already exist';
@@ -406,8 +400,7 @@ module.exports = {
   editCategory: async (req, res) => {
     req.body.category = req.body.category.toLowerCase();
     let categoryName =
-      req.body.category.charAt(0).toUpperCase() +
-      req.body.category.slice(1);
+      req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
 
     let categoryExist = await Category.findOne({
       name: categoryName,
@@ -418,8 +411,7 @@ module.exports = {
     } else if (categoryExist) {
       editCategoryError = 'category already exist';
       res.redirect(
-        '/admin/categoryM/editCategory/' +
-          req.session.editingCategory._id
+        '/admin/categoryM/editCategory/' + req.session.editingCategory._id
       );
     } else {
       await Category.updateOne(
@@ -459,16 +451,26 @@ module.exports = {
   // get coupon add page
   getAddCoupon: (req, res) => {
     let admin = req.session.admin;
-    res.render('admin/addCoupon', { admin });
+    let todaysDate = formattedDate(new Date());
+    res.render('admin/addCoupon', { admin, todaysDate, error: addCouponError });
+    addCouponError = null;
   },
   // post coupon add page
   addCoupon: async (req, res) => {
-    try {
-      const newCoupon = await Coupon.create(req.body);
-      res.redirect('/admin/couponM');
-    } catch (err) {
-      console.log(err);
-      res.redirect('/admin/couponM');
+    let couponExist = await Coupon.findOne({
+      $or: [{ name: req.body.name }, { code: req.body.code }],
+    });
+    if (couponExist) {
+      addCouponError = 'coupon with same name or code already exist';
+      res.redirect('back');
+    } else {
+      try {
+        const newCoupon = await Coupon.create(req.body);
+        res.redirect('/admin/couponM');
+      } catch (err) {
+        console.log(err);
+        res.redirect('/admin/couponM');
+      }
     }
   },
   // get edit coupon page
@@ -476,8 +478,10 @@ module.exports = {
     let admin = req.session.admin;
     try {
       const coupon = await Coupon.findById(req.params.id);
+      req.session.editingCoupon = coupon;
+      let todaysDate = formattedDate(new Date());
       let expiryDate = formattedDate(coupon.expiryDate);
-      res.render('admin/editCoupon', { admin, coupon, expiryDate });
+      res.render('admin/editCoupon', { admin, coupon, expiryDate, todaysDate,error:editCouponError });
     } catch (err) {
       console.log(err);
       res.redirect('/admin/couponM');
@@ -485,15 +489,24 @@ module.exports = {
   },
   // post edit coupon page
   editCoupon: async (req, res) => {
+    let sameCoupon =false;
     let couponId = req.params.id;
-    try {
-      const coupon = await Coupon.updateOne(
-        { _id: couponId },
-        req.body
-      );
-      res.redirect('/admin/couponM');
-    } catch (err) {
-      res.redirect('/admin/couponM');
+    let couponExist = await Coupon.findOne({
+      $or: [{ name: req.body.name }, { code: req.body.code }],
+    });
+    if (req.session.editingCoupon.name == req.body.name && req.session.editingCoupon.code == req.body.code){
+      sameCoupon = true;
+    }
+    if (couponExist && !sameCoupon) {
+      editCouponError = 'coupon with same name or code already exist';
+      res.redirect('back');
+    } else {
+      try {
+        const coupon = await Coupon.updateOne({ _id: couponId }, req.body);
+        res.redirect('/admin/couponM');
+      } catch (err) {
+        res.redirect('/admin/couponM');
+      }
     }
   },
   //unList Coupon
@@ -562,9 +575,7 @@ module.exports = {
   getReport: async (req, res) => {
     const admin = req.session.admin;
 
-    let startDate = new Date(
-      new Date().setDate(new Date().getDate() - 8)
-    );
+    let startDate = new Date(new Date().setDate(new Date().getDate() - 8));
     let endDate = new Date();
     let filter = req.query.filter ?? '';
 
@@ -580,9 +591,7 @@ module.exports = {
       let currentDate = new Date();
       startDate = new Date(currentDate.getFullYear(), 0, 1);
       startDate.setHours(0, 0, 0, 0);
-      endDate = new Date(
-        new Date().setDate(new Date().getDate() + 1)
-      );
+      endDate = new Date(new Date().setDate(new Date().getDate() + 1));
       endDate.setHours(0, 0, 0, 0);
     }
 
@@ -594,16 +603,11 @@ module.exports = {
         1
       );
       startDate.setHours(0, 0, 0, 0);
-      endDate = new Date(
-        new Date().setDate(new Date().getDate() + 1)
-      );
+      endDate = new Date(new Date().setDate(new Date().getDate() + 1));
       endDate.setHours(0, 0, 0, 0);
     }
 
-    if (
-      !req.query.filter &&
-      (!req.query.startDate || !req.query.endDate)
-    ) {
+    if (!req.query.filter && (!req.query.startDate || !req.query.endDate)) {
       filter = 'lastWeek';
     }
 
