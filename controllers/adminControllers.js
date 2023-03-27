@@ -55,6 +55,7 @@ let editProductMessage = null;
 let editProductFailMessage = null;
 let imageFileError = null;
 let addProductError = null;
+let editProductError = null;
 
 module.exports = {
   getPanel: async (req, res) => {
@@ -179,30 +180,32 @@ module.exports = {
   },
   //post add product page
   addProduct: async (req, res) => {
-    const prductExist = await Product.find({
-      name: req.body.name,
-      author: req.body.author,
-      category: req.body.category,
-    });
-    if (prductExist) {
-      addProductError =
-        'product with the same details already exists';
-      res.redirect('back');
-    } else {
-      uploadImages(req, res, async function (err) {
-        if (err instanceof multer.MulterError) {
-          // a multer error occured when uploading
-          imageFileError = 'choose only image files';
-          res.redirect('/admin/productM/addProduct');
-          return;
-        } else if (err) {
-          // an unknown error occured while uploading
-          imageFileError =
-            'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files';
-          res.redirect('/admin/productM/addProduct');
-          return;
-        }
-        // everything went fine
+    uploadImages(req, res, async function (err) {
+      if (err instanceof multer.MulterError) {
+        // a multer error occured when uploading
+        imageFileError = 'choose only image files';
+        res.redirect('/admin/productM/addProduct');
+        return;
+      } else if (err) {
+        // an unknown error occured while uploading
+        imageFileError =
+          'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files';
+        res.redirect('/admin/productM/addProduct');
+        return;
+      }
+      // everything went fine
+      const productExist = await Product.find({
+        $and: [
+          { name: req.body.name },
+          { author: req.body.author },
+          { category: req.body.category },
+        ],
+      });
+      if (productExist[0]) {
+        addProductError =
+          'product with the same details already exists';
+        res.redirect('back');
+      } else {
         try {
           const fields = {
             name: req.body.name,
@@ -226,8 +229,8 @@ module.exports = {
           addProductFailMessage = 'Failed to add product';
           res.redirect('/admin/productM');
         }
-      });
-    }
+      }
+    });
   },
   // get edit product page
   getEditProduct: async (req, res) => {
@@ -241,8 +244,10 @@ module.exports = {
         admin,
         product,
         imageError: imageFileError,
+        editError: editProductError,
       });
       imageFileError = null;
+      editProductError = null;
     } catch (error) {
       res.send(error);
     }
@@ -265,33 +270,56 @@ module.exports = {
       }
 
       // everything went fine //
-      try {
-        let productId = req.params.id;
-        const fieldsToUpdate = {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
-        };
-        await Product.updateOne({ _id: productId }, fieldsToUpdate);
+      let sameProduct = false;
+      const productExist = await Product.find({
+        $and: [
+          { name: req.body.name },
+          { author: req.body.author },
+          { category: req.body.category },
+        ],
+      });
+      if (
+        req.session.editingProduct.name == req.body.name &&
+        req.session.editingProduct.category == req.body.category &&
+        req.session.editingProduct.author == req.body.author
+      ) {
+        sameProduct = true;
+      }
+      if (productExist[0] && !sameProduct) {
+        editProductError =
+          'product with the same details already exists';
+        res.redirect('back');
+      } else {
+        try {
+          let productId = req.params.id;
+          const fieldsToUpdate = {
+            name: req.body.name,
+            author: req.body.author,
+            category: req.body.category,
+            mrp: req.body.mrp,
+            price: req.body.price,
+            inStock: req.body.inStock,
+            description: req.body.description,
+            richDescription: req.body.richDescription,
+          };
+          await Product.updateOne({ _id: productId }, fieldsToUpdate);
 
-        const imageFieldsToUpdate = getImageFieldsToUpdate(req.files);
-        if (Object.keys(imageFieldsToUpdate).length > 0) {
-          await Product.updateOne(
-            { _id: productId },
-            imageFieldsToUpdate
+          const imageFieldsToUpdate = getImageFieldsToUpdate(
+            req.files
           );
+          if (Object.keys(imageFieldsToUpdate).length > 0) {
+            await Product.updateOne(
+              { _id: productId },
+              imageFieldsToUpdate
+            );
+          }
+          editProductMessage = 'Product edited successfully';
+          imageFileError = null;
+          res.redirect('/admin/productM');
+        } catch (error) {
+          editProductFailMessage = 'Failed to edit product';
+          res.redirect('/admin/productM');
         }
-        editProductMessage = 'Product edited successfully';
-        imageFileError = null;
-        res.redirect('/admin/productM');
-      } catch (error) {
-        editProductFailMessage = 'Failed to edit product';
-        res.redirect('/admin/productM');
       }
     });
   },
