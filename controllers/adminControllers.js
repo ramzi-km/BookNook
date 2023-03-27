@@ -54,6 +54,7 @@ let addProductFailMessage = null;
 let editProductMessage = null;
 let editProductFailMessage = null;
 let imageFileError = null;
+let addProductError = null;
 
 module.exports = {
   getPanel: async (req, res) => {
@@ -168,52 +169,65 @@ module.exports = {
         admin,
         categories,
         imageError: imageFileError,
+        addError: addProductError,
       });
       imageFileError = null;
+      addProductError = null;
     } catch (error) {
       res.send(error);
     }
   },
   //post add product page
   addProduct: async (req, res) => {
-    uploadImages(req, res, async function (err) {
-      if (err instanceof multer.MulterError) {
-        // a multer error occured when uploading
-        imageFileError = 'choose only image files';
-        res.redirect('/admin/productM/addProduct');
-        return;
-      } else if (err) {
-        // an unknown error occured while uploading
-        imageFileError =
-          'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files';
-        res.redirect('/admin/productM/addProduct');
-        return;
-      }
-      // everything went fine
-      try {
-        const fields = {
-          name: req.body.name,
-          author: req.body.author,
-          category: req.body.category,
-          mrp: req.body.mrp,
-          price: req.body.price,
-          inStock: req.body.inStock,
-          description: req.body.description,
-          richDescription: req.body.richDescription,
-          mainImage: req.files.mainImage,
-          coverImage: req.files.coverImage,
-          extraImages: req.files.extraImages,
-        };
-        const newProduct = new Product(fields);
-        await newProduct.save();
-        imageFileError = null;
-        addProductMessage = 'product added successfully';
-        res.redirect('/admin/productM');
-      } catch (err) {
-        addProductFailMessage = 'Failed to add product';
-        res.redirect('/admin/productM');
-      }
+    const prductExist = await Product.find({
+      name: req.body.name,
+      author: req.body.author,
+      category: req.body.category,
     });
+    if (prductExist) {
+      addProductError =
+        'product with the same details already exists';
+      res.redirect('back');
+    } else {
+      uploadImages(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+          // a multer error occured when uploading
+          imageFileError = 'choose only image files';
+          res.redirect('/admin/productM/addProduct');
+          return;
+        } else if (err) {
+          // an unknown error occured while uploading
+          imageFileError =
+            'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files';
+          res.redirect('/admin/productM/addProduct');
+          return;
+        }
+        // everything went fine
+        try {
+          const fields = {
+            name: req.body.name,
+            author: req.body.author,
+            category: req.body.category,
+            mrp: req.body.mrp,
+            price: req.body.price,
+            inStock: req.body.inStock,
+            description: req.body.description,
+            richDescription: req.body.richDescription,
+            mainImage: req.files.mainImage,
+            coverImage: req.files.coverImage,
+            extraImages: req.files.extraImages,
+          };
+          const newProduct = new Product(fields);
+          await newProduct.save();
+          imageFileError = null;
+          addProductMessage = 'product added successfully';
+          res.redirect('/admin/productM');
+        } catch (err) {
+          addProductFailMessage = 'Failed to add product';
+          res.redirect('/admin/productM');
+        }
+      });
+    }
   },
   // get edit product page
   getEditProduct: async (req, res) => {
@@ -233,8 +247,9 @@ module.exports = {
       res.send(error);
     }
   },
+
   // post edit product page
-  editProduct: (req, res) => {
+  editProduct: async (req, res) => {
     uploadImages(req, res, async function (err) {
       if (err instanceof multer.MulterError) {
         // a multer error occured when uploading
@@ -266,7 +281,10 @@ module.exports = {
 
         const imageFieldsToUpdate = getImageFieldsToUpdate(req.files);
         if (Object.keys(imageFieldsToUpdate).length > 0) {
-          await Product.updateOne({ _id: productId }, imageFieldsToUpdate);
+          await Product.updateOne(
+            { _id: productId },
+            imageFieldsToUpdate
+          );
         }
         editProductMessage = 'Product edited successfully';
         imageFileError = null;
@@ -323,20 +341,24 @@ module.exports = {
   //get add category page
   getAddCategory: (req, res) => {
     let admin = req.session.admin;
-    res.render('admin/addCategory', { admin, error: addCategoryError });
+    res.render('admin/addCategory', {
+      admin,
+      error: addCategoryError,
+    });
     addCategoryError = null;
   },
   //add category
   addCategory: async (req, res) => {
     req.body.category = req.body.category.toLowerCase();
     let categoryName =
-      req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
+      req.body.category.charAt(0).toUpperCase() +
+      req.body.category.slice(1);
     let category = await Category.findOne({ name: categoryName });
     if (category) {
       addCategoryError = 'category already exist';
       res.redirect('/admin/categoryM/addCategory');
     } else {
-      const newCategory = await Category.create({ name: categoryName });
+      await Category.create({ name: categoryName });
       res.redirect('/admin/categoryM');
     }
   },
@@ -356,16 +378,20 @@ module.exports = {
   editCategory: async (req, res) => {
     req.body.category = req.body.category.toLowerCase();
     let categoryName =
-      req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1);
+      req.body.category.charAt(0).toUpperCase() +
+      req.body.category.slice(1);
 
-    let categoryExist = await Category.findOne({ name: categoryName });
+    let categoryExist = await Category.findOne({
+      name: categoryName,
+    });
 
     if (req.session.editingCategory.name == categoryName) {
       res.redirect('/admin/categoryM');
     } else if (categoryExist) {
       editCategoryError = 'category already exist';
       res.redirect(
-        '/admin/categoryM/editCategory/' + req.session.editingCategory._id
+        '/admin/categoryM/editCategory/' +
+          req.session.editingCategory._id
       );
     } else {
       await Category.updateOne(
@@ -433,7 +459,10 @@ module.exports = {
   editCoupon: async (req, res) => {
     let couponId = req.params.id;
     try {
-      const coupon = await Coupon.updateOne({ _id: couponId }, req.body);
+      const coupon = await Coupon.updateOne(
+        { _id: couponId },
+        req.body
+      );
       res.redirect('/admin/couponM');
     } catch (err) {
       res.redirect('/admin/couponM');
@@ -484,11 +513,14 @@ module.exports = {
       const order = await Order.findById(objectId);
       if (status == 'delivered') {
         order.paid = true;
-        order.lastDate = Date.now()+259200000;
+        order.lastDate = Date.now() + 259200000;
         order.amountToPay = 0;
       }
       if (status == 'returned') {
-        await User.updateOne({ _id: order.userId }, { $inc: { wallet: order.total } })
+        await User.updateOne(
+          { _id: order.userId },
+          { $inc: { wallet: order.total } }
+        );
       }
       order.status = status;
       await order.save();
@@ -502,7 +534,9 @@ module.exports = {
   getReport: async (req, res) => {
     const admin = req.session.admin;
 
-    let startDate = new Date(new Date().setDate(new Date().getDate() - 8));
+    let startDate = new Date(
+      new Date().setDate(new Date().getDate() - 8)
+    );
     let endDate = new Date();
     let filter = req.query.filter ?? '';
 
@@ -518,7 +552,9 @@ module.exports = {
       let currentDate = new Date();
       startDate = new Date(currentDate.getFullYear(), 0, 1);
       startDate.setHours(0, 0, 0, 0);
-      endDate = new Date(new Date().setDate(new Date().getDate() + 1));
+      endDate = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      );
       endDate.setHours(0, 0, 0, 0);
     }
 
@@ -530,11 +566,16 @@ module.exports = {
         1
       );
       startDate.setHours(0, 0, 0, 0);
-      endDate = new Date(new Date().setDate(new Date().getDate() + 1));
+      endDate = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      );
       endDate.setHours(0, 0, 0, 0);
     }
 
-    if (!req.query.filter && (!req.query.startDate || !req.query.endDate)) {
+    if (
+      !req.query.filter &&
+      (!req.query.startDate || !req.query.endDate)
+    ) {
       filter = 'lastWeek';
     }
 
