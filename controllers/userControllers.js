@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
-const Razorpay = require("razorpay");
+const mongoose = require('mongoose');
+const Razorpay = require('razorpay');
 
 //-------------Models--------------//
-const Product = require("../models/productModel.js");
-const Category = require("../models/categoryModel.js");
-const Coupon = require("../models/couponModel.js");
-const User = require("../models/userModel.js");
-const Order = require("../models/orderModel.js");
+const Product = require('../models/productModel.js');
+const Category = require('../models/categoryModel.js');
+const Coupon = require('../models/couponModel.js');
+const User = require('../models/userModel.js');
+const Order = require('../models/orderModel.js');
 //---------------xx--------------------//
 
 //-------------------------helpers-------------------------------//
@@ -28,7 +28,7 @@ function createId() {
     date.getMilliseconds(),
   ];
 
-  let id = "id" + components.join("");
+  let id = 'id' + components.join('');
   return id;
 }
 let stockError = false;
@@ -39,43 +39,43 @@ let addressError = false;
 module.exports = {
   //----------------Home------------------//
   getHome: async (req, res) => {
-    let user = req.session.user;
+    const user = req.session.user;
     try {
-      let bestProducts = await Order.aggregate([
+      const bestProducts = await Order.aggregate([
         {
           $group: {
-            _id: "$product._id",
-            name: { $first: "$product.name" },
-            category: { $first: "$product.category" },
-            totalSold: { $sum: "$quantity" },
-            name: { $first: "$product.name" },
-            category: { $first: "$product.category" },
-            author: { $first: "$product.author" },
-            price: { $first: "$product.price" },
-            mrp: { $first: "$product.mrp" },
-            description: { $first: "$product.description" },
-            cover: { $first: "$product.coverImage" },
+            _id: '$product._id',
+            name: { $first: '$product.name' },
+            category: { $first: '$product.category' },
+            totalSold: { $sum: '$quantity' },
+            name: { $first: '$product.name' },
+            category: { $first: '$product.category' },
+            author: { $first: '$product.author' },
+            price: { $first: '$product.price' },
+            mrp: { $first: '$product.mrp' },
+            description: { $first: '$product.description' },
+            cover: { $first: '$product.coverImage' },
           },
         },
         { $sort: { totalSold: -1 } },
         { $limit: 5 },
       ]);
 
-      let latestProducts = await Product.find({ unList: false })
+      const latestProducts = await Product.find({ unList: false })
         .sort({ createdAt: -1 })
         .limit(4)
         .lean();
 
-      let products = await Product.find({ unList: false })
+      const products = await Product.find({ unList: false })
         .sort({ createdAt: -1 })
         .lean();
 
-      let offerProducts = products.filter((product) => {
+      const offerProducts = products.filter((product) => {
         if ((product.price / product.mrp) * 100 < 70) {
           return product;
         }
       });
-      res.render("user/home", {
+      res.render('user/home', {
         user,
         bestProducts,
         latestProducts,
@@ -89,43 +89,43 @@ module.exports = {
 
   //-------------product listing--------------//
   getShop: async (req, res) => {
-    let user = req.session.user;
-    const category = req.query.category ?? "";
-    const search = req.query.search ?? "";
+    const user = req.session.user;
+    const category = req.query.category ?? '';
+    const search = req.query.search ?? '';
     const sort = req.query.sort ?? 0;
-    const price = req.query.price ?? "";
+    const price = req.query.price ?? '';
     let page = Number(req.query.page ?? 0);
     page = Math.max(page, 0);
 
     try {
-      let categoryFilter = await Category.find({
+      const categoryFilter = await Category.find({
         unList: false,
-        name: new RegExp(category, "i"),
+        name: new RegExp(category, 'i'),
       }).lean();
-      let categoryArray = categoryFilter.map((category) => category.name);
+      const categoryArray = categoryFilter.map((category) => category.name);
 
       const findConditions = {
         unList: false,
         category: { $in: categoryArray },
-        name: new RegExp(search, "i"),
+        name: new RegExp(search, 'i'),
       };
-      if (price === "1") {
+      if (price === '1') {
         findConditions.price = { $gt: 99, $lt: 501 };
-      } else if (price === "2") {
+      } else if (price === '2') {
         findConditions.price = { $gt: 500, $lt: 1501 };
-      } else if (price === "3") {
+      } else if (price === '3') {
         findConditions.price = { $gt: 1500 };
       }
       const products = await Product.find(findConditions)
-        .sort(sort == "0" ? { createdAt: -1 } : { price: sort })
+        .sort(sort == '0' ? { createdAt: -1 } : { price: sort })
         .skip(page * 9)
         .limit(9)
         .lean();
       const productCount = await Product.find(findConditions).lean().count();
 
-      let categories = await Category.find({ unList: false }).lean();
-      let pageCount = Math.ceil(productCount / 9);
-      res.render("user/shop", {
+      const categories = await Category.find({ unList: false }).lean();
+      const pageCount = Math.ceil(productCount / 9);
+      res.render('user/shop', {
         user,
         products,
         categories,
@@ -144,8 +144,8 @@ module.exports = {
 
   //--------------product details page----------//
   getProductDetails: async (req, res) => {
-    let user = req.session.user;
-    let productId = req.params.id;
+    const user = req.session.user;
+    const productId = req.params.id;
     let productInCart = [];
     let productInWishlist = [];
     if (user) {
@@ -166,9 +166,9 @@ module.exports = {
     }
 
     try {
-      let product = await Product.findById(productId);
+      const product = await Product.findById(productId);
 
-      res.render("user/productDetails", {
+      res.render('user/productDetails', {
         user,
         product,
         productInCart,
@@ -187,37 +187,37 @@ module.exports = {
     const userId = req.session.user._id;
     try {
       const user = await User.findById(userId);
-      let wishlist = user.wishlist;
+      const wishlist = user.wishlist;
       const products = await Product.find({
         _id: { $in: wishlist },
         unList: false,
       }).lean();
 
-      res.render("user/wishlist", { user, products });
+      res.render('user/wishlist', { user, products });
     } catch (error) {
       res.send(error);
     }
   },
   // remove from wishlist
   removeFromWishlist: async (req, res) => {
-    let userId = req.session.user._id;
-    let prodId = req.params.id;
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
     try {
       await User.findByIdAndUpdate(userId, {
         $pull: {
           wishlist: prodId,
         },
       });
-      res.redirect("back");
+      res.redirect('back');
     } catch (error) {
       res.send(error);
     }
   },
   removeFromWishlist2: async (req, res) => {
-    let userId = req.session.user._id;
-    let prodId = req.params.id;
+    const userId = req.session.user._id;
+    const prodId = req.params.id;
     try {
-      let user = await User.updateOne(
+      const user = await User.updateOne(
         { _id: userId },
         {
           $pull: {
@@ -235,7 +235,7 @@ module.exports = {
     const userId = req.session.user._id;
     const prodId = req.params.id;
     try {
-      let user = await User.updateOne(
+      const user = await User.updateOne(
         { _id: userId },
         {
           $addToSet: {
@@ -253,7 +253,7 @@ module.exports = {
     const userId = req.session.user._id;
     const prodId = req.params.id;
     try {
-      let user = await User.updateOne(
+      const user = await User.updateOne(
         { _id: userId },
         {
           $addToSet: {
@@ -261,7 +261,7 @@ module.exports = {
           },
         }
       );
-      res.redirect("/wishlist");
+      res.redirect('/wishlist');
     } catch (error) {
       res.send(error);
     }
@@ -299,7 +299,7 @@ module.exports = {
         totalMrp = totalMrp + item.mrp * item.cartQuantity;
       });
 
-      res.render("user/cart", {
+      res.render('user/cart', {
         user,
         products,
         totalPrice,
@@ -317,14 +317,14 @@ module.exports = {
     const userId = req.session.user._id;
     const prodId = req.params.id;
     try {
-      const prodExist = await User.find({ _id: userId, "cart.id": prodId });
+      const prodExist = await User.find({ _id: userId, 'cart.id': prodId });
       if (prodExist[0]) {
-        res.redirect("/cart");
+        res.redirect('/cart');
       } else {
         await User.findByIdAndUpdate(userId, {
           $addToSet: { cart: { id: prodId, quantity: 1 } },
         });
-        res.redirect("/cart");
+        res.redirect('/cart');
       }
     } catch (error) {
       res.send(error);
@@ -339,7 +339,7 @@ module.exports = {
       await User.findByIdAndUpdate(userId, {
         $pull: { cart: { id: prodId } },
       });
-      res.redirect("/cart");
+      res.redirect('/cart');
     } catch (error) {
       res.send(error);
     }
@@ -354,7 +354,7 @@ module.exports = {
           _id: userId,
           cart: { $elemMatch: { id: req.params.id } },
         },
-        { _id: 0, "cart.$": 1 }
+        { _id: 0, 'cart.$': 1 }
       );
 
       let quantity = cart[0].quantity;
@@ -365,7 +365,7 @@ module.exports = {
           { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
           {
             $inc: {
-              "cart.$.quantity": 1,
+              'cart.$.quantity': 1,
             },
           }
         );
@@ -390,7 +390,7 @@ module.exports = {
           _id: userId,
           cart: { $elemMatch: { id: req.params.id } },
         },
-        { _id: 0, "cart.$": 1 }
+        { _id: 0, 'cart.$': 1 }
       );
       let quantity = cart[0].quantity;
 
@@ -401,7 +401,7 @@ module.exports = {
           { _id: userId, cart: { $elemMatch: { id: req.params.id } } },
           {
             $inc: {
-              "cart.$.quantity": -1,
+              'cart.$.quantity': -1,
             },
           }
         );
@@ -450,9 +450,9 @@ module.exports = {
         }
       });
       if (stockError || !products[0]) {
-        res.redirect("/cart");
+        res.redirect('/cart');
       } else {
-        res.render("user/checkout", {
+        res.render('user/checkout', {
           user,
           address,
           products,
@@ -474,7 +474,7 @@ module.exports = {
         const expiry = new Date(coupon.expiryDate);
         if (expiry < new Date()) {
           res.json({
-            errorMessage: "Coupon expired",
+            errorMessage: 'Coupon expired',
             success: true,
             error: true,
           });
@@ -483,7 +483,7 @@ module.exports = {
         }
       } else {
         res.json({
-          errorMessage: "Invalid coupon code",
+          errorMessage: 'Invalid coupon code',
           success: true,
           error: true,
         });
@@ -500,9 +500,9 @@ module.exports = {
       amountToPay,
       couponDiscount,
     } = req.body;
-    if (addressId == "empty") {
+    if (addressId == 'empty') {
       addressError = true;
-      res.redirect("/cart/checkout");
+      res.redirect('/cart/checkout');
     } else {
       try {
         const { address } = await User.findOne(
@@ -533,11 +533,11 @@ module.exports = {
           }
         });
         if (stockError || !products[0]) {
-          res.redirect("/cart");
+          res.redirect('/cart');
         } else {
           //----------- Cash on delivery -------------//
 
-          if (payment == "cod") {
+          if (payment == 'cod') {
             const orderCount = await Order.find().count();
             let orders = [];
 
@@ -571,7 +571,7 @@ module.exports = {
                     quantity: cartQuantities[product._id],
                     total: cartQuantities[product._id] * product.price,
                     amountToPay: 0,
-                    paymentType: "cod",
+                    paymentType: 'cod',
                     orderId: orderCount + i,
                     paid: true,
                   });
@@ -620,7 +620,7 @@ module.exports = {
                     total: cartQuantities[product._id] * product.price,
                     amountToPay,
                     paid,
-                    paymentType: "cod",
+                    paymentType: 'cod',
                     orderId: orderCount + i,
                   });
                   i++;
@@ -667,7 +667,7 @@ module.exports = {
                   total: cartQuantities[product._id] * product.price,
                   amountToPay,
                   paid,
-                  paymentType: "cod",
+                  paymentType: 'cod',
                   orderId: orderCount + i,
                 });
                 i++;
@@ -678,10 +678,10 @@ module.exports = {
               $set: { cart: [] },
             });
             req.session.orderSuccess = true;
-            res.redirect("/orderPlaced");
+            res.redirect('/orderPlaced');
 
             //----------- online Payment -------------//
-          } else if (payment == "online") {
+          } else if (payment == 'online') {
             const orderCount = await Order.find().count();
             let orders = [];
 
@@ -715,7 +715,7 @@ module.exports = {
                     quantity: cartQuantities[product._id],
                     total: cartQuantities[product._id] * product.price,
                     amountToPay: 0,
-                    paymentType: "online",
+                    paymentType: 'online',
                     orderId: orderCount + i,
                     paid: true,
                   });
@@ -726,7 +726,7 @@ module.exports = {
                   $set: { cart: [] },
                 });
                 req.session.orderSuccess = true;
-                res.redirect("/orderPlaced");
+                res.redirect('/orderPlaced');
               } else if (wallet < totalPrice) {
                 await User.findByIdAndUpdate(userId, {
                   $set: {
@@ -743,7 +743,7 @@ module.exports = {
                     quantity: cartQuantities[product._id],
                     total: cartQuantities[product._id] * product.price,
                     amountToPay: 0,
-                    paymentType: "online",
+                    paymentType: 'online',
                     paid: true,
                   });
                 }
@@ -752,7 +752,7 @@ module.exports = {
                 req.session.totalAmount = totalPrice;
                 req.session.tempOrders = orders;
                 req.session.pass = true;
-                res.redirect("/paymentGateway");
+                res.redirect('/paymentGateway');
               }
 
               //--------- Not Using wallet -----------//
@@ -767,7 +767,7 @@ module.exports = {
                   quantity: cartQuantities[product._id],
                   total: cartQuantities[product._id] * product.price,
                   amountToPay: 0,
-                  paymentType: "online",
+                  paymentType: 'online',
                   paid: true,
                 });
               }
@@ -776,7 +776,7 @@ module.exports = {
               req.session.totalAmount = totalPrice;
               req.session.tempOrders = orders;
               req.session.pass = true;
-              res.redirect("/paymentGateway");
+              res.redirect('/paymentGateway');
             }
           }
         }
@@ -793,14 +793,14 @@ module.exports = {
       const amountToPay = req.session.amountToPay;
       const couponDiscount = req.session.couponDiscount;
       req.session.pass = null;
-      res.render("user/paymentGateway", {
+      res.render('user/paymentGateway', {
         user,
         totalAmount,
         amountToPay,
         couponDiscount,
       });
     } else {
-      res.redirect("/cart/checkout");
+      res.redirect('/cart/checkout');
     }
   },
 
@@ -809,7 +809,7 @@ module.exports = {
     let receiptId = Math.floor(Math.random() * 100000) + Date.now();
     let options = {
       amount: amount, // amount in the smallest currency unit
-      currency: "INR",
+      currency: 'INR',
       receipt: receiptId,
     };
     instance.orders.create(options, function (err, order) {
@@ -821,7 +821,7 @@ module.exports = {
     instance.payments
       .fetch(req.body.razorpay_payment_id)
       .then(async (paymentDocument) => {
-        if (paymentDocument.status == "captured") {
+        if (paymentDocument.status == 'captured') {
           try {
             let orders = req.session.tempOrders;
             let i = 1;
@@ -835,7 +835,7 @@ module.exports = {
             req.session.totalAmount = null;
             req.session.tempOrders = null;
             req.session.orderSuccess = true;
-            res.redirect("orderPlaced");
+            res.redirect('orderPlaced');
           } catch (error) {
             req.session.amountToPay = null;
             req.session.totalAmount = null;
@@ -844,7 +844,7 @@ module.exports = {
           }
         } else {
           req.session.orderSuccess = false;
-          res.redirect("orderPlaced");
+          res.redirect('orderPlaced');
         }
       })
       .catch((err) => {
@@ -857,12 +857,12 @@ module.exports = {
     const user = req.session.user;
     if (req.session.orderSuccess) {
       req.session.orderSuccess = null;
-      res.render("user/orderPlaced", { user });
+      res.render('user/orderPlaced', { user });
     } else if (req.session.orderSuccess == false) {
       req.session.orderSuccess = null;
-      res.render("user/orderFailure", { user });
+      res.render('user/orderFailure', { user });
     } else {
-      res.redirect("/cart");
+      res.redirect('/cart');
     }
   },
   //----------------xx---------------------------//
@@ -875,7 +875,7 @@ module.exports = {
     const userId = req.session.user._id;
     try {
       const user = await User.findById(userId);
-      res.render("user/profile", { user });
+      res.render('user/profile', { user });
     } catch (error) {
       res.send(error);
     }
@@ -888,7 +888,7 @@ module.exports = {
       unlist: false,
       expiryDate: { $gt: new Date() },
     }).lean();
-    res.render("user/coupons", { user, coupons });
+    res.render('user/coupons', { user, coupons });
   },
 
   //edit user profile
@@ -896,7 +896,7 @@ module.exports = {
     const userId = req.params.id;
     try {
       await User.findByIdAndUpdate(userId, req.body);
-      res.redirect("back");
+      res.redirect('back');
     } catch (error) {
       res.send(error);
     }
@@ -922,7 +922,7 @@ module.exports = {
         },
       }
     );
-    res.redirect("back");
+    res.redirect('back');
   },
 
   // edit address
@@ -935,7 +935,7 @@ module.exports = {
         { _id: userId, address: { $elemMatch: { id: addressId } } },
         {
           $set: {
-            "address.$": {
+            'address.$': {
               name,
               mobile,
               address,
@@ -947,7 +947,7 @@ module.exports = {
           },
         }
       );
-      res.redirect("back");
+      res.redirect('back');
     } catch (error) {
       res.send(error);
     }
@@ -968,7 +968,7 @@ module.exports = {
           },
         }
       );
-      res.redirect("back");
+      res.redirect('back');
     } catch (error) {
       res.send(error);
     }
@@ -981,7 +981,7 @@ module.exports = {
     const orders = await Order.find({ userId: userId })
       .sort({ _id: -1 })
       .lean();
-    res.render("user/myOrders", { user, orders });
+    res.render('user/myOrders', { user, orders });
   },
 
   // get order details page
@@ -992,8 +992,7 @@ module.exports = {
 
     const [order] = await Order.find({ userId: userId, _id: orderId });
 
-    console.log(order);
-    res.render("user/orderDetails", { user, order });
+    res.render('user/orderDetails', { user, order });
   },
 
   // cancel order
@@ -1001,26 +1000,23 @@ module.exports = {
     const orderId = req.params.id;
     const userId = req.session.user._id;
     const order = await Order.findById(orderId);
-    let walletInc = (order.total) - (order.amountToPay);
+    let walletInc = order.total - order.amountToPay;
     if (walletInc != 0) {
-      await User.updateOne(
-        { _id: userId },
-        { $inc: { wallet: walletInc } }
-      );
+      await User.updateOne({ _id: userId }, { $inc: { wallet: walletInc } });
     }
-    order.status = "cancelled"
+    order.status = 'cancelled';
     await order.save();
-    res.redirect("back");
+    res.redirect('back');
   },
 
   // return order
   returnOrder: async (req, res) => {
     const orderId = req.params.id;
     const order = await Order.findById(orderId);
-    order.status = "return processing"
+    order.status = 'return processing';
     await order.save();
-    res.redirect("back");
-  }
+    res.redirect('back');
+  },
 
   //----------------xx---------------------------//
 };

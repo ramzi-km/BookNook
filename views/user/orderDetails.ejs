@@ -89,7 +89,8 @@
             <% } else if (order.status=="delivered" ) { %>
             <button class="btn btn-rounded btn-success">
               <%= order.status %>
-            </button>
+            </button><br>
+            <h6>delivery date: <%= order.deliveryDate %></h6>
             <% } else if (order.status=="return processing" ) { %>
             <button class="btn btn-rounded btn-info">
               <%= order.status %>

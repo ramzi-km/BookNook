@@ -1,20 +1,20 @@
-const mongoose = require("mongoose");
-const User = require("../models/userModel.js");
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
+const mongoose = require('mongoose');
+const User = require('../models/userModel.js');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
 const signupVerifyMail = {
-  subject: "BookNook email verification",
+  subject: 'BookNook email verification',
   html: `<p>Enter the above OTP in the website to verify your email address and complete the signup to BookNook </p>
   <p>This code expires in 3 minutes </p>`,
 };
 const loginVerifyMail = {
-  subject: "BookNook login confirmation",
+  subject: 'BookNook login confirmation',
   html: `<p>Enter the above OTP in the website to confirm the login to BookNook.<p>
   <p>This code expires in 3 minutes</p><br><p>If it was not done by you we request to immediately reset your password and secure your account</p>`,
 };
 const resetPasswordVerifyMail = {
-  subject: "BookNook reset password confirmation",
+  subject: 'BookNook reset password confirmation',
   html: `<p>Enter the above OTP in the website to reset the password of your BookNook's account.<p>
   <p>This code expires in 3 minutes</p>`,
 };
@@ -35,7 +35,7 @@ async function sentOtpVerification(tempUser, mail, req) {
     req.session.otpExpiry = Date.now() + 180000;
 
     await transporter.sendMail(mailOptions);
-    console.log("mail sent");
+    console.log('mail sent');
     //next()
   } catch (err) {
     console.log(err);
@@ -43,7 +43,7 @@ async function sentOtpVerification(tempUser, mail, req) {
 }
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: 'smtp.gmail.com',
   port: 465,
   secure: true,
   rejectUnauthorized: false,
@@ -54,6 +54,7 @@ let transporter = nodemailer.createTransport({
 });
 
 let loginError = null;
+let loginOtpError = null;
 let signupError = null;
 let signupOtpError = null;
 let emailInputError = null;
@@ -64,15 +65,15 @@ let rpOtpError = null;
 module.exports = {
   getLogin: (req, res) => {
     if (req.session.userLoggedIn) {
-      res.redirect("/");
+      res.redirect('/');
     } else {
-      res.render("user/login", { user: req.session.user, error: loginError });
+      res.render('user/login', { user: req.session.user, error: loginError });
       loginError = null;
     }
   },
 
   getSignup: (req, res) => {
-    res.render("user/signup", { user: req.session.user, error: signupError });
+    res.render('user/signup', { user: req.session.user, error: signupError });
     signupError = null;
   },
 
@@ -85,11 +86,11 @@ module.exports = {
         signupError = null;
         req.session.tempUser = req.body;
         sentOtpVerification(req.session.tempUser, signupVerifyMail, req);
-        res.redirect("/verification");
+        res.redirect('/verification');
       } else {
         //user already exist
-        signupError = "An account with this email already exist";
-        res.redirect("/signup");
+        signupError = 'An account with this email already exist';
+        res.redirect('/signup');
       }
     } catch (err) {
       console.log(err);
@@ -97,7 +98,7 @@ module.exports = {
   },
 
   getVerification: (req, res) => {
-    res.render("user/verification", {
+    res.render('user/verification', {
       user: req.session.user,
       user2: req.session.tempUser,
       error: signupOtpError,
@@ -107,15 +108,15 @@ module.exports = {
 
   resendSignupOtp: (req, res) => {
     sentOtpVerification(req.session.tempUser, signupVerifyMail, req);
-    res.redirect("/verification");
+    res.redirect('/verification');
   },
 
   verifySignupOtp: async (req, res) => {
     const typedOtp = req.body.typedotp;
 
     if (req.session.otpExpiry < Date.now()) {
-      signupOtpError = "Invalid otp";
-      res.redirect("/verification");
+      signupOtpError = 'Invalid otp';
+      res.redirect('/verification');
     } else {
       if (typedOtp === req.session.otp) {
         //Create new user
@@ -126,79 +127,83 @@ module.exports = {
         req.session.otp = null;
         req.session.otpExpiry = null;
         signupOtpError = null;
-        res.redirect("/login");
+        res.redirect('/login');
       } else {
-        signupOtpError = "Invalid otp";
-        res.redirect("/verification");
+        signupOtpError = 'Invalid otp';
+        res.redirect('/verification');
       }
     }
   },
 
   validateUser: async (req, res) => {
-    let user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
     if (user) {
       bcrypt.compare(req.body.password, user.password).then((result) => {
         if (result && !user.block) {
-          // req.session.validatedUser = user;
-          // req.session.validatedUserLoggedIn = true;
-          // sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
-          req.session.user = user;
-          req.session.userLoggedIn = true;
+          req.session.validatedUser = user;
+          req.session.validatedUserLoggedIn = true;
+          sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
+          res.redirect('/loginVerification');
           loginError = null;
-          res.redirect("/");
         } else {
           if (user.block) {
-            loginError = "User is banned";
+            loginError = 'User is banned';
           } else {
-            loginError = "Invalid email or password";
+            loginError = 'Invalid email or password';
           }
-          res.redirect("/login");
+          res.redirect('/login');
         }
       });
     } else {
-      loginError = "Invalid email or password";
-      res.redirect("/login");
+      loginError = 'Invalid email or password';
+      res.redirect('/login');
     }
   },
 
-  // getloginverification: (req, res) => {
-  //   res.render("user/loginVerification", {
-  //     user: req.session.validatedUser,
-  //     error: loginOtpError,
-  //   });
-  //   loginOtpError = null;
-  // },
+  getloginverification: (req, res) => {
+    if (!req.session.validatedUserLoggedIn) {
+      res.redirect('/login');
+    } else {
+      res.render('user/loginVerification', {
+        user: req.session.validatedUser,
+        error: loginOtpError,
+      });
+      loginOtpError = null;
+    }
+  },
 
-  // resendLoginOtp: (req, res) => {
-  //   sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
-  //   res.redirect("/loginVerification");
-  // },
+  resendLoginOtp: (req, res) => {
+    sentOtpVerification(req.session.validatedUser, loginVerifyMail, req);
+    res.redirect('/loginVerification');
+  },
 
-  // verifyLoginOtp: async (req, res) => {
-  //   let typedOtp = req.body.typedotp;
+  verifyLoginOtp: async (req, res) => {
+    let typedOtp = req.body.typedotp;
 
-  //   if (req.session.otpExpiry < Date.now()) {
-  //     loginOtpError = "Invalid otp";
-  //     res.redirect("/loginVerification");
-  //   } else {
-  //     if (typedOtp === req.session.otp) {
-  //       //store user in session
-  //       req.session.user = req.session.validatedUser;
-  //       req.session.userLoggedIn = true;
+    if (req.session.otpExpiry < Date.now()) {
+      loginOtpError = 'Invalid otp';
+      res.redirect('/loginVerification');
+    } else {
+      if (typedOtp === req.session.otp) {
+        //store user in session
+        req.session.user = req.session.validatedUser;
+        req.session.userLoggedIn = true;
 
-  //       req.session.otp = null;
-  //       req.session.otpExpiry = null;
-  //       loginOtpError = null;
-  //       res.redirect("/");
-  //     } else {
-  //       loginOtpError = "Invalid otp";
-  //       res.redirect("/loginVerification");
-  //     }
-  //   }
-  // },
+        req.session.otp = null;
+        req.session.otpExpiry = null;
+        req.session.validatedUser= null
+        req.session.validatedUserLoggedIn = false;
+        loginOtpError = null;
+        res.redirect('/');
+      } else {
+        loginOtpError = 'Invalid otp';
+        res.redirect('/loginVerification');
+      }
+    }
+  },
 
   getEmailInput: (req, res) => {
-    res.render("user/emailInput", {
+    res.render('user/emailInput', {
       error: emailInputError,
       user: req.session.user,
     });
@@ -209,15 +214,15 @@ module.exports = {
     req.session.rpUser = await User.findOne({ email: req.body.email });
     if (req.session.rpUser) {
       sentOtpVerification(req.session.rpUser, resetPasswordVerifyMail, req);
-      res.redirect("resetPasswordVerification");
+      res.redirect('resetPasswordVerification');
     } else {
-      emailInputError = "an Account with this email doesnt exist";
-      res.redirect("/emailInput");
+      emailInputError = 'an Account with this email doesnt exist';
+      res.redirect('/emailInput');
     }
   },
 
   getPasswordVerification: (req, res) => {
-    res.render("user/passwordVerification", {
+    res.render('user/passwordVerification', {
       error: rpOtpError,
       user2: req.session.rpUser,
       user: req.session.user,
@@ -227,15 +232,15 @@ module.exports = {
 
   resendPasswordOtp: (req, res) => {
     sentOtpVerification(req.session.rpUser, resetPasswordVerifyMail, req);
-    res.redirect("/resetPasswordVerification");
+    res.redirect('/resetPasswordVerification');
   },
 
   verifyPasswordOtp: async (req, res) => {
-    let typedOtp = req.body.typedotp;
+    const typedOtp = req.body.typedotp;
 
     if (req.session.otpExpiry < Date.now()) {
-      rpOtpError = "Invalid otp";
-      res.redirect("/resetPasswordVerification");
+      rpOtpError = 'Invalid otp';
+      res.redirect('/resetPasswordVerification');
     } else {
       if (typedOtp === req.session.otp) {
         //stor user in session
@@ -244,34 +249,34 @@ module.exports = {
         req.session.otp = null;
         req.session.otpExpiry = null;
         rpOtpError = null;
-        res.redirect("/resetPassword");
+        res.redirect('/resetPassword');
       } else {
-        rpOtpError = "Invalid otp";
-        res.redirect("/resetPasswordVerification");
+        rpOtpError = 'Invalid otp';
+        res.redirect('/resetPasswordVerification');
       }
     }
   },
 
   getResetPassword: (req, res) => {
     if (req.session.rpVerified && req.session.rpUser) {
-      res.render("user/resetPassword", { user: req.session.user });
+      res.render('user/resetPassword', { user: req.session.user });
     } else {
-      res.redirect("/emailInput");
+      res.redirect('/emailInput');
     }
   },
 
   postResetPassword: async (req, res) => {
-    let rpUser = await User.findOne({ email: req.session.rpUser.email });
+    const rpUser = await User.findOne({ email: req.session.rpUser.email });
     rpUser.password = await bcrypt.hash(req.body.password, 10);
     await rpUser.save();
     req.session.rpVerified = false;
     req.session.rpUser = null;
-    res.redirect("/login");
+    res.redirect('/login');
   },
 
   logOut: async (req, res) => {
     req.session.user = null;
     req.session.userLoggedIn = false;
-    res.redirect("/");
+    res.redirect('/');
   },
 };

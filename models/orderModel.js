@@ -39,6 +39,9 @@ var orderSchema = new mongoose.Schema({
     orderId: {
         type: Number,
     },
+    deliveryDate:{
+        type:String,
+    },
     lastDate: { 
         type: Number, 
     },

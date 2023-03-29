@@ -182,7 +182,7 @@
         const priceInput = document.querySelector('input[name="price"]');
 
         priceInput.addEventListener('input', () => {
-            if (priceInput.value > mrpInput.value) {
+            if (Number(priceInput.value) > Number(mrpInput.value)) {
                 priceInput.setCustomValidity('Price cannot be greater than MRP');
             } else {
                 priceInput.setCustomValidity('');

@@ -10,7 +10,7 @@ module.exports = {
     loginError = null;
   },
   validateAdmin: async (req, res) => {
-    let admin = await Admin.findOne({ email: req.body.email });
+    const admin = await Admin.findOne({ email: req.body.email });
 
     if (admin) {
       bcrypt.compare(req.body.password, admin.password).then((result) => {

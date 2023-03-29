@@ -46,15 +46,15 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label class="text-white">Name</label>
-                                        <input type="text" id="name" class="form-control" name="name" value="<%= product.name %>"
-                                            placeholder="Book title" required>
-                                            <label id="nameError" class="text-danger"></label>
+                                        <input type="text" id="name" class="form-control" name="name"
+                                            value="<%= product.name %>" placeholder="Book title" required>
+                                        <label id="nameError" class="text-danger"></label>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label class="text-white for=" Author">Author</label>
                                         <input type="text" id="author" name="author" value="<%= product.author %>"
                                             class="form-control" placeholder="Name of the Author" required>
-                                            <label id="authorError" class="text-danger"></label>
+                                        <label id="authorError" class="text-danger"></label>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -84,15 +84,16 @@
 
                                     <div class="form-group col-md-4">
                                         <label class="text-white">MRP</label>
-                                        <input type="number" class="form-control" name="mrp" min="1" value="<%= product.mrp %>"
-                                            placeholder="Maximum retailing price" required>
+                                        <input type="number" id="mrp" class="form-control" name="mrp" min="1"
+                                            value="<%= product.mrp %>" placeholder="Maximum retailing price" required>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label class="text-white">Price</label>
-                                        <input type="number" class="form-control" min="1" name="price"
+                                        <input type="number" id="price" class="form-control" min="1" name="price"
                                             value="<%= product.price %>" placeholder="BookNook retailing price"
                                             required>
+                                            <label id="priceError" class="text-danger"></label>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -216,27 +217,19 @@
 
         const form = document.getElementById('form');
 
-        const mrpInput = document.querySelector('input[name="mrp"]');
-        const priceInput = document.querySelector('input[name="price"]');
-
-        priceInput.addEventListener('input', () => {
-            if (priceInput.value > mrpInput.value) {
-                priceInput.setCustomValidity('Price cannot be greater than MRP');
-            } else {
-                priceInput.setCustomValidity('');
-            }
-        });
-
         form.addEventListener('submit', (event) => {
             event.preventDefault();
 
             const nameInput = document.getElementById('name')
             const authorInput = document.getElementById('author')
             const descriptionInput = document.getElementById('description')
+            const mrpInput = document.getElementById('mrp');
+            const priceInput = document.getElementById('price');
 
             const nameError = document.getElementById('nameError')
             const authorError = document.getElementById('authorError')
             const descriptionError = document.getElementById('descriptionError')
+            const priceError = document.getElementById('priceError')
 
 
             let isValid = true;
@@ -261,6 +254,19 @@
                 authorError.textContent = '';
             }
 
+             // Validate Price field
+             if (Number(priceInput.value)>Number(mrpInput.value)) {
+                console.log(priceInput.value);
+                priceInput.classList.add('is-invalid');
+                priceError.textContent = 'Price cannot be greater than MRP';
+                isValid = false;
+            } else {
+                console.log(priceInput.value+'not');
+                console.log(mrpInput.value+'t');
+                priceInput.classList.remove('is-invalid');
+                priceError.textContent = '';   
+            }
+
             // Validate Description field
             if (descriptionInput.value.trim().length < 20) {
                 descriptionInput.classList.add('is-invalid');
@@ -270,7 +276,9 @@
                 descriptionInput.classList.remove('is-invalid');
                 descriptionError.textContent = '';
             }
-            console.log(isValid);
+
+           
+
             if (isValid) {
                 form.submit();
             }

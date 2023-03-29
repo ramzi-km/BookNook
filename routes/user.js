@@ -195,12 +195,12 @@ router.post("/verifySignupOtp", verifySignupOtp);
 //get resendotp
 router.get("/resendSignupOtp", resendSignupOtp);
 
-// //get loginverification page
-// router.get("/loginVerification", verifyLoggedOut, getloginverification);
-// //get resendLoginOtp
-// router.get("/resendLoginOtp", verifyLoggedOut, resendLoginOtp);
-// //post loginverification page
-// router.post("/verifyLoginOtp", verifyLoggedOut, verifyLoginOtp);
+//get loginverification page
+router.get("/loginVerification", verifyLoggedOut, getloginverification);
+//get resendLoginOtp
+router.get("/resendLoginOtp", verifyLoggedOut, resendLoginOtp);
+//post loginverification page
+router.post("/verifyLoginOtp", verifyLoggedOut, verifyLoginOtp);
 
 // get reset password email input page
 router.get("/emailInput", getEmailInput);

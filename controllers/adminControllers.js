@@ -481,7 +481,13 @@ module.exports = {
       req.session.editingCoupon = coupon;
       let todaysDate = formattedDate(new Date());
       let expiryDate = formattedDate(coupon.expiryDate);
-      res.render('admin/editCoupon', { admin, coupon, expiryDate, todaysDate,error:editCouponError });
+      res.render('admin/editCoupon', {
+        admin,
+        coupon,
+        expiryDate,
+        todaysDate,
+        error: editCouponError,
+      });
     } catch (err) {
       console.log(err);
       res.redirect('/admin/couponM');
@@ -489,12 +495,15 @@ module.exports = {
   },
   // post edit coupon page
   editCoupon: async (req, res) => {
-    let sameCoupon =false;
+    let sameCoupon = false;
     let couponId = req.params.id;
     let couponExist = await Coupon.findOne({
       $or: [{ name: req.body.name }, { code: req.body.code }],
     });
-    if (req.session.editingCoupon.name == req.body.name && req.session.editingCoupon.code == req.body.code){
+    if (
+      req.session.editingCoupon.name == req.body.name &&
+      req.session.editingCoupon.code == req.body.code
+    ) {
       sameCoupon = true;
     }
     if (couponExist && !sameCoupon) {
@@ -554,6 +563,7 @@ module.exports = {
       const order = await Order.findById(objectId);
       if (status == 'delivered') {
         order.paid = true;
+        order.deliveryDate = formattedDate(new Date());
         order.lastDate = Date.now() + 259200000;
         order.amountToPay = 0;
       }
