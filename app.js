@@ -26,8 +26,8 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 //middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit: "10mb", extended: true}));
+app.use(express.urlencoded({limit: "10mb",extended: true ,parameterLimit: 50000}));
 app.use(express.static(path.join(__dirname, "public")));
 const threeDay = 1000 * 60 * 60 * 72;
 app.use(
@@ -52,12 +52,6 @@ app.listen(PORT, () => {
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
-app.get("/upload", async (req, res)=>{
-
-  const imageFile=await cloudinary.uploader.upload('public/images/library.jpg',{folder:'booknook'})
-  res.json(imageFile)
-
-})
 
 //render 404 page
 app.use((req, res) => {

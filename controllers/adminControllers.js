@@ -242,7 +242,7 @@ module.exports = {
       } else if (err) {
         // an unknown error occured while uploading
         imageFileError =
-          'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files'+err;
+          'error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files';
         res.redirect('/admin/productM/addProduct');
         return;
       }
