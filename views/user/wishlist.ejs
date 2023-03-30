@@ -8,7 +8,7 @@
                 <% if(!products[0]){ %>
                     <div class="empty-container w-100 h-50 d-flex flex-column justify-content-center align-items-center"
                         style="gap:10px">
-                        <img src="/images/wishlistEmpty.webp"
+                        <img src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153467/booknook/wishlistEmpty_yne9ex.webp"
                             height="250px" alt="">
                         <h3>Your wishlist is empty!</h3>
                     </div>
@@ -46,7 +46,7 @@
                                                     class="fa-solid fa-trash"></i></a>
                                         </div>
                                     </div>
-                                    <img src="/images/productImages/<%= product.mainImage[0].filename %>" alt="image"
+                                    <img src="<%= product.mainImage[0].secure_url %>" alt="image"
                                         height="170px" width="130px" class="ml-lg-5 order-1 order-lg-2 mb-2 mb-lg-0"
                                         onclick="window.location.href='/productDetails/<%= product._id %>'">
 

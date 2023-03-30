@@ -61,7 +61,7 @@
 					<% bestProducts.forEach(product=> { %>
 						<swiper-slide>
 							<div class="banner"
-								style="background-image: url('/images/productImages/<%= product.cover[0].filename %>');">
+								style="background-image: url('<%= product.cover[0].secure_url %>');">
 								<h3 class="text-warning">BEST SELLER</h3>
 								<h1 class="text-white my-3" style="width: 80%; text-align: start;">
 									<%= product.name %>
@@ -122,7 +122,7 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Philosophy&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="/images/philosophy.png"
+								<img class="img-fluid w-100" src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153477/booknook/philosophy_pebrlm.png"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Philosophy&price=&sort=0">
 									<div class="deal-details">
@@ -135,7 +135,7 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Personal+development&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="/images/personal.webp"
+								<img class="img-fluid w-100" src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153472/booknook/personal_vf0s1t.webp"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Personal+development&price=&sort=0">
 									<div class="deal-details">
@@ -148,7 +148,7 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Manga&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid" src="/images/manga.jpg"
+								<img class="img-fluid" src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153470/booknook/manga_q6ykwo.jpg"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Manga&price=&sort=0">
 									<div class=" deal-details">
@@ -161,7 +161,7 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Romance&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid " src="/images/romance.jpg"
+								<img class="img-fluid " src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153465/booknook/romance_nnwyua.jpg"
 									style="width:100%; height: 12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Romance&price=&sort=0">
 									<div class="deal-details">
@@ -248,7 +248,7 @@
 							<div class="col-lg-3 col-md-6">
 								<div class="single-product">
 									<a href="/productDetails/<%= product._id %>"><img class="img-fluid"
-											src="/images/productImages/<%= product.mainImage[0].filename %>" alt=""
+											src="<%= product.mainImage[0].secure_url %>" alt=""
 											style="max-width: 234px;  max-height: 274px;"></a>
 									<div class="product-details">
 										<h6
@@ -320,7 +320,7 @@
 								<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
 									<div class="single-related-product d-flex">
 										<a href="/productDetails/<%= offerProducts[i]._id %>"><img width="50px;"
-												src="images/productImages/<%= offerProducts[i].mainImage[0].filename %>"
+												src="<%= offerProducts[i].mainImage[0].secure_url %>"
 												alt=""></a>
 										<div class="desc">
 											<a href="/productDetails/<%= offerProducts[i]._id %>" class="title"> <%=

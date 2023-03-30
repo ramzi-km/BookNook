@@ -52,6 +52,13 @@ app.listen(PORT, () => {
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
+app.get("/upload", async (req, res)=>{
+
+  const imageFile=await cloudinary.uploader.upload('public/images/library.jpg',{folder:'booknook'})
+  res.json(imageFile)
+
+})
+
 //render 404 page
 app.use((req, res) => {
   res.status(404).render("404");

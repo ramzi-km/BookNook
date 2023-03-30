@@ -9,11 +9,11 @@
           <!-- Primary carousel image -->
           <div
             class="shows"
-            href="/images/productImages/<%= product.mainImage[0].filename %>"
+            href="<%= product.mainImage[0].secure_url %>"
             style="height: 540px; width: 350px"
           >
             <img
-              src="/images/productImages/<%= product.mainImage[0].filename %>"
+              src="<%= product.mainImage[0].secure_url %>"
               id="show-img"
               style="max-height: 80%"
               alt=""
@@ -32,13 +32,13 @@
             <div class="small-container">
               <div id="small-img-roll">
                 <img
-                  src="/images/productImages/<%= product.mainImage[0].filename %>"
+                  src="<%= product.mainImage[0].secure_url %>"
                   class="show-small-img"
                   alt=""
                 />
                 <% product.extraImages.forEach(image=> { %>
                 <img
-                  src="/images/productImages/<%= image.filename %>"
+                  src="<%= image.secure_url %>"
                   class="show-small-img"
                   alt=""
                 />
@@ -60,7 +60,7 @@
           <div class="single-prd-item d-flex justify-content-center">
             <img
               class="img-fluid"
-              src="/images/productImages/<%= product.mainImage[0].filename %>"
+              src="<%= product.mainImage[0].secure_url %>"
               alt=""
               style="height: 350px; width: 260px"
             />
@@ -69,7 +69,7 @@
           <div class="single-prd-item d-flex justify-content-center">
             <img
               class="img-fluid"
-              src="/images/productImages/<%= image.filename %>"
+              src="<%= image.secure_url %>"
               alt=""
               style="height: 350px; width: 260px"
             />

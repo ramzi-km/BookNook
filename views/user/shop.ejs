@@ -128,7 +128,7 @@
                         <% if(!products[0]){ %>
                             <div class="empty-container w-100 h-50 d-flex flex-column  justify-content-center align-items-center mb-5 mt-5 "
                                 style="gap:20px">
-                                <img src="/images/shopEmpty.png"
+                                <img src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153467/booknook/shopEmpty_ctvhxw.png"
                                     height="300px" alt="">
                                 <h3>Your search did not match any products!</h3>
                                 <p> Please try again </p>
@@ -139,7 +139,7 @@
                                     <div class="col-lg-4 col-6 col-md-4">
                                         <div class="single-product">
                                             <a href="/productDetails/<%= product._id %>"><img class="img-fluid"
-                                                    src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                                    src="<%= product.mainImage[0].secure_url %>"
                                                     alt="" style="width: 234px;  height: 264px;"></a>
                                             <div class="product-details">
                                                 <h6

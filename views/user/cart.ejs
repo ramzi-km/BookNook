@@ -33,7 +33,7 @@
         style="gap: 10px"
       >
         <img
-          src="/images/cartEmpty.webp"
+          src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153468/booknook/cartEmpty_xlizwo.webp"
           height="300px"
           alt=""
         />
@@ -66,7 +66,7 @@
                 <td class="product__cart__item" style="vertical-align: middle">
                   <div class="product__cart__item__pic">
                     <img
-                      src="/images/productImages/<%= product.mainImage[0].filename %>"
+                      src="<%= product.mainImage[0].secure_url %>"
                       width="75px"
                       alt=""
                       onclick="window.location.href='/productDetails/<%= product._id %>'"

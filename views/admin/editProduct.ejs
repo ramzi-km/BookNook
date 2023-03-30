@@ -123,7 +123,7 @@
 
                                         <div class="form-outline">
                                             <img style="width: 150px; height: 200px;"
-                                                src="/images/productImages/<%= product.mainImage[0].filename %>"
+                                                src="<%= product.mainImage[0].secure_url %>"
                                                 id="mainImageDisplay" alt="">
                                         </div>
                                     </div>
@@ -131,7 +131,7 @@
 
                                         <div class="form-outline">
                                             <img style="width: 300px; height: 200px;"
-                                                src="/images/productImages/<%= product.coverImage[0].filename %>"
+                                                src="<%= product.coverImage[0].secure_url %>"
                                                 id="coverImageDisplay" alt="">
                                         </div>
                                     </div>
@@ -143,9 +143,9 @@
                                             <% product.extraImages.forEach((image,index)=> { %>
                                                 <div style="position: relative; width: 120px; height: 200px; ">
                                                     <img style="width: 120px; height: 200px;"
-                                                        src="/images/productImages/<%= image.filename %>" alt="">
+                                                        src="<%= image.secure_url %>" alt="">
                                                     <a id="extraImageDelete"
-                                                        href="/admin/productM/editProduct/deleteExtraImage/<%= product._id %>/<%= image.filename %>"
+                                                        href="/admin/productM/editProduct/deleteExtraImage/<%= product._id %>/<%= image.original_filename %>"
                                                         onclick="return confirm('Do you really want to Delete this image')">
                                                         <button type="button" class="btn btn-circle btn-danger"
                                                             style="position: absolute; top: 0; right: 0; "><span

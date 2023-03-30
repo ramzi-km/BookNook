@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const multer = require('multer');
 const moment = require('moment');
+const cloudinary= require("../config/cloudinary")
 //------------------------------ Models-----------------------------//
 
 const User = require('../models/userModel.js');
@@ -19,11 +20,26 @@ const { uploadImages } = require('../middlewares/multer.js');
 
 //-------------------------helpers-------------------------------//
 
-function getImageFieldsToUpdate(files) {
+async function getImageFieldsToUpdate(files) {
   const fields = {};
-  if (files.mainImage) fields.mainImage = files.mainImage;
-  if (files.coverImage) fields.coverImage = files.coverImage;
-  if (files.extraImages) fields.extraImages = files.extraImages;
+  if (files.mainImage){
+    let mainImage=files.mainImage[0]
+    const imageFile= await cloudinary.uploader.upload(mainImage.path,{folder:'booknook'})
+    fields.mainImage = imageFile;
+  }
+  if (files.coverImage){
+    let coverImage=files.coverImage[0]
+    const imageFile2= await cloudinary.uploader.upload(coverImage.path,{folder:'booknook'})
+    fields.coverImage = imageFile2;
+  }
+  if (files.extraImages){
+    let extraImages = files.extraImages
+    for(i in extraImages) {
+     const imageFile3 = await cloudinary.uploader.upload(extraImages[i].path,{folder:'booknook'})
+     extraImages[i] = imageFile3
+    }
+    fields.extraImages = extraImages;
+  }
   return fields;
 }
 
@@ -208,6 +224,15 @@ module.exports = {
         res.redirect('back');
       } else {
         try {
+          let mainImage=req.files.mainImage[0],coverImage=req.files.coverImage[0] ,extraImages=req.files.extraImages
+          const imageFile= await cloudinary.uploader.upload(mainImage.path,{folder:'booknook'})
+          const imageFile2= await cloudinary.uploader.upload(coverImage.path,{folder:'booknook'})
+          mainImage = imageFile
+          coverImage = imageFile2
+          for(i in extraImages) {
+           const imageFile3 = await cloudinary.uploader.upload(extraImages[i].path,{folder:'booknook'})
+           extraImages[i] = imageFile3
+          }
           const fields = {
             name: req.body.name,
             author: req.body.author,
@@ -217,9 +242,9 @@ module.exports = {
             inStock: req.body.inStock,
             description: req.body.description,
             richDescription: req.body.richDescription,
-            mainImage: req.files.mainImage,
-            coverImage: req.files.coverImage,
-            extraImages: req.files.extraImages,
+            mainImage: mainImage,
+            coverImage: coverImage,
+            extraImages: extraImages,
           };
           const newProduct = new Product(fields);
           await newProduct.save();
@@ -304,7 +329,7 @@ module.exports = {
           };
           await Product.updateOne({ _id: productId }, fieldsToUpdate);
 
-          const imageFieldsToUpdate = getImageFieldsToUpdate(req.files);
+          const imageFieldsToUpdate = await getImageFieldsToUpdate(req.files);
           if (Object.keys(imageFieldsToUpdate).length > 0) {
             await Product.updateOne({ _id: productId }, imageFieldsToUpdate);
           }
@@ -323,9 +348,8 @@ module.exports = {
     let imageName = req.params.imageName;
     let prodId = req.params.prodId;
     await Product.findByIdAndUpdate(prodId, {
-      $pull: { extraImages: { filename: imageName } },
+      $pull: { extraImages: { original_filename: imageName } },
     });
-    console.log(prodId);
     res.redirect('back');
   },
 
