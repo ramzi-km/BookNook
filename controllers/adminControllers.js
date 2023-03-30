@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const multer = require('multer');
 const moment = require('moment');
-const cloudinary= require("../config/cloudinary")
+const cloudinary = require('../config/cloudinary');
 //------------------------------ Models-----------------------------//
 
 const User = require('../models/userModel.js');
@@ -22,21 +22,27 @@ const { uploadImages } = require('../middlewares/multer.js');
 
 async function getImageFieldsToUpdate(files) {
   const fields = {};
-  if (files.mainImage){
-    let mainImage=files.mainImage[0]
-    const imageFile= await cloudinary.uploader.upload(mainImage.path,{folder:'booknook'})
+  if (files.mainImage) {
+    let mainImage = files.mainImage[0];
+    const imageFile = await cloudinary.uploader.upload(mainImage.path, {
+      folder: 'booknook',
+    });
     fields.mainImage = imageFile;
   }
-  if (files.coverImage){
-    let coverImage=files.coverImage[0]
-    const imageFile2= await cloudinary.uploader.upload(coverImage.path,{folder:'booknook'})
+  if (files.coverImage) {
+    let coverImage = files.coverImage[0];
+    const imageFile2 = await cloudinary.uploader.upload(coverImage.path, {
+      folder: 'booknook',
+    });
     fields.coverImage = imageFile2;
   }
-  if (files.extraImages){
-    let extraImages = files.extraImages
-    for(i in extraImages) {
-     const imageFile3 = await cloudinary.uploader.upload(extraImages[i].path,{folder:'booknook'})
-     extraImages[i] = imageFile3
+  if (files.extraImages) {
+    let extraImages = files.extraImages;
+    for (i in extraImages) {
+      const imageFile3 = await cloudinary.uploader.upload(extraImages[i].path, {
+        folder: 'booknook',
+      });
+      extraImages[i] = imageFile3;
     }
     fields.extraImages = extraImages;
   }
@@ -80,8 +86,18 @@ module.exports = {
     try {
       const admin = req.session.admin;
       const totalUsers = await User.find().lean().count();
+      const totalProducts = await Product.find().lean().count();
       const orders = await Order.find().lean();
       const totalOrders = orders.length;
+      const categoryDataArray = await Order.aggregate([
+        { $match: { paid: true } },
+        {
+          $group: {
+            _id: '$product.category',
+            revenue: { $sum: '$total' },
+          },
+        },
+      ]);
       const monthlyDataArray = await Order.aggregate([
         { $match: { paid: true } },
         {
@@ -94,6 +110,7 @@ module.exports = {
       let totalRevenue = 0;
       let totalPending = 0;
       let onlineOrders = 0;
+      let cod = 0;
       let deliveredOrders = orders.filter((order) => {
         if (order.status == 'pending' || order.status == 'shipped') {
           totalPending++;
@@ -101,21 +118,35 @@ module.exports = {
         if (order.paymentType == 'online') {
           onlineOrders++;
         }
+        if (order.paymentType == 'cod') {
+          cod++;
+        }
         if (order.paid) {
           totalRevenue = totalRevenue + order.total;
         }
         return order.status == 'delivered';
       });
       let totalDispatch = deliveredOrders.length;
-
       let monthlyDataObject = {};
+      let categoryDataObject = {};
       monthlyDataArray.map((item) => {
         monthlyDataObject[item._id] = item.revenue;
       });
+      categoryDataArray.map((item) => {
+        categoryDataObject[item._id] = item.revenue;
+      });
+      const paymentData = [onlineOrders, cod];
       let monthlyData = [];
+      let categoryData = [];
+      let categoryName = [];
       for (let i = 1; i <= 12; i++) {
         monthlyData[i - 1] = monthlyDataObject[i] ?? 0;
       }
+
+      Object.entries(categoryDataObject).forEach(([key, value], index) => {
+        categoryData[index] = value;
+        categoryName[index] = key;
+      });
 
       formattedRevenue = formatCash(totalRevenue);
 
@@ -126,9 +157,13 @@ module.exports = {
         totalPending,
         totalDispatch,
         onlineOrders,
+        totalProducts,
         totalRevenue,
         formattedRevenue,
         monthlyData,
+        categoryData,
+        categoryName,
+        paymentData,
       });
     } catch (error) {
       console.log(error);
@@ -224,14 +259,23 @@ module.exports = {
         res.redirect('back');
       } else {
         try {
-          let mainImage=req.files.mainImage[0],coverImage=req.files.coverImage[0] ,extraImages=req.files.extraImages
-          const imageFile= await cloudinary.uploader.upload(mainImage.path,{folder:'booknook'})
-          const imageFile2= await cloudinary.uploader.upload(coverImage.path,{folder:'booknook'})
-          mainImage = imageFile
-          coverImage = imageFile2
-          for(i in extraImages) {
-           const imageFile3 = await cloudinary.uploader.upload(extraImages[i].path,{folder:'booknook'})
-           extraImages[i] = imageFile3
+          let mainImage = req.files.mainImage[0],
+            coverImage = req.files.coverImage[0],
+            extraImages = req.files.extraImages;
+          const imageFile = await cloudinary.uploader.upload(mainImage.path, {
+            folder: 'booknook',
+          });
+          const imageFile2 = await cloudinary.uploader.upload(coverImage.path, {
+            folder: 'booknook',
+          });
+          mainImage = imageFile;
+          coverImage = imageFile2;
+          for (i in extraImages) {
+            const imageFile3 = await cloudinary.uploader.upload(
+              extraImages[i].path,
+              { folder: 'booknook' }
+            );
+            extraImages[i] = imageFile3;
           }
           const fields = {
             name: req.body.name,
@@ -355,6 +399,7 @@ module.exports = {
 
   // unlist product
   unListProduct: async (req, res) => {
+    ``;
     try {
       let productId = req.params.id;
       let product = await Product.findById(productId);

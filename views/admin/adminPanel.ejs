@@ -39,7 +39,7 @@
           <div class="card-body">
             <div class="d-md-flex align-items-center">
               <div>
-                <h4 class="card-title">Sale Analysis</h4>
+                <h3 class="card-title">Sale analysis</h3>
                 <h5 class="card-subtitle">Overview of This Year</h5>
               </div>
             </div>
@@ -83,9 +83,11 @@
                   </div>
                   <div class="col-6 mt-3">
                     <div class="bg-dark p-10 text-white text-center">
-                      <i class="mdi mdi-web fs-3 mb-1 font-16"></i>
-                      <h5 class="mb-0 mt-1"><%= onlineOrders %></h5>
-                      <small class="font-light">Online Payments</small>
+                      <i
+                        class="mdi mdi-book-open-page-variant fs-3 mb-1 font-16"
+                      ></i>
+                      <h5 class="mb-0 mt-1"><%= totalProducts %></h5>
+                      <small class="font-light">Total Products</small>
                     </div>
                   </div>
                   <div class="col-6 mt-3">
@@ -98,6 +100,21 @@
                 </div>
               </div>
               <!-- column -->
+              <div class="row mt-3">
+                <div class="col-lg-6">
+                  <h3 class="card-title">Sale analysis</h3>
+                  <h5 class="card-subtitle">Category wise sales</h5>
+                  <div class="chart-container">
+                    <div id="chart2"></div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <h3 class="card-title">Payment analysis</h3>
+                  <div class="chart-container">
+                    <div id="chart3"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -122,7 +139,13 @@
   <!-- ============================================================== -->
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script>
+    var paymentData = '<%= JSON.stringify(paymentData) %>';
     var monthlyData = '<%= JSON.stringify(monthlyData)%>';
+    var categoryData = '<%= JSON.stringify(categoryData)%>';
+    var categoryName = `<%=categoryName%>`.split(",")
+
+     //--------------- chart 1 ------------//
+    
     var options = {
       series: [
         {
@@ -172,8 +195,52 @@
       },
     };
 
-    var chart = new ApexCharts(document.querySelector('#chart'), options);
-    chart.render();
+    var chart1 = new ApexCharts(document.querySelector('#chart'), options);
+    chart1.render();
+
+     //--------------- chart 2 ------------//
+
+    var options2 = {
+      chart: {
+        type: 'donut',
+      },
+      series: JSON.parse(categoryData),
+      labels:  categoryName,
+      plotOptions: {
+        pie: {
+          customScale: 0.8,
+        },
+      },
+
+     
+    };
+
+    var chart2 = new ApexCharts(document.querySelector('#chart2'), options2);
+    chart2.render();
+
+     //--------------- chart 3 ------------//
+
+     var options3 = {
+      chart: {
+        type: 'pie',
+      },
+      series: JSON.parse(paymentData),
+      labels:  ['Online payment','Cash on delivery'],
+      plotOptions: {
+        pie: {
+          customScale: 0.7,
+        },
+      },
+
+   
+      theme: {
+        palette: 'palette3',
+      },
+    };
+
+    var chart3 = new ApexCharts(document.querySelector('#chart3'), options3);
+    chart3.render();
+
   </script>
 
   <%- include('./partials/adminFooter.ejs') %>
