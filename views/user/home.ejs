@@ -2,6 +2,25 @@
 
 	<head>
 		<style>
+			@media (max-width: 991px) {
+				.swiper-main {
+				font-size: 14px !important;
+				height: 45vh !important;
+			}
+
+			swiper-container {
+				width: 100% !important;
+				height: 100% !important;
+			}
+			swiper-slide {
+				font-size: 14px !important;
+			}
+			.banner {
+				padding-left: 40px !important;
+
+			}
+
+			}
 			.swiper-main {
 				background: #eee;
 				font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
@@ -55,7 +74,7 @@
 
 	<div class="container-fluid" style="margin-top: -30px">
 		<div class="swiper-main">
-			<swiper-container class="mySwiper" pagination="true" pagination-clickable="true" navigation="true"
+			<swiper-container class="mySwiper" pagination="true" navigation="true"
 				space-between="30" centered-slides="true" autoplay-delay="5000" autoplay-disable-on-interaction="false">
 				<% if (bestProducts[0]) { %>
 					<% bestProducts.forEach(product=> { %>
@@ -63,7 +82,7 @@
 							<div class="banner"
 								style="background-image: url('<%= product.cover[0].secure_url %>');">
 								<h3 class="text-warning">BEST SELLER</h3>
-								<h1 class="text-white my-3" style="width: 80%; text-align: start;">
+								<h1 class="text-white my-3" style="max-width: 80%; text-align: start;">
 									<%= product.name %>
 								</h1>
 								<div class="d-flex">
@@ -78,7 +97,7 @@
 										</b>
 									</span>
 								</div><br>
-								<div class="d-flex" style="width: 30%; text-align: start;">
+								<div class="d-flex" style="max-width: 30%; text-align: start;">
 									<span style="color: #999999;">
 										<%= product.description %>
 									</span>
@@ -354,6 +373,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
 	<script>
 		const swiper = new Swiper()
+
 	</script>
 
 	<%- include('./partials/footer.ejs') %>

@@ -826,7 +826,10 @@ module.exports = {
             let orders = req.session.tempOrders;
             let i = 1;
             let orderCount = await Order.find().count();
-
+            orders.forEach((order) => {
+              order.orderId = orderCount + i;
+              i++;
+            });
             await Order.create(orders);
             await User.findByIdAndUpdate(req.session.user._id, {
               $set: { cart: [] },
