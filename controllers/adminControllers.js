@@ -241,8 +241,7 @@ module.exports = {
         return;
       } else if (err) {
         // an unknown error occured while uploading
-        imageFileError =
-          `error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files`;
+        imageFileError = `error occured when uplaoding images,make sure you only chose 3 images on the side images input and all the chosen files are image files`;
         res.redirect('/admin/productM/addProduct');
         return;
       }
@@ -259,9 +258,9 @@ module.exports = {
         res.redirect('back');
       } else {
         try {
-          let mainImage = req.files.mainImage[0],
-            coverImage = req.files.coverImage[0],
-            extraImages = req.files.extraImages;
+          let mainImage = req.files.mainImage[0];
+          let coverImage = req.files.coverImage[0];
+          let extraImages = req.files.extraImages;
           const imageFile = await cloudinary.uploader.upload(mainImage.path, {
             folder: 'booknook',
           });
@@ -271,7 +270,7 @@ module.exports = {
           mainImage = imageFile;
           coverImage = imageFile2;
           for (i in extraImages) {
-            const imageFile3 = await cloudinary.uploader.upload(
+            let imageFile3 = await cloudinary.uploader.upload(
               extraImages[i].path,
               { folder: 'booknook' }
             );
