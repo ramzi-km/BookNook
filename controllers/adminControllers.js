@@ -39,7 +39,7 @@ async function getImageFieldsToUpdate(files) {
   if (files.extraImages) {
     let extraImages = files.extraImages;
     for (i in extraImages) {
-      const imageFile3 = await cloudinary.uploader.upload(extraImages[i].path, {
+      let imageFile3 = await cloudinary.uploader.upload(extraImages[i].path, {
         folder: 'booknook',
       });
       extraImages[i] = imageFile3;
