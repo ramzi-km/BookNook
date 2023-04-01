@@ -191,7 +191,7 @@
   //---------list product alert-----------//
   function listAlert(id,name){
    Swal.fire({
-         text: `Do you want to list the product '${name}'?`,
+         text: `Do you want to list the product '${name}' ?`,
          icon: 'warning',
          showCancelButton: true,
          confirmButtonColor: '#28a745',
@@ -207,12 +207,12 @@
   //---------unlist product alert-----------//
  function unlistAlert(id,name){
    Swal.fire({
-         text: `Do you really want to unlist the product '${name}'?`,
+         text: `Do you really want to unlist the product '${name}' ?`,
          icon: 'warning',
          showCancelButton: true,
          confirmButtonColor: '#d33',
          cancelButtonColor: '#6c757d',
-         confirmButtonText: 'Unlist',
+         confirmButtonText: 'Unlist !',
          cancelButtonText: 'Cancel',
        }).then((result) => {
          if (result.isConfirmed) {

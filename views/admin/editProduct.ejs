@@ -145,8 +145,8 @@
                                                     <img style="width: 120px; height: 200px;"
                                                         src="<%= image.secure_url %>" alt="">
                                                     <a id="extraImageDelete"
-                                                        href="/admin/productM/editProduct/deleteExtraImage/<%= product._id %>/<%= image.original_filename %>"
-                                                        onclick="return confirm('Do you really want to Delete this image')">
+                                                        href="#"
+                                                        onclick="deleteAlert('<%=product._id %>','<%= image.original_filename %>')"
                                                         <button type="button" class="btn btn-circle btn-danger"
                                                             style="position: absolute; top: 0; right: 0; "><span
                                                                 class="mdi mdi-delete"></span></button>
@@ -283,6 +283,23 @@
                 form.submit();
             }
         });
+
+          //---------delete image alert alert-----------//
+ function deleteAlert(id,fileName){
+   Swal.fire({
+         text: `Do you really want to Delete this image ?`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Yes!',
+         cancelButtonText: 'No',
+       }).then((result) => {
+         if (result.isConfirmed) {
+           window.location.href = `/admin/productM/editProduct/deleteExtraImage/${id}/${fileName}`
+         }
+       });
+ }
 
     </script>
 

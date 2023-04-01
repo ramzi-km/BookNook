@@ -79,18 +79,18 @@
 
                         <% if (category.unList) { %>
                         <a
-                          href="/admin/categoryM/list/<%= category._id %> "
+                          href="#"
                           class="btn btn-light btn-outline-success"
-                          onclick="return confirm('Do you want to List <%= category.name %> ?')"
+                          onclick="listAlert('<%=category._id %>','<%= category.name %>')"
                         >
                           List</a
                         >
                         <% } else { %>
                         <a
-                          href="/admin/categoryM/unList/<%= category._id %> "
+                          href="#"
                           class="btn btn-light btn-outline-danger"
-                          onclick="return confirm('Do you really want to Unlist <%= category.name %> ?')"
-                        >
+                          onclick="unlistAlert('<%=category._id %>','<%= category.name %>')"
+                          >
                           Unlist</a
                         >
                         <% } %>
@@ -123,5 +123,41 @@
 <!-- ============================================================== -->
 <!-- footer -->
 <!-- ============================================================== -->
+<script>
+  //---------list category alert-----------//
+  function listAlert(id,name){
+   Swal.fire({
+         text: `Do you want to list the category '${name}' ?`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#28a745',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'List',
+         cancelButtonText: 'Cancel',
+       }).then((result) => {
+         if (result.isConfirmed) {
+           window.location.href = '/admin/categoryM/list/'+id
+         }
+       });
+ }
+  //---------unlist category alert-----------//
+ function unlistAlert(id,name){
+   Swal.fire({
+         text: `Do you really want to unlist the category '${name}' ?`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Unlist !',
+         cancelButtonText: 'Cancel',
+       }).then((result) => {
+         if (result.isConfirmed) {
+           window.location.href = '/admin/categoryM/unList/'+id
+         }
+       });
+ }
+</script>
+
+
 
 <%- include('./partials/adminFooter.ejs') %>
