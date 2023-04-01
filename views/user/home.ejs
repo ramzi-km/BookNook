@@ -91,13 +91,13 @@
 	<div class="container-fluid" style="margin-top: -30px">
 		<div class="swiper-main">
 			<swiper-container class="mySwiper" pagination="true" navigation="true" space-between="30"
-				centered-slides="true" autoplay-delay="5000" autoplay-disable-on-interaction="false">
+				centered-slides="true" autoplay-delay="4000" autoplay-disable-on-interaction="false">
 				<% if (bestProducts[0]) { %>
 					<% bestProducts.forEach(product=> { %>
 						<swiper-slide>
 							<div class="banner" style="background-image: url('<%= product.cover[0].secure_url %>');">
 								<h3 class="text-warning">BEST SELLER</h3>
-								<h2 class="text-white my-3" style="max-width: 80%; text-align: start;">
+								<h2 class="text-white my-3" style="max-width: 90%; text-align: start; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 									<%= product.name %>
 								</h2>
 								<div class="d-flex">
@@ -284,11 +284,11 @@
 						<% latestProducts.forEach(product=> { %>
 							<!-- single product -->
 							<div class="col-lg-3 col-md-6">
-								<div class="single-product">
+								<div class="single-product d-flex flex-column align-items-center">
 									<a href="/productDetails/<%= product._id %>"><img class="img-fluid"
 											src="<%= product.mainImage[0].secure_url %>" alt=""
 											style="max-width: 234px;  max-height: 274px;"></a>
-									<div class="product-details">
+									<div class="product-details d-flex flex-column align-items-center">
 										<h6
 											style="max-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 											<a href="/productDetails/<%= product._id %>" class="text-dark"><span>
@@ -301,7 +301,15 @@
 											<h6 class="l-through">₹ <%= product.mrp %>
 											</h6>
 										</div>
-										<div class="prd-bottom">
+										<div class="d-flex align-items-center">
+											<button onclick="window.location.href='/addToCart/<%= product._id %>'"
+												class="btn btn-sm btn-rounded btn-danger m-1"><i
+													class="fa-solid fa-cart-shopping mr-2"></i>Add to cart</button>
+											<button onclick="window.location.href='/wishlist/add2/<%= product._id %>'"
+												class="btn btn-sm btn-rounded btn-outline-dark m-1"><i
+													class="fa-regular fa-heart mr-2"></i>wishlist</button>
+										</div>
+										<div class="prd-bottom d-none">
 
 											<a href="/addToCart/<%= product._id %>" class="social-info">
 												<span class="ti-bag"></span>
