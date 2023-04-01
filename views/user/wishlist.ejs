@@ -40,8 +40,8 @@
                                             <a href="/addToCart/<%= product._id %>"
                                                 class="btn btn-rounded btn-sm btn-dark m-1"><i
                                                     class="fa-solid fa-cart-plus"></i> Add to cart</a>
-                                            <a href="/wishlist/remove/<%= product._id %>"
-                                                onclick="return confirm(`Do you really want to remove '<%= product.name %>' from wishlist ?`)"
+                                            <a href="#""
+                                                onclick="rmItem('<%= product._id %>','<%= product.name %>')"
                                                 class="btn btn-rounded btn-danger btn-sm m-1"><i
                                                     class="fa-solid fa-trash"></i></a>
                                         </div>
@@ -58,6 +58,25 @@
                     </ul>
 
                 </div>
+
+                <script>
+                        //---------remove from wishlist alert-----------//
+  function rmItem(id,name){
+    Swal.fire({
+          text: `Do you really want to remove '${name}' from wishlist ?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes!',
+          cancelButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/wishlist/remove/'+id
+          }
+        });
+  }
+                </script>
 
     </section>
 

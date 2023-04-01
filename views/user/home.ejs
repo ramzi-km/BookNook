@@ -4,23 +4,33 @@
 		<style>
 			@media (max-width: 991px) {
 				.swiper-main {
-				font-size: 14px !important;
-				height: 45vh !important;
+					font-size: 13px !important;
+					height: 55vh !important;
+				}
+
+				.banner h1 {
+					font-size: 1.1rem !important;
+				}
+
+				.banner .banner-desc {
+					min-width: 300px;
+				}
+
+				swiper-container {
+					width: 100% !important;
+					height: 100% !important;
+				}
+
+				swiper-slide {
+					font-size: 13px !important;
+				}
+
+				.banner {
+					padding-left: 30px !important;
+				}
+
 			}
 
-			swiper-container {
-				width: 100% !important;
-				height: 100% !important;
-			}
-			swiper-slide {
-				font-size: 14px !important;
-			}
-			.banner {
-				padding-left: 40px !important;
-
-			}
-
-			}
 			.swiper-main {
 				background: #eee;
 				font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
@@ -61,12 +71,18 @@
 				flex-direction: column;
 				align-items: flex-start;
 				justify-content: center;
-				padding-left: 100px;
+				padding-left: 80px;
 				box-shadow: inset 200px 200px 300px 200px rgba(0, 0, 0, 0.8);
 			}
 
 			.section_gap {
 				padding: 80px 0;
+			}
+
+			@media (max-width: 575px) {
+				.features-area .col-lg-3:last-child .single-features {
+					margin-top: 0px;
+				}
 			}
 		</style>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
@@ -74,17 +90,16 @@
 
 	<div class="container-fluid" style="margin-top: -30px">
 		<div class="swiper-main">
-			<swiper-container class="mySwiper" pagination="true" navigation="true"
-				space-between="30" centered-slides="true" autoplay-delay="5000" autoplay-disable-on-interaction="false">
+			<swiper-container class="mySwiper" pagination="true" navigation="true" space-between="30"
+				centered-slides="true" autoplay-delay="5000" autoplay-disable-on-interaction="false">
 				<% if (bestProducts[0]) { %>
 					<% bestProducts.forEach(product=> { %>
 						<swiper-slide>
-							<div class="banner"
-								style="background-image: url('<%= product.cover[0].secure_url %>');">
+							<div class="banner" style="background-image: url('<%= product.cover[0].secure_url %>');">
 								<h3 class="text-warning">BEST SELLER</h3>
-								<h1 class="text-white my-3" style="max-width: 80%; text-align: start;">
+								<h2 class="text-white my-3" style="max-width: 80%; text-align: start;">
 									<%= product.name %>
-								</h1>
+								</h2>
 								<div class="d-flex">
 									<span>
 										<b class="text-white">
@@ -98,7 +113,7 @@
 									</span>
 								</div><br>
 								<div class="d-flex" style="max-width: 30%; text-align: start;">
-									<span style="color: #999999;">
+									<span style="color: #999999;" class="banner-desc">
 										<%= product.description %>
 									</span>
 								</div>
@@ -141,7 +156,8 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Philosophy&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153477/booknook/philosophy_pebrlm.png"
+								<img class="img-fluid w-100"
+									src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153477/booknook/philosophy_pebrlm.png"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Philosophy&price=&sort=0">
 									<div class="deal-details">
@@ -154,7 +170,8 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Personal+development&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153472/booknook/personal_vf0s1t.webp"
+								<img class="img-fluid w-100"
+									src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153472/booknook/personal_vf0s1t.webp"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Personal+development&price=&sort=0">
 									<div class="deal-details">
@@ -167,7 +184,8 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Manga&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid" src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153470/booknook/manga_q6ykwo.jpg"
+								<img class="img-fluid"
+									src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153470/booknook/manga_q6ykwo.jpg"
 									style="width:100%; height:12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Manga&price=&sort=0">
 									<div class=" deal-details">
@@ -180,7 +198,8 @@
 							<div class="single-deal"
 								onclick="window.location.href='/shop?search=&category=Romance&price=&sort=0'">
 								<div class="overlay"></div>
-								<img class="img-fluid " src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153465/booknook/romance_nnwyua.jpg"
+								<img class="img-fluid "
+									src="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153465/booknook/romance_nnwyua.jpg"
 									style="width:100%; height: 12em; object-fit: cover;" alt="">
 								<a href="/shop?search=&category=Romance&price=&sort=0">
 									<div class="deal-details">
@@ -339,11 +358,11 @@
 								<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
 									<div class="single-related-product d-flex">
 										<a href="/productDetails/<%= offerProducts[i]._id %>"><img width="50px;"
-												src="<%= offerProducts[i].mainImage[0].secure_url %>"
-												alt=""></a>
+												src="<%= offerProducts[i].mainImage[0].secure_url %>" alt=""></a>
 										<div class="desc">
-											<a href="/productDetails/<%= offerProducts[i]._id %>" class="title"> <%=
-													offerProducts[i].name %></a>
+											<a href="/productDetails/<%= offerProducts[i]._id %>" class="title">
+												<%= offerProducts[i].name %>
+											</a>
 											<div class="price">
 												<h6>₹ <%= offerProducts[i].price %>
 												</h6>
@@ -371,6 +390,7 @@
 
 
 	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
+
 	<script>
 		const swiper = new Swiper()
 

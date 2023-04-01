@@ -143,17 +143,17 @@
                         </a>
                         <% if (product.unList) { %>
                         <a
-                          href="/admin/productM/list/<%= product._id %> "
+                          href="#"
                           class="btn btn-light btn-outline-success"
-                          onclick="return confirm('Do you want to List <%= product.name %> ?')"
-                        >
+                          onclick="listAlert('<%=product._id %>','<%= product.name %>')"
+                          >
                           List</a
                         >
                         <% } else { %>
                         <a
-                          href="/admin/productM/unList/<%= product._id %> "
+                          href="#"
                           class="btn btn-light btn-outline-danger"
-                          onclick="return confirm('Do you really want to Unlist <%= product.name %> ?')"
+                        onclick="unlistAlert('<%=product._id %>','<%= product.name %>')"
                         >
                           Unlist</a
                         >
@@ -187,4 +187,39 @@
 <!-- ============================================================== -->
 <!-- footer -->
 <!-- ============================================================== -->
+<script>
+  //---------list product alert-----------//
+  function listAlert(id,name){
+   Swal.fire({
+         text: `Do you want to list the product '${name}'?`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#28a745',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'List',
+         cancelButtonText: 'Cancel',
+       }).then((result) => {
+         if (result.isConfirmed) {
+           window.location.href = '/admin/productM/list/'+id
+         }
+       });
+ }
+  //---------unlist product alert-----------//
+ function unlistAlert(id,name){
+   Swal.fire({
+         text: `Do you really want to unlist the product '${name}'?`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Unlist',
+         cancelButtonText: 'Cancel',
+       }).then((result) => {
+         if (result.isConfirmed) {
+           window.location.href = '/admin/productM/unList/'+id
+         }
+       });
+ }
+</script>
+
 <%- include('./partials/adminFooter.ejs') %>

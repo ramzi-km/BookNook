@@ -7,7 +7,10 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <!-- Favicon-->
-    <link rel="shortcut icon" href="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153717/booknook/Component_4_hxynzk.png" />
+    <link
+      rel="shortcut icon"
+      href="https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153717/booknook/Component_4_hxynzk.png"
+    />
     <!-- Author Meta -->
     <meta name="author" content="CodePixar" />
     <!-- Meta Description -->
@@ -49,6 +52,9 @@
     <link rel="stylesheet" type="text/css" href="/imageZoom/style.css" />
 
     <!---------------  Image zoom ------------------>
+    <!--------------- Swal ------------------>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
   </head>
 
   <body style="background-color: #f1f1f1">
@@ -136,11 +142,14 @@
                       >
                     </li>
                     <li class="nav-item">
-                      <form action="/logout" method="post">
+                      <form
+                        action="/logout"
+                        method="post"
+                        id="logoutForm"
+                      >
                         <button
                           class="nav-link"
                           type="submit"
-                          onclick="return confirm(`Do you really want to logout?`)"
                           style="width: 100%"
                         >
                           <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -182,5 +191,24 @@
     </section>
     <!-- start banner Area -->
     <!-- End banner Area -->
+
   </body>
+    <script>
+      const logoutForm = document.getElementById('logoutForm');
+      logoutForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        Swal.fire({
+          text: 'Do you really want to logout from your account?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Logout!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutForm.submit();
+          }
+        });
+      });
+    </script>
 </html>

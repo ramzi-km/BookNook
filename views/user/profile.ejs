@@ -1,10 +1,7 @@
 <%- include('./partials/header.ejs') %>
 
 <head>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+
   <style>
     body {
       text-align: left;
@@ -100,12 +97,11 @@
                   <h4><%= user.name %></h4>
                   <p class="text-secondary mb-1"><%= user.email %></p>
                   <p class="text-muted font-size-sm"><%= user.place %></p>
-                  <form id="logoutForm" action="/logout" method="post">
+                  <form id="logoutForm2" action="/logout" method="post">
                     <button
                       type="submit"
-                      form="logoutForm"
+                      form="logoutForm2"
                       class="btn btn-danger"
-                      onclick="return confirm(`Do you really want to logout?`)"
                     >
                       Logout
                     </button>
@@ -503,13 +499,12 @@
                       >
                         <i class="fa-solid fa-pen-to-square"></i>
                       </button>
-                      <a
-                        href="/profile/deleteAddress/<%=addr.id %>"
+                      <button
                         class="btn"
-                        onclick="return confirm(`Do you really want to remove this address ?`)"
+                        onclick="rmAddress('<%=addr.id %>')"
                       >
                         <i class="fa-solid fa-trash"></i>
-                      </a>
+                      </button>
                     </div>
                   </div>
                   <h6><%=addr.mobile %></h6>
@@ -875,6 +870,42 @@
         addressForm.submit();
       }
     });
+
+    //---------logout alert-----------//
+      const logoutForm2 = document.getElementById('logoutForm2');
+      logoutForm2.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        Swal.fire({
+          text: 'Do you really want to logout from your account?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Logout!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutForm2.submit();
+          }
+        });
+      });
+
+    //---------remove address alert-----------//
+  function rmAddress(id){
+    Swal.fire({
+          text: 'Do you really want to remove this address?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes!',
+          cancelButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/profile/deleteAddress/'+id
+          }
+        });
+  }
+
   </script>
 
   <%- include('./partials/footer.ejs') %>

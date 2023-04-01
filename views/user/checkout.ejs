@@ -245,9 +245,9 @@
                   </button>
 
                   <a
-                    href="/profile/deleteAddress/<%=addr.id %>"
+                    href="#"
                     class="btn btn-light m-1"
-                    onclick="return confirm(`Do you really want to remove this address ?`)"
+                    onclick="rmAddress('<%=addr.id %>')"
                   >
                     <i class="fa-solid fa-trash"></i>
                   </a>
@@ -766,6 +766,23 @@
       totalInput.value = price - discountAmount;
     }
   });
+
+      //---------remove address alert-----------//
+      function rmAddress(id){
+    Swal.fire({
+          text: 'Do you really want to remove this address?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes!',
+          cancelButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/profile/deleteAddress/'+id
+          }
+        });
+  }
 </script>
 
 <%- include('./partials/footer') %>

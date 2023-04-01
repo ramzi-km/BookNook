@@ -37,18 +37,17 @@
             <% if (order.status=="pending" || order.status=="shipped" ) { %>
             <a
               class="btn btn-rounded btn-lg btn-dark"
-              href="/profile/myOrders/cancelOrder/<%= order._id %>"
-              onclick="return confirm('Do you really want to cancel this order ?')"
+              href="#"
+              onclick="rtCancel('<%= order._id %>')"
               >Cancel order</a
             >
             <% }else if( order.status == 'delivered' && ((order.lastDate) >=
             Date.now())){ %>
             <a
               class="btn btn-rounded btn-lg btn-dark"
-              href="/profile/myOrders/returnOrder/<%= order._id %>"
-              onclick="return confirm('Do you really want to return this product ?')"
-              >Return product</a
-            >
+              href="#"
+              onclick="rtProd('<%= order._id %>')"
+              >Return product</a>
             <% }else{ %>
             <button class="btn btn-rounded btn-lg btn-dark" disabled>
               Cancel
@@ -88,8 +87,8 @@
             </button>
             <% } else if (order.status=="delivered" ) { %>
             <button class="btn btn-rounded btn-success">
-              <%= order.status %>
-            </button><br>
+              <%= order.status %></button
+            ><br />
             <h6>delivery date: <%= order.deliveryDate %></h6>
             <% } else if (order.status=="return processing" ) { %>
             <button class="btn btn-rounded btn-info">
@@ -124,4 +123,42 @@
   </div>
 </div>
 
+
+<script>
+  //---------return product alert-----------//
+
+  function rtProd(id) {
+    Swal.fire({
+      text: `Do you really want to return this product ?`,
+      icon: 'warning',
+      text: 'You money will be refunded to your wallet after we pick it from your door.',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '/profile/myOrders/returnOrder/'+ id;
+      }
+    });
+  }
+
+  function rtCancel(id) {
+    Swal.fire({
+      text: `Do you really want to cancel this order ?`,
+      icon: 'warning',
+      text: `You won't be able to revert this!.We will refund the amount you payed to your wallet.`,
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes!',
+      cancelButtonText: 'No',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/profile/myOrders/cancelOrder/${id}`;
+      }
+    });
+  }
+</script>
 <%- include('./partials/footer') %>

@@ -62,17 +62,17 @@
                     <td>
                       <% if (user.block) { %>
                       <a
-                        href="/admin/userM/<%= user._id %> "
+                        href="# "
                         class="btn btn-light btn-outline-secondary"
-                        onclick="return confirm('Do you want to unblock <%= user.name %> ?')"
+                        onclick="unblockAlert('<%=user._id %>','<%= user.name %>')"
                         ><i class="fa fa-unlock-alt text-success"></i>
                         Unblock</a
                       >
                       <% } else { %>
                       <a
-                        href="/admin/userM/<%= user._id %> "
+                        href="#"
                         class="btn btn-light btn-outline-dark"
-                        onclick="return confirm('Do you really want to Block <%= user.name %> ?')"
+                        onclick="blockAlert('<%=user._id %>','<%= user.name %>')"
                         ><i class="fa fa-ban text-danger"></i> Block</a
                       >
                       <% } %>
@@ -104,4 +104,38 @@
 <!-- ============================================================== -->
 <!-- footer -->
 <!-- ============================================================== -->
+<script>
+   //---------block user alert-----------//
+   function blockAlert(id,name){
+    Swal.fire({
+          text: `Do you really want to block ${name}?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes!',
+          cancelButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/admin/userM/'+id
+          }
+        });
+  }
+   //---------unblock user alert-----------//
+  function unblockAlert(id,name){
+    Swal.fire({
+          text: `Do you want to unblock ${name}?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#28a745',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/admin/userM/'+id
+          }
+        });
+  }
+</script>
 <%- include('./partials/adminFooter.ejs') %>

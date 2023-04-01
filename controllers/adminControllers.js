@@ -255,7 +255,7 @@ module.exports = {
       });
       if (productExist[0]) {
         addProductError = 'product with the same details already exists';
-        res.redirect('back');
+        res.redirect('back'); 
       } else {
         try {
           let mainImage = req.files.mainImage[0];
