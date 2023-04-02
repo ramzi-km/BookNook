@@ -369,7 +369,7 @@ module.exports = {
             inStock: req.body.inStock,
             description: req.body.description,
             richDescription: req.body.richDescription,
-          };
+          };0
           await Product.updateOne({ _id: productId }, fieldsToUpdate);
 
           const imageFieldsToUpdate = await getImageFieldsToUpdate(req.files);
