@@ -111,7 +111,7 @@ module.exports = {
       let totalPending = 0;
       let onlineOrders = 0;
       let cod = 0;
-      let deliveredOrders = orders.filter((order) => {
+      const deliveredOrders = orders.filter((order) => {
         if (order.status == 'pending' || order.status == 'shipped') {
           totalPending++;
         }
@@ -126,7 +126,7 @@ module.exports = {
         }
         return order.status == 'delivered';
       });
-      let totalDispatch = deliveredOrders.length;
+      const totalDispatch = deliveredOrders.length;
       let monthlyDataObject = {};
       let categoryDataObject = {};
       monthlyDataArray.map((item) => {
@@ -166,21 +166,21 @@ module.exports = {
         paymentData,
       });
     } catch (error) {
-      console.log(error);
+      res.send(error);
     }
   },
   //------------------------------ user management-----------------------------//
 
   getUserM: async (req, res) => {
-    let admin = req.session.admin;
-    let users = await User.find().lean();
+    const admin = req.session.admin;
+    const users = await User.find().lean();
     res.render('admin/userM', { admin, users });
   },
   //block or unblock user
   blockUser: async (req, res) => {
-    let userId = req.params.id;
+    const userId = req.params.id;
     //bUser = blocking or unblocking user
-    let bUser = await User.findById(userId);
+    const bUser = await User.findById(userId);
 
     if (bUser.block) {
       bUser.block = false;
@@ -195,9 +195,9 @@ module.exports = {
   //--------------------------- product management----------------------------//
 
   getProductM: async (req, res) => {
-    let admin = req.session.admin;
+    const admin = req.session.admin;
     try {
-      let products = await Product.find().lean();
+      const products = await Product.find().lean();
       res.render('admin/productM', {
         admin,
         products,
@@ -216,9 +216,9 @@ module.exports = {
   },
   //get add product page
   getAddProduct: async (req, res) => {
-    let admin = req.session.admin;
+    const admin = req.session.admin;
     try {
-      let categories = await Category.find().lean();
+      const categories = await Category.find().lean();
       res.render('admin/addProduct', {
         admin,
         categories,
@@ -255,7 +255,7 @@ module.exports = {
       });
       if (productExist[0]) {
         addProductError = 'product with the same details already exists';
-        res.redirect('back'); 
+        res.redirect('back');
       } else {
         try {
           let mainImage = req.files.mainImage[0];
@@ -303,7 +303,7 @@ module.exports = {
   },
   // get edit product page
   getEditProduct: async (req, res) => {
-    let admin = req.session.admin;
+    const admin = req.session.admin;
     try {
       const categories = await Category.find().lean();
       const product = await Product.findOne({ _id: req.params.id });
@@ -369,7 +369,8 @@ module.exports = {
             inStock: req.body.inStock,
             description: req.body.description,
             richDescription: req.body.richDescription,
-          };0
+          };
+          0;
           await Product.updateOne({ _id: productId }, fieldsToUpdate);
 
           const imageFieldsToUpdate = await getImageFieldsToUpdate(req.files);
@@ -388,8 +389,8 @@ module.exports = {
   },
   // delete extra images individually
   deleteExtraImage: async (req, res) => {
-    let imageName = req.params.imageName;
-    let prodId = req.params.prodId;
+    const imageName = req.params.imageName;
+    const prodId = req.params.prodId;
     await Product.findByIdAndUpdate(prodId, {
       $pull: { extraImages: { original_filename: imageName } },
     });
@@ -398,9 +399,8 @@ module.exports = {
 
   // unlist product
   unListProduct: async (req, res) => {
-    ``;
     try {
-      let productId = req.params.id;
+      const productId = req.params.id;
       let product = await Product.findById(productId);
       product.unList = true;
       await product.save();
@@ -412,7 +412,7 @@ module.exports = {
   //list product
   listProduct: async (req, res) => {
     try {
-      let productId = req.params.id;
+      const productId = req.params.id;
       let product = await Product.findById(productId);
       product.unList = false;
       await product.save();

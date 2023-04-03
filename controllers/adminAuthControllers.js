@@ -15,7 +15,6 @@ module.exports = {
     if (admin) {
       bcrypt.compare(req.body.password, admin.password).then((result) => {
         if (result) {
-          console.log("login success");
           req.session.admin = admin;
           req.session.adminLoggedIn = true;
           loginError = null;

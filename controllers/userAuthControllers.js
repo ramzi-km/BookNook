@@ -22,7 +22,6 @@ const resetPasswordVerifyMail = {
 async function sentOtpVerification(tempUser, mail, req) {
   try {
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-    console.log(otp);
     //mail options
     const mailOptions = {
       from: process.env.AUTH_EMAIL,
@@ -35,10 +34,9 @@ async function sentOtpVerification(tempUser, mail, req) {
     req.session.otpExpiry = Date.now() + 180000;
 
     await transporter.sendMail(mailOptions);
-    console.log('mail sent');
     //next()
   } catch (err) {
-    console.log(err);
+    res.send(err);
   }
 }
 
@@ -93,7 +91,7 @@ module.exports = {
         res.redirect('/signup');
       }
     } catch (err) {
-      console.log(err);
+      res.send(err);
     }
   },
 
@@ -160,7 +158,7 @@ module.exports = {
     }
   },
 
-  getloginverification: (req, res) => {
+  getLoginVerification: (req, res) => {
     if (!req.session.validatedUserLoggedIn) {
       res.redirect('/login');
     } else {
@@ -191,7 +189,7 @@ module.exports = {
 
         req.session.otp = null;
         req.session.otpExpiry = null;
-        req.session.validatedUser= null
+        req.session.validatedUser = null;
         req.session.validatedUserLoggedIn = false;
         loginOtpError = null;
         res.redirect('/');

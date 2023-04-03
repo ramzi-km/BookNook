@@ -2,7 +2,7 @@ const multer = require("multer");
 
 // -------image upload-------------//
 
-let multerStorage = multer.diskStorage({
+const multerStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/images/productImages");
   },
@@ -11,7 +11,7 @@ let multerStorage = multer.diskStorage({
   },
 });
 
-let uploadImages = multer({
+const uploadImages = multer({
   storage: multerStorage,
   fileFilter: (req, file, cb) => {
     if (

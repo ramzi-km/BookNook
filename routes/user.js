@@ -18,7 +18,6 @@ const {
   getVerification,
   verifySignupOtp,
   resendSignupOtp,
-  getloginverification,
   resendLoginOtp,
   verifyLoginOtp,
   getEmailInput,
@@ -29,6 +28,7 @@ const {
   getResetPassword,
   postResetPassword,
   validateUser,
+  getLoginVerification,
 } = require("../controllers/userAuthControllers.js");
 
 const {
@@ -196,7 +196,7 @@ router.post("/verifySignupOtp", verifySignupOtp);
 router.get("/resendSignupOtp", resendSignupOtp);
 
 //get loginverification page
-router.get("/loginVerification", verifyLoggedOut, getloginverification);
+router.get("/loginVerification", verifyLoggedOut, getLoginVerification);
 //get resendLoginOtp
 router.get("/resendLoginOtp", verifyLoggedOut, resendLoginOtp);
 //post loginverification page

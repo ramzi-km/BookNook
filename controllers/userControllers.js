@@ -149,17 +149,22 @@ module.exports = {
     let productInCart = [];
     let productInWishlist = [];
     if (user) {
-      productInCart = await User.find(
-        {
+      try {
+        productInCart = await User.find(
+          {
+            _id: user._id,
+            cart: { $elemMatch: { id: productId } },
+          },
+          { cart: 1 }
+        );
+        productInWishlist = await User.find({
           _id: user._id,
-          cart: { $elemMatch: { id: productId } },
-        },
-        { cart: 1 }
-      );
-      productInWishlist = await User.find({
-        _id: user._id,
-        wishlist: productId,
-      });
+          wishlist: productId,
+        });
+      } catch (error) {
+        res.send(error)
+      }
+      
     } else {
       productInCart = [];
       productInWishlist = [];
@@ -253,7 +258,7 @@ module.exports = {
     const userId = req.session.user._id;
     const prodId = req.params.id;
     try {
-      const user = await User.updateOne(
+       await User.updateOne(
         { _id: userId },
         {
           $addToSet: {
@@ -271,10 +276,10 @@ module.exports = {
 
   //-------------------Cart page-----------------//
   getCart: async (req, res) => {
-    let userId = req.session.user._id;
+    const userId = req.session.user._id;
     try {
-      let user = await User.findById(userId);
-      let cart = user.cart;
+      const user = await User.findById(userId);
+      const cart = user.cart;
       const cartQuantities = {};
       const cartList = cart.map((item) => {
         cartQuantities[item.id] = item.quantity;
