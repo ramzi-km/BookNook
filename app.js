@@ -36,7 +36,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: threeDay },
-    store: MongoStore.create({ mongoUrl: process.env.MONGOOSE_CONNECT }),
+    store: MongoStore.create({ mongoUrl: process.env.DB_URI }),
   })
 );
 app.use(nocache());
