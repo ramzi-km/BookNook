@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const multer = require('multer');
 const moment = require('moment');
 const cloudinary = require('../config/cloudinary');
@@ -332,6 +331,7 @@ module.exports = {
         return;
       } else if (err) {
         // an unknown error occured while uploading
+        console.log('imgerr', err);
         imageFileError =
           'error occured when uploading images,make sure you only chose 3 images on side images input and all the chosen files are image files';
         res.redirect(`/admin/productM/editProduct/${req.params.id}`);
@@ -381,6 +381,7 @@ module.exports = {
           imageFileError = null;
           res.redirect('/admin/productM');
         } catch (error) {
+          console.log(error);
           editProductFailMessage = 'Failed to edit product';
           res.redirect('/admin/productM');
         }
