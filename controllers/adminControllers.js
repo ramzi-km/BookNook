@@ -330,6 +330,7 @@ module.exports = {
         res.redirect(`/admin/productM/editProduct/${req.params.id}`);
         return;
       } else if (err) {
+        console.log(err);
         // an unknown error occured while uploading
         console.log('imgerr', err);
         imageFileError =
