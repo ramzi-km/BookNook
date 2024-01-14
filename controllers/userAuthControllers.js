@@ -157,6 +157,19 @@ module.exports = {
       res.redirect('/login');
     }
   },
+  demoLogin: async (req, res) => {
+    const user = await User.findOne({ email: 'ramzikm5@gmail.com' });
+    req.session.validatedUser = user;
+    req.session.validatedUserLoggedIn = true;
+    req.session.user = req.session.validatedUser;
+    req.session.userLoggedIn = true;
+    req.session.otp = null;
+    req.session.otpExpiry = null;
+    req.session.validatedUser = null;
+    req.session.validatedUserLoggedIn = false;
+    loginOtpError = null;
+    res.redirect('/');
+  },
 
   getLoginVerification: (req, res) => {
     if (!req.session.validatedUserLoggedIn) {

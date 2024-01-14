@@ -28,7 +28,7 @@
     <div class="row">
       <div id="signupTop" class="col-lg-6">
         <div class="login_box_img">
-          <img class="img-fluid" src="img/login.jpg" alt="" />
+          <img class="img-fluid" src="img/Sign up-amico.png" alt="" />
           <div class="hover">
             <h4>New to Book<span class="text-danger">Nook</span>?</h4>
             <p></p>
@@ -79,7 +79,20 @@
             </div>
             <div class="col-md-12 form-group">
               <button type="submit" value="submit" class="primary-btn">
-                Log In
+                Login
+              </button>
+              <div class="d-flex container-fluid justify-content-between m-2">
+                <div class="border rounded-pill bg-secondary m-2 w-50"></div>
+                <div>OR</div>
+                <div class="border rounded-pill bg-secondary m-2 w-50"></div>
+              </div>
+
+              <button
+                type="button"
+                onclick="demoLogin()"
+                class="btn btn-dark container-fluid"
+              >
+                Demo Login
               </button>
               <a href="/emailInput">Forgot Password?</a>
             </div>
@@ -88,7 +101,7 @@
       </div>
       <div id="signupBottom" class="col-lg-6" style="display: none">
         <div class="login_box_img">
-          <img class="img-fluid" src="img/login.jpg" alt="" />
+          <img class="img-fluid" src="img/Sign up-amico.png" alt="" />
           <div class="hover">
             <h4>New to Book<span class="text-danger">Nook</span>?</h4>
             <p></p>
@@ -100,8 +113,18 @@
   </div>
 </section>
 <!--================End Login Box Area =================-->
-
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script>
+  async function demoLogin() {
+    try {
+      const response = await axios.post('/demoLogin');
+      console.log(response);
+      // Redirect to another page
+      window.location.pathname = '/';
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  }
   // Get the form element
   const form = document.getElementById('loginForm');
 
