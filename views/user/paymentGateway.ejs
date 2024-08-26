@@ -105,27 +105,30 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-  document.getElementById('rzp-button1').onclick = async function (e) {
+  document.getElementById("rzp-button1").onclick = async function (e) {
     e.preventDefault();
 
-    let response = await axios.post('/payment');
+    let response = await axios.post("/payment");
 
     if (response.data.success) {
+      console.log(response.data);
+
       let orderData = response.data.order;
       let id = orderData.id;
       let key = response.data.key;
       let amount = orderData.amount;
       var options = {
         key: key, // Enter the Key ID generated from the Dashboard
-        name: 'BookNook',
+        name: "BookNook",
         amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-        currency: 'INR',
-        description: 'Test Transaction',
-        image: 'https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153717/booknook/Component_4_hxynzk.png',
+        currency: "INR",
+        description: "Test Transaction",
+        image:
+          "https://res.cloudinary.com/dbmujhmpe/image/upload/v1680153717/booknook/Component_4_hxynzk.png",
         order_id: id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        callback_url: '/verifyPayment',
+        callback_url: "/verifyPayment",
         theme: {
-          color: '#da1111',
+          color: "#da1111",
         },
       };
       var rzp1 = new Razorpay(options);

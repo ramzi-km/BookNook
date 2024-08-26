@@ -811,7 +811,7 @@ module.exports = {
 
   payment: async (req, res) => {
     let amount = req.session.amountToPay * 100;
-    let receiptId = Math.floor(Math.random() * 100000) + Date.now();
+    let receiptId = Math.floor(Math.random() * 100000) + Date.now()+'';
     let options = {
       amount: amount, // amount in the smallest currency unit
       currency: 'INR',
